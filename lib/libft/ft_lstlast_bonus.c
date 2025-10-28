@@ -1,18 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/27 19:50:25 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/10/27 20:09:34 by bpetrovi         ###   ########.fr       */
+/*   Created: 2025/03/27 15:05:58 by fbui-min          #+#    #+#             */
+/*   Updated: 2025/03/27 15:06:34 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "libft.h"
 
-# include <stdio.h>
+t_list	*ft_lstlast(t_list *lst)
+{
+	t_list	*traverse;
 
-#endif
+	traverse = lst;
+	while (traverse)
+	{
+		if (traverse->next == NULL)
+			return (traverse);
+		traverse = traverse->next;
+	}
+	return (traverse);
+}

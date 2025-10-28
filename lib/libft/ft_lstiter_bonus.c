@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_lstiter_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/27 21:09:30 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/10/28 18:17:06 by bpetrovi         ###   ########.fr       */
+/*   Created: 2025/03/27 15:10:51 by fbui-min          #+#    #+#             */
+/*   Updated: 2025/03/27 15:11:22 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "libft.h"
 
-int	main(void)
+void	ft_lstiter(t_list *lst, void (*f)(void *))
 {
-	char	*line;
+	t_list	*traverse;
 
-	line = readline("$");
-	printf("%s", line);
-	free(line);
-	return (0);
+	if (!lst)
+		return ;
+	traverse = lst;
+	while (traverse)
+	{
+		(*f)(traverse->content);
+		traverse = traverse->next;
+	}
 }

@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_lstsize_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/27 21:09:30 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/10/28 18:17:06 by bpetrovi         ###   ########.fr       */
+/*   Created: 2025/03/27 14:55:31 by fbui-min          #+#    #+#             */
+/*   Updated: 2025/03/27 15:04:56 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "libft.h"
 
-int	main(void)
+int	ft_lstsize(t_list *lst)
 {
-	char	*line;
+	int		count;
+	t_list	*traverse;
 
-	line = readline("$");
-	printf("%s", line);
-	free(line);
-	return (0);
+	count = 0;
+	if (!lst)
+		return (count);
+	traverse = lst;
+	while (traverse)
+	{
+		count++;
+		traverse = traverse->next;
+	}
+	return (count);
 }

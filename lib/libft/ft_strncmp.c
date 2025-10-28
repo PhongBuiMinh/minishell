@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/27 21:09:30 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/10/28 18:17:06 by bpetrovi         ###   ########.fr       */
+/*   Created: 2025/03/11 17:01:34 by fbui-min          #+#    #+#             */
+/*   Updated: 2025/03/17 18:17:17 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "libft.h"
 
-int	main(void)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	char	*line;
+	size_t	i;
 
-	line = readline("$");
-	printf("%s", line);
-	free(line);
+	i = 0;
+	while (i < n)
+	{
+		if (*(s1 + i) != *(s2 + i))
+			return (*((unsigned char *)s1 + i) - *((unsigned char *)s2 + i));
+		if (*(s1 + i) == '\0')
+			return (0);
+		i++;
+	}
 	return (0);
 }

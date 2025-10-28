@@ -61,23 +61,23 @@ BONUSOBJ = $(BONUS:.c=.o)
 all: $(NAME)
 
 bonus: $(NAME) $(BONUSOBJ)
-	ar -rc $(NAME) $(BONUSOBJ)
+	@ar -rc $(NAME) $(BONUSOBJ)
 
 $(NAME): $(OBJ)
-	ar -rc $(NAME) $(OBJ)
+	@ar -rc $(NAME) $(OBJ)
 
 $(OBJ): %.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(BONUSOBJ): %.o : %.c 
-	$(CC) $(CFLAGS) -c $< -o $@
-
-re: fclean all
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ) $(BONUSOBJ)
+	@rm -f $(OBJ) $(BONUSOBJ)
 
 fclean:
-	rm -f $(NAME) $(OBJ) $(BONUSOBJ)
+	@rm -f $(NAME) $(OBJ) $(BONUSOBJ)
+
+re: fclean all
 
 .PHONY: fclean clean re bonus

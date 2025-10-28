@@ -1,47 +1,81 @@
+# Color codes
 GREEN = \033[0;32m
 RED = \033[0;31m
 DEFAULT = \033[0m
 
+# Compile and flags
 CC = gcc
 FLAGS = -Wall -Werror -Wextra
+MODE ?= release
 
+ifeq ($(MODE), debug)
+	FLAGS += -g
+else
+	FLAGS += -O2
+endif
+
+# Project name
 NAME = minishell
 
+# Direcories and source files
 SRC_DIR = srcs
-SRCS = minishell.c
-
 OBJ_DIR = objs
+SRCS = minishell.c
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
+DEPS = $(OBJS:.o=.d)
 
-INCLUDE_LIBFT = lib/libft
+-include $(DEPS)
+
+# Libraries
+LIBFT_PATH = lib/libft
 LIBFT = lib/libft/libft.a
 
+# Targets
+.PHONY: all clean fclean re test benchmark install uninstall
+
+# Build targets
 all: $(NAME)
 
-$(LIBFT):
-	@make -C lib/libft
+$(NAME): $(LIBFT) $(OBJS)
+	@echo "$(GREEN)Linking files...$(DEFAULT)"
+	@$(CC) $(FLAGS) $^ -L$(LIBFT_PATH) -lft -lc -lm -lreadline -o $@
 
+# Object file rules
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	@echo "$(GREEN)Compling source files...$(DEFAULT)"
-	@$(CC) $(FLAGS) -Iincludes -I$(INCLUDE_LIBFT) -c $< -o $@
+	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -MMD -MP -c $< -o $@
 
-$(NAME): $(LIBFT) $(OBJS)
-	@echo "$(GREEN)Linking files...$(DEFAULT)"
-	@$(CC) $(FLAGS) $^ -o $@
+# Library build
+$(LIBFT):
+	@echo "$(GREEN)Compling library...$(DEFAULT)"
+	@make -C lib/libft
 
+# Cleanup
 clean:
 	@echo "$(RED)Removing object files...$(DEFAULT)"
 	@rm -rf $(OBJ_DIR)
-	@make clean -C lib/libft
+	@make clean -C $(LIBFT_PATH)
 
 fclean: clean
 	@echo "$(RED)Removing program and libraries...$(DEFAULT)"
 	@rm -f $(NAME)
-	@make fclean -C lib/libft
+	@make fclean -C $(LIBFT_PATH)
+
+# Testing and benchmarking
+test:
+	@./tests/run_tests.sh
+
+benhmark:
+	@./benchmarks/run_benchmarks.sh
+
+# Install and Uninstall
+install:
+	@cp $(NAME) /usr/local/bin
+
+uninstall:
+	@rm -f /ur/local/bin/$(NAME)
 
 re: fclean all
-
-.PHONY: all clean fclean re

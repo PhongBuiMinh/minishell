@@ -3,3 +3,9 @@ MADE FOR GIVING INFORMATION TO EACH OTHER
 FONH: makefile, libft
 
 A list of source files: minishell.c
+
+Boris: did alot of research on parsing, starting to play with taking input in minishell.c
+
+IMPORTANT NOTE:
+there is something wrong with makefile / compiling; becouse when i run ./minishell the readline stops after the first input,
+where as if i do it by myself with cc -lreadline minishell.c, it works fine and it goes in a loop as its suposed to

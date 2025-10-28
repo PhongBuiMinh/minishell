@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fbui-min <fbui-min@student.42.fr>          +#+  +:+       +#+         #
+#    By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 15:57:24 by fbui-min          #+#    #+#              #
-#    Updated: 2025/03/27 16:39:19 by fbui-min         ###   ########.fr        #
+#    Updated: 2025/10/28 23:06:25 by bpetrovi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,7 +72,7 @@ $(OBJ): %.o : %.c
 $(BONUSOBJ): %.o : %.c 
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-clean:
+clean: fclean
 	@rm -f $(OBJ) $(BONUSOBJ)
 
 fclean:

@@ -38,7 +38,7 @@ all: $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
 	@echo "$(GREEN)Linking files...$(DEFAULT)"
-	@$(CC) $(FLAGS) $^ -L$(LIBFT_PATH) -lft -lc -lm -lreadline -o $@
+	@$(CC) $(FLAGS) $^ -L$(LIBFT_PATH) -lft -lc -lreadline -o $@
 
 # Object file rules
 $(OBJ_DIR):

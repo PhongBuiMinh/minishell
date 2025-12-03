@@ -1,35 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   lexer_helpers.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/28 23:08:40 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/12/03 17:00:06 by bpetrovi         ###   ########.fr       */
+/*   Created: 2025/11/20 20:09:03 by bpetrovi          #+#    #+#             */
+/*   Updated: 2025/11/20 21:29:20 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-
-int	main(void)
-{
-	char	*line;
-
-	while (1)
-	{
-		line = readline("> ");
-		if (!line)
-		{
-			printf("exit\n");
-			break ;
-		}
-		printf("%s\n", line);
-		free(line);
-	}
-	free(line);
-	return (0);
-}

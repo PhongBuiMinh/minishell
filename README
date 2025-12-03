@@ -4,7 +4,7 @@ FONH: makefile, libft
 
 A list of source files: minishell.c
 
-Boris: did alot of research on parsing, starting to play with taking input in minishell.c
+Boris: started working on the lexer
 
 IMPORTANT NOTE:
 there is something wrong with makefile / compiling; becouse when i run ./minishell the readline stops after the first input,

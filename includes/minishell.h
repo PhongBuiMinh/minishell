@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 19:50:25 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/12/07 13:08:31 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2025/12/07 16:09:47 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,28 +23,17 @@
 
 typedef enum e_token_type
 {
-	LPAREN,
-	RPAREN,
 	PIPE,
 	REDIR_OUT,
 	REDIR_IN,
-	REDIR_OUT_APP,
-	REDIR_HERE,
-	AND_AND,
-	OR_OR,
-	WORD,
+	REDIR_HEREDOC,
+	REDIR_APPEND,
 	STRING,
 	INVALID_TOKEN,
 	EOF_TOKEN
 }	t_token_type;
 
 // LEXER STRUCTS
-
-typedef struct s_lexer
-{
-	char	*input;
-	int		pos;
-}	t_lexer;
 
 typedef struct s_token
 {

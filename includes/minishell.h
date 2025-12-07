@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 19:50:25 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/12/03 20:33:37 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2025/12/07 13:08:31 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,45 @@ typedef struct s_token
 	t_token_type	type;
 	char			*value;
 }	t_token;
+
+typedef enum e_ast_node_type
+{
+	AST_REDIRECTION,
+	AST_CMD,
+	AST_PIPELINE,
+	AST_IDENTIFIER
+}								t_ast_node_type;
+
+// AST Node Structure
+typedef struct s_ast_node
+{
+	t_ast_node_type				type;
+	union						u_data
+	{
+		struct					s_identifier
+		{
+			char				*string_value;
+		} identifier;
+		struct					s_ast_redirection
+		{
+			t_redirection_type	type;
+			char				*target;
+		} redirection;
+		struct					s_ast_command
+		{
+			struct s_ast_node	*args;
+			struct s_ast_node	*args_tail;
+			long				arg_cnt;
+			struct s_ast_node	*redirections;
+			struct s_ast_node	*redirections_tail;
+		} command;
+		struct					s_ast_pipeline
+		{
+			struct s_ast_node	*cmds;
+			long				cmd_cnt;
+		} pipeline;
+	} data;
+	struct s_ast_node			*next;
+}								t_ast_node;
 
 #endif

@@ -8,7 +8,7 @@ CC = gcc
 FLAGS = -Wall -Werror -Wextra
 MODE ?= release
 
-ifeq ($(MODE), debug)
+ifeq ($(MODE), debug)	
 	FLAGS += -g
 else
 	FLAGS += -O2
@@ -20,7 +20,9 @@ NAME = minishell
 # Direcories and source files
 SRC_DIR = srcs
 OBJ_DIR = objs
-SRCS = minishell.c
+SRCS = minishell.c \
+		lexer/lexer.c \
+		lexer/utils.c
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 DEPS = $(OBJS:.o=.d)
 
@@ -32,7 +34,7 @@ LIBFT = lib/libft/libft.a
 
 # Targets
 .PHONY: all clean fclean re test benchmark install uninstall
-
+ 
 # Build targets
 all: $(NAME)
 
@@ -41,10 +43,14 @@ $(NAME): $(LIBFT) $(OBJS)
 	@$(CC) $(FLAGS) $^ -L$(LIBFT_PATH) -lft -lc -lreadline -o $@
 
 # Object file rules
+
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%/:
+	@mkdir -p $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR) $(OBJ_DIR)/
 	@echo "$(GREEN)Compling source files...$(DEFAULT)"
 	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -MMD -MP -c $< -o $@
 

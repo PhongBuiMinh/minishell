@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 19:50:25 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/12/07 16:09:47 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2025/12/14 19:05:45 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@ typedef struct s_token
 	char			*value;
 }	t_token;
 
+typedef struct s_lexer
+{
+	char			*input;
+	int				pos;
+}	t_lexer;
+
 typedef enum e_ast_node_type
 {
 	AST_REDIRECTION,
@@ -61,7 +67,7 @@ typedef struct s_ast_node
 		} identifier;
 		struct					s_ast_redirection
 		{
-			t_redirection_type	type;
+			int					type;
 			char				*target;
 		} redirection;
 		struct					s_ast_command
@@ -80,5 +86,18 @@ typedef struct s_ast_node
 	} data;
 	struct s_ast_node			*next;
 }								t_ast_node;
+
+// UTILS FUNCTIONS
+
+int		ft_isspace(char c);
+char	*ft_strndup(const char *s1, size_t n);
+
+// LEXER FUNCTIONS
+
+int		string_token(char *input, t_token *next_tok);
+int		one_char_tokens(char *input, t_token *next_tok);
+int		two_char_tokens(char *input, t_token *next_tok);
+t_token	*lexer_advance(t_lexer *lex);
+t_token	*lexer_peek(t_lexer *lex);
 
 #endif

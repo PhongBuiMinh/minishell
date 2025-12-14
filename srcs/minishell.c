@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 23:08:40 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/12/03 17:00:06 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2025/12/08 20:38:04 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,28 @@
 
 int	main(void)
 {
-	char	*line;
+	t_token	*next_tok;
+	t_lexer *lex;
 
-	while (1)
+	lex = malloc(sizeof(t_lexer));
+	if (!lex)
+		return (0);
+	lex->pos = 0;
+	char	*str = "echo '-mf yo | wassup <<' file.txt how its going";
+	lex->input = str;
+	next_tok = lexer_advance(lex);
+	while (next_tok->type != EOF_TOKEN)
 	{
-		line = readline("> ");
-		if (!line)
-		{
-			printf("exit\n");
-			break ;
-		}
-		printf("%s\n", line);
-		free(line);
+		printf("next token type: %i\nnext token value: %s\n-------\n", next_tok->type, next_tok->value);
+		free(next_tok->value);
+		free(next_tok);
+		next_tok = lexer_peek(lex);
+		printf("next token type peek: %i\nnext token value peek: %s\n-------\n", next_tok->type, next_tok->value);
+		free(next_tok->value);
+		free(next_tok);
+		next_tok = lexer_advance(lex);
 	}
-	free(line);
+	free(next_tok);
+	free(lex);
 	return (0);
 }

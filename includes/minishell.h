@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 19:50:25 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/12/07 13:08:31 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2025/12/14 11:37:53 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,35 +61,35 @@ typedef enum e_ast_node_type
 }								t_ast_node_type;
 
 // AST Node Structure
-typedef struct s_ast_node
-{
-	t_ast_node_type				type;
-	union						u_data
-	{
-		struct					s_identifier
-		{
-			char				*string_value;
-		} identifier;
-		struct					s_ast_redirection
-		{
-			t_redirection_type	type;
-			char				*target;
-		} redirection;
-		struct					s_ast_command
-		{
-			struct s_ast_node	*args;
-			struct s_ast_node	*args_tail;
-			long				arg_cnt;
-			struct s_ast_node	*redirections;
-			struct s_ast_node	*redirections_tail;
-		} command;
-		struct					s_ast_pipeline
-		{
-			struct s_ast_node	*cmds;
-			long				cmd_cnt;
-		} pipeline;
-	} data;
-	struct s_ast_node			*next;
-}								t_ast_node;
+// typedef struct s_ast_node
+// {
+// 	t_ast_node_type				type;
+// 	union						u_data
+// 	{
+// 		struct					s_identifier
+// 		{
+// 			char				*string_value;
+// 		} identifier;
+// 		struct					s_ast_redirection
+// 		{
+// 			t_redirection_type	type;
+// 			char				*target;
+// 		} redirection;
+// 		struct					s_ast_command
+// 		{
+// 			struct s_ast_node	*args;
+// 			struct s_ast_node	*args_tail;
+// 			long				arg_cnt;
+// 			struct s_ast_node	*redirections;
+// 			struct s_ast_node	*redirections_tail;
+// 		} command;
+// 		struct					s_ast_pipeline
+// 		{
+// 			struct s_ast_node	*cmds;
+// 			long				cmd_cnt;
+// 		} pipeline;
+// 	} data;
+// 	struct s_ast_node			*next;
+// }								t_ast_node;
 
 #endif

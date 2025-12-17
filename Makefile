@@ -20,8 +20,9 @@ NAME = minishell
 # Direcories and source files
 SRC_DIR = srcs
 OBJ_DIR = objs
-SRCS = minishell.c
-OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
+SRCS = $(SRC_DIR)/builtins/builtins.c
+# 		$(SRC_DIR)/parsing/minishell.c
+OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:$(SRC_DIR)/%.c=%.o))
 DEPS = $(OBJS:.o=.d)
 
 -include $(DEPS)
@@ -36,7 +37,7 @@ LIBFT = lib/libft/libft.a
 # Build targets
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJS)
+$(NAME): $(LIBFT) $(OBJS) | $(OBJ_DIR)
 	@echo "$(GREEN)Linking files...$(DEFAULT)"
 	@$(CC) $(FLAGS) $^ -L$(LIBFT_PATH) -lft -lc -lreadline -o $@
 
@@ -45,6 +46,7 @@ $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	@echo "$(GREEN)Compling source files...$(DEFAULT)"
 	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -MMD -MP -c $< -o $@
 

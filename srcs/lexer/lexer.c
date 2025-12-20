@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:11:07 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/12/08 20:39:48 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2025/12/20 01:34:05 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ t_token	*lexer_advance(t_lexer *lex)
 	while (ft_isspace(lex->input[lex->pos]))
 		lex->pos++;
 	if (lex->input[lex->pos] == '\0')
-		return (next_tok->type = EOF_TOKEN, next_tok);
+		return (next_tok->type = TOKEN_EOF, next_tok);
 	if (two_char_tokens(lex->input + lex->pos, next_tok))
 		return (lex->pos += 2, next_tok);
 	else if (one_char_tokens(lex->input + lex->pos, next_tok))

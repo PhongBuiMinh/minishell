@@ -44,14 +44,9 @@ $(NAME): $(LIBFT) $(OBJS)
 
 # Object file rules
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
-
-$(OBJ_DIR)/%/:
-	@mkdir -p $@
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR) $(OBJ_DIR)/
-	@echo "$(GREEN)Compling source files...$(DEFAULT)"
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	@echo "$(GREEN)Compiling source files...$(DEFAULT)"
 	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -MMD -MP -c $< -o $@
 
 # Library build

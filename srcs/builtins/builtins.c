@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 09:57:52 by fbui-min          #+#    #+#             */
-/*   Updated: 2025/12/17 22:10:03 by codespace        ###   ########.fr       */
+/*   Updated: 2025/12/20 09:12:12 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-// builtin_echo - Print arguments with optional -n flag
 int builtin_echo(char **argv)
 {
 	int	newline;
@@ -37,7 +36,6 @@ int builtin_echo(char **argv)
 	return (0);
 }
 
-// builtin_cd - Change current directory
 int builtin_cd(char **argv, t_env *env)
 {
 	char	*path;
@@ -55,7 +53,6 @@ int builtin_cd(char **argv, t_env *env)
 	return (0);
 }
 
-// builtin_pwd - Print current working directory
 int builtin_pwd(void)
 {
 	char	cwd[PATH_MAX];

@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 09:57:52 by fbui-min          #+#    #+#             */
-/*   Updated: 2025/12/17 22:10:17 by codespace        ###   ########.fr       */
+/*   Updated: 2025/12/29 07:17:52 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,19 @@ int execute_builtin(t_cmd *cmd, t_shell *sh)
 {
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return (-1);
-	if (ft_strcmp(cmd->argv[0], "echo") == 0)
+	if (ft_strncmp(cmd->argv[0], "echo", 3) == 0)
 		return (builtin_echo(cmd->argv));
-	if (ft_strcmp(cmd->argv[0], "cd") == 0)
+	if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (builtin_cd(cmd->argv, sh->env));
-	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
+	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
 		return (builtin_pwd());
-	if (ft_strcmp(cmd->argv[0], "export") == 0)
+	if (ft_strncmp(cmd->argv[0], "export", 6) == 0)
 		return (builtin_export(cmd->argv, &sh->env));
-	if (ft_strcmp(cmd->argv[0], "unset") == 0)
+	if (ft_strncmp(cmd->argv[0], "unset", 5) == 0)
 		return (builtin_unset(cmd->argv, &sh->env));
-	if (ft_strcmp(cmd->argv[0], "env") == 0)
+	if (ft_strncmp(cmd->argv[0], "env", 4) == 0)
 		return (builtin_env(sh->env));
-	if (ft_strcmp(cmd->argv[0], "exit") == 0)
+	if (ft_strncmp(cmd->argv[0], "exit", 4) == 0)
 		return (builtin_exit(cmd->argv, sh));
 	return (-1);
 }
@@ -73,13 +73,31 @@ int is_builtin_cmd(const char *cmd)
 {
 	if (!cmd)
 		return (0);
-	if (ft_strcmp(cmd, "echo") == 0 || ft_strcmp(cmd, "cd") == 0)
+	if (ft_strncmp(cmd, "echo", 4) == 0 || ft_strncmp(cmd, "cd", 2) == 0)
 		return (1);
-	if (ft_strcmp(cmd, "pwd") == 0 || ft_strcmp(cmd, "export") == 0)
+	if (ft_strncmp(cmd, "pwd", 3) == 0 || ft_strncmp(cmd, "export", 6) == 0)
 		return (1);
-	if (ft_strcmp(cmd, "unset") == 0 || ft_strcmp(cmd, "env") == 0)
+	if (ft_strncmp(cmd, "unset", 5) == 0 || ft_strncmp(cmd, "env", 3) == 0)
 		return (1);
-	if (ft_strcmp(cmd, "exit") == 0)
+	if (ft_strncmp(cmd, "exit", 4) == 0)
 		return (1);
 	return (0);
+}
+
+void cleanup_shell(t_shell *sh)
+{
+	t_env	*current;
+	t_env	*next;
+
+	if (!sh)
+		return ;
+	current = sh->env;
+	while (current)
+	{
+		next = current->next;
+		free(current->name);
+		free(current->value);
+		free(current);
+		current = next;
+	}
 }

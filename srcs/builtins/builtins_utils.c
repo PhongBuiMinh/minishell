@@ -6,23 +6,11 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 09:57:52 by fbui-min          #+#    #+#             */
-/*   Updated: 2025/12/29 07:18:01 by codespace        ###   ########.fr       */
+/*   Updated: 2026/01/18 21:39:45 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-int	is_valid_identifier(const char *str)
-{
-	if (!str || !*str)
-		return (0);
-	if (!(isalpha(*str) || *str == '_'))
-		return (0);
-	while (*++str)
-		if (!(isalnum(*str) || *str == '_'))
-			return (0);
-	return (1);
-}
 
 int	is_numeric(const char *str)
 {
@@ -41,6 +29,19 @@ int	is_numeric(const char *str)
 	return (1);
 }
 
+int	is_valid_identifier(const char *str)
+{
+	if (!str || !*str)
+		return (0);
+	if (!(isalpha(*str) || *str == '_'))
+		return (0);
+	while (*++str)
+		if (!(isalnum(*str) || *str == '_'))
+			return (0);
+	return (1);
+}
+
+// cd, export
 t_env	*find_env_node(t_env *env, const char *name)
 {
 	while (env)
@@ -50,6 +51,21 @@ t_env	*find_env_node(t_env *env, const char *name)
 		env = env->next;
 	}
 	return (NULL);
+}
+
+// cd call
+void	update_env_node(t_env *env, const char *name, const char *value)
+{
+	t_env	*node;
+
+	node = find_env_node(env, name);
+	if (node)
+	{
+		free(node->value);
+		node->value = ft_strdup(value);
+	}
+	// else
+	// add_or_update_env() - Would need to add at end of list
 }
 
 void	add_or_update_env(t_env **env, const char *name, const char *value)
@@ -71,29 +87,4 @@ void	add_or_update_env(t_env **env, const char *name, const char *value)
 	new->value = ft_strdup(value);
 	new->next = *env;
 	*env = new;
-}
-
-void	remove_from_env(t_env **env, const char *name)
-{
-	t_env *current;
-	t_env *prev;
-
-	current = *env;
-	prev = NULL;
-	while (current)
-	{
-		if (ft_strcmp(current->name, name) == 0)
-		{
-			if (prev)
-				prev->next = current->next;
-			else
-				*env = current->next;
-			free(current->name);
-			free(current->value);
-			free(current);
-			return ;
-		}
-		prev = current;
-		current = current->next;
-	}
 }

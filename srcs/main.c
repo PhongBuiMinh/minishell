@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/01/18 10:33:23 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/01/18 14:37:30 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,27 @@
 
 volatile sig_atomic_t	g_signal_received = 0;
 
+typedef struct s_cmd_exec
+{
+	char				**argv;
+	int					argc;
+	t_redirection		*redirections;
+}	t_cmd_exec;
+
+typedef struct s_executor
+{
+	int					saved_stdin;
+	int					saved_stdout;
+	int					last_exit_status;
+	t_shell_state		*shell;
+}	t_executor;
+
 int	main(void)
 {
-	init_shell();
+	t_shell_state	shell;
+	char			*line;
+	
+	init_shell(&shell);
 	init_signal_handlers();
 	while (1)
 	{
@@ -35,10 +53,11 @@ int	main(void)
 		}
 		if (parse_line(line, &shell) == 0)
 		{
-			shell.exit_status = execute_ast();
+			shell.exit_status = execute_ast(shell.ast, &shell);
 			shell.ast = NULL;
 		}
 		free(line);
 	}
 	cleanup_shell();
+	return (shell.exit_status);
 }

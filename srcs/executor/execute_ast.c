@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 10:38:35 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/01/18 14:33:53 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/01/18 14:44:21 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	execute_simple_command(t_ast_node *ast, t_executor *exec)
 		return (127);
 	// if (apply_redirections(&cmd, exec) != 0)
 	// 	return (1);
-	if (is_builtin(cmd.name))
+	if (is_builtin(cmd.argv[0]))
 		status = execute_builtin(&cmd, exec);
 	else
 		status = execute_external_command(&cmd, exec);

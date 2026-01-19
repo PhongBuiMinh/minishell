@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 18:36:03 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/01/18 23:13:39 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/19 17:33:36 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ int	is_redirection(t_token_type	type)
 		return (1);
 	return (0);
 }
+
+// A function which checks if there are 2 pipes in a row,
+// or 2 redirections in a row, and also iterates trough all of
+// the string/redirection tokens in a single command
+
 
 int	parse_command(t_lexer *lexer)
 {
@@ -47,7 +52,13 @@ int	parse_command(t_lexer *lexer)
 	return (0);
 }
 
-int	parse_pipeline(t_lexer *lexer)
+// checks for false grammar such as a pipe in the beggining,
+// or invalid tokens, for each command it uses the parse_command() func
+// and then it swallows the next pipe operator before using parse command again
+// ps aux | grep -i firefox | grep -v grep | awk '{print $2, $11}' | sort -n
+//command pipe  command    pipe  command  pipe      command     pipe command EOF
+
+int	parse_pipeline(t_lexer *lexer, t_ast_node *pipeline)
 {
 	t_token			*token;
 	t_token_type	next_token;
@@ -73,16 +84,16 @@ int	parse_pipeline(t_lexer *lexer)
 int	parser(char *input)
 {
 	t_lexer		lexer;
-	//t_ast_node	*pipeline;
+	t_ast_node	*pipeline;
 
-	//pipeline = malloc(sizeof(t_ast_node));
-	//if (!pipeline)
-	//	return (-1);
-	//pipeline->type = AST_PIPELINE;
-	//pipeline->data.pipeline.cmd_cnt = 0;
+	pipeline = malloc(sizeof(t_ast_node));
+	if (!pipeline)
+		return (-1);
+	pipeline->type = AST_PIPELINE;
+	pipeline->data.pipeline.cmd_cnt = 0;
 	lexer.pos = 0;
 	lexer.input = input;
-	if (parse_pipeline(&lexer) == -1)
+	if (parse_pipeline(&lexer, pipeline) == -1)
 		return (-1);
 	return (0);
 }

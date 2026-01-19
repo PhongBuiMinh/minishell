@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 19:50:25 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/12/20 01:34:21 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/15 19:06:07 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,15 +89,20 @@ typedef struct s_ast_node
 
 // UTILS FUNCTIONS
 
-int		ft_isspace(char c);
-char	*ft_strndup(const char *s1, size_t n);
+int				ft_isspace(char c);
+char			*ft_strndup(const char *s1, size_t n);
+void			free_token(t_token *token);
 
 // LEXER FUNCTIONS
 
-int		string_token(char *input, t_token *next_tok);
-int		one_char_tokens(char *input, t_token *next_tok);
-int		two_char_tokens(char *input, t_token *next_tok);
-t_token	*lexer_advance(t_lexer *lex);
-t_token	*lexer_peek(t_lexer *lex);
+int				string_token(char *input, t_token *next_tok);
+int				one_char_tokens(char *input, t_token *next_tok);
+int				two_char_tokens(char *input, t_token *next_tok);
+t_token_type	lexer_peek(t_lexer *lex);
+t_token			*lexer_advance(t_lexer *lex);
+
+// PARSER FUNCTIONS
+
+int				parser(char *input);
 
 #endif

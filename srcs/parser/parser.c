@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 18:36:03 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/12/20 01:55:20 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/18 23:13:39 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,70 +18,71 @@ void	free_token(t_token *token)
 	free(token);
 }
 
-int	is_redirection(t_token *next_tok)
+int	is_redirection(t_token_type	type)
 {
-	if (next_tok->type == REDIR_OUT || next_tok->type == REDIR_IN
-		|| next_tok->type == REDIR_HEREDOC || next_tok->type == REDIR_APPEND)
+	if (type == REDIR_OUT || type == REDIR_IN
+		|| type == REDIR_HEREDOC || type == REDIR_APPEND)
 		return (1);
 	return (0);
 }
 
-s_ast_node	*parse_command(t_lexer *lexer, s_ast_node *previous_command)
+int	parse_command(t_lexer *lexer)
 {
-	t_token		*next_tok;
-	s_ast_node	*command;
+	t_token_type	next_token;
+	t_token_type	previous_token;
+	t_token			*token;
 
-	command = malloc(sizeof(s_ast_node));
-	if (!command)
-		return (NULL);
-	if (previous_command != NULL)
-		previous_command->next = command;
-	command->type = AST_CMD;
-	next_tok = lexer_peek(lexer);
-	while (next_tok == STRING || is_redirection(next_tok))
-	{
-		free_token(token);
-		next_tok = lexer_advance(lexer);
-		if (pipeline->cmds == NULL)
-			pipeline->cmds = command;
-	}
-}
-
-int	parser_pipeline(t_lexer *lexer, s_ast_node *pipeline)
-{
-	t_token		*token;
-	s_ast_node	*previous_command;
-	s_ast_node	*current_command;
-
-	token = lexer_peek(lexer);
-	previous_command = NULL;
-	if (token->type == PIPE || token->type == INVALID_TOKEN)
+	previous_token = STRING;
+	next_token = lexer_peek(lexer);
+	if (next_token == PIPE)
 		return (-1);
-	while (token->type != TOKEN_EOF)
+	while (next_token == STRING || is_redirection(next_token))
 	{
-		free_token(token);
-		current_command = parse_command(lexer, previous_command);
-		if (pipeline->cmds == NULL)
-			pipeline->cmds = current_command;
-		previous_command = current_command;
+		if (is_redirection(previous_token) && next_token != STRING)
+			return (printf("False Syntax"), -1);
 		token = lexer_advance(lexer);
+		next_token = lexer_peek(lexer);
+		previous_token = token->type;
 	}
-	free(token);
 	return (0);
 }
 
-s_ast_node	*parser(char *input)
+int	parse_pipeline(t_lexer *lexer)
+{
+	t_token			*token;
+	t_token_type	next_token;
+
+	next_token = lexer_peek(lexer);
+	if (next_token == PIPE || next_token == INVALID_TOKEN)
+		return (-1);
+	while (next_token != EOF_TOKEN)
+	{
+		if (parse_command(lexer) == -1)
+			return (-1);
+		next_token = lexer_peek(lexer);
+		if (next_token == PIPE)
+		{
+			token = lexer_advance(lexer);
+			free_token(token);
+		}
+		next_token = lexer_peek(lexer); // can be done better(for tomorrow)
+	}
+	return (0);
+}
+
+int	parser(char *input)
 {
 	t_lexer		lexer;
-	s_ast_node	*pipeline;
+	//t_ast_node	*pipeline;
 
-	pipeline = malloc(sizeof(s_ast_node));
-	if (!pipeline)
-		return (NULL);
-	pipeline->type = pipeline;
-	pipeline->command_cnt = 0;
-	lexer->count = 0;
-	lexer->input = input;
-	parser_pipeline(&lexer, pipeline);
-	return (pipeline);
+	//pipeline = malloc(sizeof(t_ast_node));
+	//if (!pipeline)
+	//	return (-1);
+	//pipeline->type = AST_PIPELINE;
+	//pipeline->data.pipeline.cmd_cnt = 0;
+	lexer.pos = 0;
+	lexer.input = input;
+	if (parse_pipeline(&lexer) == -1)
+		return (-1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 17:11:07 by bpetrovi          #+#    #+#             */
-/*   Updated: 2025/12/20 01:34:05 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/15 18:48:42 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ t_token	*lexer_advance(t_lexer *lex)
 	while (ft_isspace(lex->input[lex->pos]))
 		lex->pos++;
 	if (lex->input[lex->pos] == '\0')
-		return (next_tok->type = TOKEN_EOF, next_tok);
+		return (next_tok->type = EOF_TOKEN, next_tok);
 	if (two_char_tokens(lex->input + lex->pos, next_tok))
 		return (lex->pos += 2, next_tok);
 	else if (one_char_tokens(lex->input + lex->pos, next_tok))
@@ -83,13 +83,16 @@ t_token	*lexer_advance(t_lexer *lex)
 	return (next_tok);
 }
 
-t_token	*lexer_peek(t_lexer *lex)
+t_token_type	lexer_peek(t_lexer *lex)
 {
-	t_token	*next_tok;
-	int		saved_pos;
+	t_token			*next_tok;
+	int				saved_pos;
+	t_token_type	token_peek;	
 
 	saved_pos = lex->pos;
 	next_tok = lexer_advance(lex);
 	lex->pos = saved_pos;
-	return (next_tok);
+	token_peek = next_tok->type;
+	free_token(next_tok);
+	return (token_peek);
 }

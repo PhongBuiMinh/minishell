@@ -22,7 +22,8 @@ SRC_DIR = srcs
 OBJ_DIR = objs
 SRCS = minishell.c \
 		lexer/lexer.c \
-		lexer/utils.c
+		lexer/utils.c \
+		parser/parser.c
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 DEPS = $(OBJS:.o=.d)
 
@@ -77,6 +78,6 @@ install:
 	@cp $(NAME) /usr/local/bin
 
 uninstall:
-	@rm -f /ur/local/bin/$(NAME)
+	@rm -f /usr/local/bin/$(NAME)
 
 re: fclean all

@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 19:50:25 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/01/15 19:06:07 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/25 15:41:55 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,53 +56,48 @@ typedef enum e_ast_node_type
 }								t_ast_node_type;
 
 // AST Node Structure
-typedef struct s_ast_node
+
+typedef struct	s_argument_list
 {
-	t_ast_node_type				type;
-	union						u_data
-	{
-		struct					s_identifier
-		{
-			char				*string_value;
-		} identifier;
-		struct					s_ast_redirection
-		{
-			int					type;
-			char				*target;
-		} redirection;
-		struct					s_ast_command
-		{
-			struct s_ast_node	*args;
-			struct s_ast_node	*args_tail;
-			long				arg_cnt;
-			struct s_ast_node	*redirections;
-			struct s_ast_node	*redirections_tail;
-		} command;
-		struct					s_ast_pipeline
-		{
-			struct s_ast_node	*cmds;
-			long				cmd_cnt;
-		} pipeline;
-	} data;
-	struct s_ast_node			*next;
-}								t_ast_node;
+	char			*string;
+	t_argument_list	*next;
+
+}		t_argument_list;
+
+typedef struct	s_redirection_list
+{
+	int					redir_type;
+	char				*target;
+	t_redirection_list	*next;
+}		t_redirection_list;
+
+typedef struct s_command_list
+{
+	t_argument_list		*arguments;
+	t_redirection_list	*redirections;
+	t_command_list		*next;
+}		t_command_list;
+
 
 // UTILS FUNCTIONS
 
 int				ft_isspace(char c);
 char			*ft_strndup(const char *s1, size_t n);
 void			free_token(t_token *token);
+int				is_redirection(t_token_type	type);
 
 // LEXER FUNCTIONS
 
 int				string_token(char *input, t_token *next_tok);
 int				one_char_tokens(char *input, t_token *next_tok);
 int				two_char_tokens(char *input, t_token *next_tok);
+void			lexer_skip(t_lexer *lex);
 t_token_type	lexer_peek(t_lexer *lex);
 t_token			*lexer_advance(t_lexer *lex);
 
 // PARSER FUNCTIONS
 
 int				parser(char *input);
+
 
 #endif

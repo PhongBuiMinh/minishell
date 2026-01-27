@@ -8,7 +8,7 @@ CC = gcc
 FLAGS = -Wall -Werror -Wextra
 MODE ?= release
 
-ifeq ($(MODE), debug)
+ifeq ($(MODE), debug)	
 	FLAGS += -g
 else
 	FLAGS += -O2
@@ -20,9 +20,17 @@ NAME = minishell
 # Direcories and source files
 SRC_DIR = srcs
 OBJ_DIR = objs
+<<<<<<< HEAD
 SRCS = $(SRC_DIR)/builtins/builtins.c
 # 		$(SRC_DIR)/parsing/minishell.c
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:$(SRC_DIR)/%.c=%.o))
+=======
+SRCS = minishell.c \
+		lexer/lexer.c \
+		lexer/utils.c \
+		parser/parser.c
+OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
+>>>>>>> origin/parsing
 DEPS = $(OBJS:.o=.d)
 
 -include $(DEPS)
@@ -33,7 +41,7 @@ LIBFT = lib/libft/libft.a
 
 # Targets
 .PHONY: all clean fclean re test benchmark install uninstall
-
+ 
 # Build targets
 all: $(NAME)
 
@@ -42,12 +50,16 @@ $(NAME): $(LIBFT) $(OBJS) | $(OBJ_DIR)
 	@$(CC) $(FLAGS) $^ -L$(LIBFT_PATH) -lft -lc -lreadline -o $@
 
 # Object file rules
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
 
+<<<<<<< HEAD
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	@mkdir -p $(dir $@)
 	@echo "$(GREEN)Compling source files...$(DEFAULT)"
+=======
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	@echo "$(GREEN)Compiling source files...$(DEFAULT)"
+>>>>>>> origin/parsing
 	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -MMD -MP -c $< -o $@
 
 # Library build
@@ -78,6 +90,6 @@ install:
 	@cp $(NAME) /usr/local/bin
 
 uninstall:
-	@rm -f /ur/local/bin/$(NAME)
+	@rm -f /usr/local/bin/$(NAME)
 
 re: fclean all

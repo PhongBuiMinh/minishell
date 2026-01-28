@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/01/18 21:42:54 by codespace        ###   ########.fr       */
+/*   Updated: 2026/01/27 19:06:45 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,19 @@ typedef struct s_shell_state
 {
 	t_env				*env;
 	int					exit_status;
-	t_ast_node			*ast;
+	t_command_list		*commands;
 }						t_shell_state;
 
 int	main(void)
 {
 	t_shell_state	shell;
 	char			*line;
+	t_command_list	*commands;
 
 	init_shell(&shell);
 	init_signal_handlers();
+	shell.exit_status = 0;
+	shell.commands = NULL;
 	while (1)
 	{
 		if (g_signal_received == SIGINT)
@@ -65,13 +68,16 @@ int	main(void)
 			printf("exit\n");
 			break ;
 		}
-		if (parse_line(line, &shell) == 0)
+		if (*line != '\0')
+			add_history(line);
+		commands = NULL;
+		if (parser(line, &commands) == 0 && commands != NULL)
 		{
-			shell.exit_status = execute_ast(shell.ast, &shell);
-			shell.ast = NULL;
+			shell.exit_status = execute_ast(commands, &shell);
+			// free_commands(commands)
 		}
 		free(line);
 	}
-	cleanup_shell();
+	cleanup_shell(&shell);
 	return (shell.exit_status);
 }

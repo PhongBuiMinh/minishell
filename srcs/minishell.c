@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 23:08:40 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/01/19 16:45:36 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/28 02:44:34 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,32 @@
 
 int	main(void)
 {
-	t_token			*next_tok;
-	t_lexer			*lex;
+	t_command_list	*commands;
+	t_command_list	*first_command = NULL;
 
-	lex = malloc(sizeof(t_lexer));
-	if (!lex)
-		return (0);
-	lex->pos = 0;
-	char	*str = "echo '-mf yo | | wassup <<' |  echo file.txt >ho>w its going";
-	lex->input = str;
-	if (parser(lex->input) == -1)
-		return (printf("\nthe input is invalid\n"), -1);
-	else
-		printf("\nthe input is valid and the process goes on\n");
-	next_tok = lexer_advance(lex);
-	while (next_tok->type != EOF_TOKEN)
+	char	*input = "echo -mf yo |  wassup  |  echo file.txt > how its going";
+	if (parser(input, &first_command) == -1)
+		return (printf("Parser failed"), -1);
+	commands = first_command;
+	while (commands)
 	{
-		printf("next token type: %i\nnext token value: %s\n-------\n", next_tok->type, next_tok->value);
-		free_token(next_tok);
-		next_tok = lexer_advance(lex);
+		printf("Current command: %s\n", commands->args->string);
+		printf("All arguments: \n");
+		commands->args = commands->args->next;
+		while (commands->args)
+		{
+			printf("%s\n", commands->args->string);
+			commands->args = commands->args->next;
+		}
+		printf("All redirections: \n");
+		while (commands->redirs)
+		{
+			printf("%i, %s\n", commands->redirs->redir_type, commands->redirs->target);
+			commands->redirs = commands->redirs->next;
+		}
+		printf("-----------------------------------------------\n");
+		commands = commands->next;
 	}
-	free(next_tok);
-	free(lex);
+	free_all(first_command);
 	return (0);
 }

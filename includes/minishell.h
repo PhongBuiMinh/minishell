@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 19:50:25 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/01/25 15:41:55 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/28 02:20:16 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <math.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <stdbool.h>
 
 typedef enum e_token_type
 {
@@ -59,23 +60,25 @@ typedef enum e_ast_node_type
 
 typedef struct	s_argument_list
 {
-	char			*string;
-	t_argument_list	*next;
+	char					*string;
+	struct s_argument_list	*next;
 
 }		t_argument_list;
 
 typedef struct	s_redirection_list
 {
-	int					redir_type;
-	char				*target;
-	t_redirection_list	*next;
+	int							redir_type;
+	char						*target;
+	struct s_redirection_list	*next;
 }		t_redirection_list;
 
 typedef struct s_command_list
 {
-	t_argument_list		*arguments;
-	t_redirection_list	*redirections;
-	t_command_list		*next;
+	t_argument_list			*args_tail;
+	t_argument_list			*args;
+	t_redirection_list		*redirs_tail;
+	t_redirection_list		*redirs;
+	struct s_command_list	*next;
 }		t_command_list;
 
 
@@ -88,16 +91,17 @@ int				is_redirection(t_token_type	type);
 
 // LEXER FUNCTIONS
 
-int				string_token(char *input, t_token *next_tok);
-int				one_char_tokens(char *input, t_token *next_tok);
-int				two_char_tokens(char *input, t_token *next_tok);
+int				string_token(char *input, t_token *next_tok, int just_peek, t_token_type *next_tok_type);
+int				one_char_tokens(char *input, t_token_type *next_tok_type);
+int				two_char_tokens(char *input, t_token_type *next_tok_type);
 void			lexer_skip(t_lexer *lex);
 t_token_type	lexer_peek(t_lexer *lex);
 t_token			*lexer_advance(t_lexer *lex);
 
 // PARSER FUNCTIONS
 
-int				parser(char *input);
+int				parser(char *input, t_command_list **first_command);
+void			free_all(t_command_list	*commands);
 
 
 #endif

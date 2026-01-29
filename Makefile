@@ -23,7 +23,8 @@ OBJ_DIR = objs
 SRCS = minishell.c \
 		lexer/lexer.c \
 		lexer/utils.c \
-		parser/parser.c
+		parser/parser_utils.c \
+		parser/parser.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 DEPS = $(OBJS:.o=.d)
 

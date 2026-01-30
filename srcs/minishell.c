@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 23:08:40 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/01/28 02:44:34 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/30 23:34:06 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@
 
 int	main(void)
 {
-	t_command_list	*commands;
-	t_command_list	*first_command = NULL;
+	t_command_list		*commands;
+	t_command_list		*first_command = NULL;
+	t_argument_list		*temp_arg;
+	t_redirection_list	*temp_redir;
 
 	char	*input = "echo -mf yo |  wassup  |  echo file.txt > how its going";
 	if (parser(input, &first_command) == -1)
@@ -26,19 +28,21 @@ int	main(void)
 	commands = first_command;
 	while (commands)
 	{
-		printf("Current command: %s\n", commands->args->string);
+		temp_arg = commands->args;
+		temp_redir = commands->redirs;
+		printf("Current command: %s\n", temp_arg->string);
 		printf("All arguments: \n");
-		commands->args = commands->args->next;
-		while (commands->args)
+		temp_arg = temp_arg->next;
+		while (temp_arg)
 		{
-			printf("%s\n", commands->args->string);
-			commands->args = commands->args->next;
+			printf("%s\n", temp_arg->string);
+			temp_arg = temp_arg->next;
 		}
 		printf("All redirections: \n");
-		while (commands->redirs)
+		while (temp_redir)
 		{
-			printf("%i, %s\n", commands->redirs->redir_type, commands->redirs->target);
-			commands->redirs = commands->redirs->next;
+			printf("%i, %s\n", temp_redir->redir_type, temp_redir->target);
+			temp_redir = temp_redir->next;
 		}
 		printf("-----------------------------------------------\n");
 		commands = commands->next;

@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 18:36:03 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/01/28 02:21:24 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/30 21:18:19 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	set_error(int *error)
 
 void	consume_string(t_lexer *lexer, t_command_list *command, int	*error)
 {
-	t_token			*string_token;
+	t_token			*token_string;
 	t_argument_list	*new_argument;
 
 	new_argument = malloc(sizeof(t_argument_list));
@@ -42,11 +42,13 @@ void	consume_string(t_lexer *lexer, t_command_list *command, int	*error)
 	else
 		command->args_tail->next = new_argument;
 	command->args_tail = new_argument;
-	string_token = lexer_advance(lexer);
-	if (!string_token)
+	token_string = lexer_advance(lexer);
+	if (!token_string)
 		return (set_error(error));
-	new_argument->string = string_token->value;
-	free_token(string_token);
+	new_argument->string = ft_strdup(token_string->value);
+	if (!new_argument->string)
+		return (free_token(token_string), set_error(error));
+	free_token(token_string);
 }
 
 void	consume_redir(t_lexer *lexer, t_command_list *command,
@@ -72,7 +74,9 @@ void	consume_redir(t_lexer *lexer, t_command_list *command,
 	token_string = lexer_advance(lexer);
 	if (!token_string)
 		return (set_error(error));
-	new_redir->target = token_string->value;
+	new_redir->target = ft_strdup(token_string->value);
+	if (!new_redir->target)
+		return (free_token(token_string), set_error(error));
 	free_token(token_string);
 }
 

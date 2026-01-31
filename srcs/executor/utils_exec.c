@@ -1,16 +1,57 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fd_pipeline.c                                      :+:      :+:    :+:   */
+/*   child_process.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/02 10:38:35 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/01/29 14:38:42 by codespace        ###   ########.fr       */
+/*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
+/*   Updated: 2025/02/31 19:07:42 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "exec.h"
+#include <minishell.h>
+
+int	extract_exit_status(int wstatus)
+{
+	if ((wstatus & 0x7F) == 0)
+		return ((wstatus >> 8) & 0xFF);
+	return (128 + (wstatus & 0x7F));
+}
+
+void	handle_wait_status(pid_t last_pid, int *exit_status)
+{
+	pid_t	finished;
+	int		wstatus;
+
+	while ((finished = wait(&wstatus)) != -1)
+	{
+		if (finished == last_pid)
+		{
+			*exit_status = extract_exit_status(wstatus);
+			if (WIFSIGNALED(wstatus))
+			{
+				int sig = WTERMSIG(wstatus);
+				if (sig == SIGINT)
+					ft_putstr_fd("\n", STDERR_FILENO);
+				else if (sig == SIGQUIT)
+					ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+			}
+		}
+	}
+}
+
+static void	close_and_update_fds(int *inputfd, int saved_stdin, int *pipefd,
+								t_command_list *current)
+{
+	if (*inputfd != saved_stdin)
+		close(*inputfd);
+	if (current->next)
+	{
+		close(pipefd[1]);
+		*inputfd = pipefd[0];
+	}
+}
 
 int	save_std_fds(t_executor *exec)
 {
@@ -26,37 +67,6 @@ int	save_std_fds(t_executor *exec)
 		exec->saved_stdin = -1;
 		return (perror("dup(STDOUT_FILENO)"), -1);
 	}
-	return (0);
-}
-
-int	setup_pipe(int pipe_fd[2])
-{
-	if (pipe(pipe_fd) == -1)
-		return (perror("pipe"), -1);
-	if (dup2(pipe_fd[1], STDOUT_FILENO) == -1)
-	{
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-		return (perror("dup2(stdout)"), -1);
-	}
-	close(pipe_fd[1]);
-	return (0);
-}
-
-int	restore_and_pipe(int saved_stdout, int pipe_fd[2])
-{
-	if (dup2(saved_stdout, STDOUT_FILENO) == -1)
-	{
-		close(saved_stdout);
-		return (perror("dup2(restore stdout)"), -1);
-	}
-	close(saved_stdout);
-	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
-	{
-		close(pipe_fd[0]);
-		return (perror("dup2(stdin)"), -1);
-	}
-	close(pipe_fd[0]);
 	return (0);
 }
 

@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-int	execute_builtin(t_cmd_exec *cmd, t_executor *exec)
+int	exec_builtin(t_cmd_exec *cmd, t_executor *exec)
 {
 	char	*c;
 

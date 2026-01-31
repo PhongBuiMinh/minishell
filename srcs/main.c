@@ -73,7 +73,7 @@ int	main(void)
 		commands = NULL;
 		if (parser(line, &commands) == 0 && commands != NULL)
 		{
-			shell.exit_status = execute_ast(commands, &shell);
+			shell.exit_status = execute_pipeline(commands, &shell);
 			// free_commands(commands)
 		}
 		free(line);

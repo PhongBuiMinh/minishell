@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 23:08:40 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/01/30 23:34:06 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/31 01:22:20 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(void)
 	t_argument_list		*temp_arg;
 	t_redirection_list	*temp_redir;
 
-	char	*input = "echo -mf yo |  wassup  |  echo file.txt > how its going";
+	char	*input = "echo -mf yo |  wassup  | |  echo file.txt > how its going";
 	if (parser(input, &first_command) == -1)
 		return (printf("Parser failed"), -1);
 	commands = first_command;

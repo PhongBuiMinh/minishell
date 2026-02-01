@@ -20,17 +20,12 @@ NAME = minishell
 # Direcories and source files
 SRC_DIR = srcs
 OBJ_DIR = objs
-<<<<<<< HEAD
-SRCS = $(SRC_DIR)/builtins/builtins.c
-# 		$(SRC_DIR)/parsing/minishell.c
-OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:$(SRC_DIR)/%.c=%.o))
-=======
 SRCS = minishell.c \
 		lexer/lexer.c \
 		lexer/utils.c \
-		parser/parser.c
+		parser/parser_utils.c \
+		parser/parser.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
->>>>>>> origin/parsing
 DEPS = $(OBJS:.o=.d)
 
 -include $(DEPS)

@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 20:09:03 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/01/19 18:07:11 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/26 00:03:00 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	free_token(t_token *token)
 {
 	free(token->value);
 	free(token);
+	token = NULL;
 }
 
 int	ft_isspace(char c)

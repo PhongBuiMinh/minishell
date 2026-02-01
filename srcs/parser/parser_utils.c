@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_helper.c                                    :+:      :+:    :+:   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 18:04:57 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/01/25 16:26:11 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/01/31 00:38:37 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	free_redirs(t_redirection_list	*redirs)
 		free(redirs->target);
 		next_node = redirs->next;
 		free(redirs);
+		redirs = NULL;
 		redirs = next_node;
 	}
 }
@@ -34,6 +35,7 @@ void	free_args(t_argument_list	*arguments)
 		free(arguments->string);
 		next_node = arguments->next;
 		free(arguments);
+		arguments = NULL;
 		arguments = next_node;
 	}
 }
@@ -44,10 +46,11 @@ void	free_all(t_command_list	*commands)
 
 	while (commands)
 	{
-		free_args(commands->arguments);
-		free_redirs(commands->redirections);
+		free_args(commands->args);
+		free_redirs(commands->redirs);
 		next_node = commands->next;
 		free(commands);
+		commands = NULL;
 		commands = next_node;
 	}
 }

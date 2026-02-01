@@ -30,13 +30,13 @@ void	exec_external_cmd(t_command_list *cmd, t_shell_state *shell)
 	char	*cmd_path;
 	char	**envp;
 
-	if (!cmd || !cmd->argv || !cmd->argv[0])
+	if (!cmd || !cmd->args || !cmd->args[0])
 		exit(127);
-	cmd_path = find_command_path(cmd->argv[0], shell);
+	cmd_path = find_command_path(cmd->args[0], shell);
 	if (!cmd_path)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->argv[0], STDERR_FILENO);
+		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit(127);
 	}
@@ -46,7 +46,7 @@ void	exec_external_cmd(t_command_list *cmd, t_shell_state *shell)
 		free(cmd_path);
 		exit(1);
 	}
-	execve(cmd_path, cmd->argv, envp);
+	execve(cmd_path, cmd->args, envp);
 	perror("minishell: execve");
 	free(cmd_path);
 	free_array(envp);

@@ -60,7 +60,7 @@ pid_t	fork_pipeline_child(t_command_list *current, int inputfd,
 		setup_child_pipeline(current, inputfd, pipefd, exec);
 		if (apply_redirections(current->redirs, exec->shell) == -1)
 			exit(1);
-		if (is_builtin(current->argv[0]))
+		if (is_builtin(current->args[0]))
 			exit(exec_builtin(current, exec->shell));
 		else
 			exec_external_cmd(current, exec->shell);

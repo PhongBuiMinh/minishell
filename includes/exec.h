@@ -16,7 +16,7 @@ typedef struct s_cmd_exec
 {
 	char				**argv;
 	int					argc;
-	t_redirection_list		*redirs;
+	t_redirection_list	*redirs;
 }						t_cmd_exec;
 
 typedef struct s_executor

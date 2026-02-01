@@ -12,7 +12,7 @@
 
 #include "exec.h"
 
-int exec_single_cmd(t_command_list *cmd, t_shell_state *shell)
+int	exec_single_cmd(t_command_list *cmd, t_shell_state *shell)
 {
 	t_executor	exec;
 	pid_t		pid;
@@ -23,7 +23,7 @@ int exec_single_cmd(t_command_list *cmd, t_shell_state *shell)
 	exec.shell = shell;
 	if (apply_redirections(cmd->redirs, shell) == -1)
 		return (cleanup_fds(&exec), 1);
-	if (is_builtin(cmd->argv[0]))
+	if (is_builtin(cmd->args[0]))
 	{
 		exec.last_exit_status = exec_builtin(cmd, shell);
 		cleanup_fds(&exec);
@@ -37,6 +37,29 @@ int exec_single_cmd(t_command_list *cmd, t_shell_state *shell)
 	cleanup_fds(&exec);
 	waitpid(pid, &wstatus, 0);
 	return (extract_exit_status(wstatus));
+}
+
+int	handle_pipe_error(t_executor *exec)
+{
+	perror("minishell: pipe");
+	while (wait(NULL) > 0)
+		;
+	cleanup_fds(exec);
+	return (1);
+}
+
+int	handle_fork_error(t_executor *exec, t_command_list *current, int pipefd[2])
+{
+	perror("minishell: fork");
+	if (current->next)
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+	while (wait(NULL) > 0)
+		;
+	cleanup_fds(exec);
+	return (1);
 }
 
 int	exec_pipeline_cmds(t_command_list *commands, t_executor *exec)
@@ -53,10 +76,10 @@ int	exec_pipeline_cmds(t_command_list *commands, t_executor *exec)
 	while (current)
 	{
 		if (current->next && pipe(pipefd) == -1)
-			return (perror("minishell: pipe"), -1);
+			return (handle_pipe_error(exec));
 		last_pid = fork_pipeline_child(current, inputfd, pipefd, exec);
 		if (last_pid == -1)
-			return (perror("minishell: fork"), -1);
+			return (handle_fork_error(exec, current, pipefd));
 		close_and_update_fds(&inputfd, exec->saved_stdin, pipefd, current);
 		current = current->next;
 	}
@@ -67,8 +90,8 @@ int	exec_pipeline_cmds(t_command_list *commands, t_executor *exec)
 
 int	execute_pipeline(t_command_list *commands, t_shell_state *shell)
 {
-	t_executor		exec;
-	int				exit_status;
+	t_executor	exec;
+	int			exit_status;
 
 	if (!commands || !shell)
 		return (127);
@@ -81,4 +104,3 @@ int	execute_pipeline(t_command_list *commands, t_shell_state *shell)
 	exit_status = exec_pipeline_cmds(commands, &exec);
 	return (exit_status);
 }
-

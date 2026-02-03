@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 09:57:52 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/01/18 21:21:15 by codespace        ###   ########.fr       */
+/*   Updated: 2026/02/03 16:46:22 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "exec.h"
 
 int	ft_echo(char **argv)
 {
@@ -19,21 +19,19 @@ int	ft_echo(char **argv)
 
 	i = 1;
 	newline = 1;
-	if (argv[i] && ft_strncmp(argv[i], "-n", 2) == 0 && argv[i][2] == '\0')
+	if (argv[i] && argv[i][0] == '-' && argv[i][1] == 'n')
 	{
 		newline = 0;
 		i++;
 	}
-	while (argv[i] && argv[i][0] == '-' && argv[i][1] == 'n')
-		i++;
 	while (argv[i])
 	{
-		printf("%s", argv[i]);
+		ft_putstr_fd(argv[i], STDOUT_FILENO);
 		if (argv[i + 1])
-			printf(" ");
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (newline)
-		printf("\n");
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }

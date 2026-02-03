@@ -24,7 +24,10 @@ SRCS = minishell.c \
 		lexer/lexer.c \
 		lexer/utils.c \
 		parser/parser_utils.c \
-		parser/parser.c 
+		parser/parser.c \
+		executor/execute_builtins.c \
+		executor/execute_command.c \
+		executor/execute_pipeline.c
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 DEPS = $(OBJS:.o=.d)
 
@@ -46,15 +49,9 @@ $(NAME): $(LIBFT) $(OBJS) | $(OBJ_DIR)
 
 # Object file rules
 
-<<<<<<< HEAD
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-	@mkdir -p $(dir $@)
-	@echo "$(GREEN)Compling source files...$(DEFAULT)"
-=======
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	@echo "$(GREEN)Compiling source files...$(DEFAULT)"
->>>>>>> origin/parsing
 	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -MMD -MP -c $< -o $@
 
 # Library build

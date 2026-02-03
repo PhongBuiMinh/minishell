@@ -3,22 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/01/18 21:41:04 by codespace        ###   ########.fr       */
+/*   Updated: 2026/02/03 18:54:26 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "exec.h"
 
-int ft_env(t_env *env)
+int ft_env(t_shell_state *shell)
 {
-	while (env)
+	int	i;
+
+	i = 0;
+	while (shell->envp && shell->envp[i])
 	{
-		if (env->value)
-			printf("%s=%s\n", env->name, env->value);
-		env = env->next;
+		ft_putstr_fd(shell->envp[i], STDOUT_FILENO);
+		write(STDOUT_FILENO, "\n", 1);
+		i++;
 	}
 	return (0);
 }

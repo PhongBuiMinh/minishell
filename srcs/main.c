@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/01/27 19:06:45 by codespace        ###   ########.fr       */
+/*   Updated: 2026/02/03 16:16:51 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	main(void)
 	init_shell(&shell);
 	init_signal_handlers();
 	shell.exit_status = 0;
-	shell.commands = NULL;
 	while (1)
 	{
 		if (g_signal_received == SIGINT)

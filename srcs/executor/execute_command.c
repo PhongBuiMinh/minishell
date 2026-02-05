@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/03 19:13:44 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/05 22:15:40 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,24 @@ void	setup_pipes(t_pipe_info *info)
 		close(info->pipe_fd[0]);
 		dup2(info->pipe_fd[1], STDOUT_FILENO);
 		close(info->pipe_fd[1]);
+	}
+}
+
+void	exec_external(char **argv, t_shell_state *shell)
+{
+	if (execve(argv[0], argv, shell->envp) < 0)
+	{
+		char	*path;
+
+		path = find_command_path();
+		if (path)
+		{
+			execve(path, argv, shell->envp);
+			free(path);
+		}
+		perror(argv[0]);
+		free(argv);
+		exit(127);
 	}
 }
 

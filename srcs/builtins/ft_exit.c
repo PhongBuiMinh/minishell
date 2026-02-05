@@ -3,32 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:38:35 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/01/18 21:41:19 by codespace        ###   ########.fr       */
+/*   Updated: 2026/02/05 14:54:42 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "exec.h"
 
 int	ft_exit(char **argv, t_shell_state *shell)
 {
 	int	exit_code;
 
-	printf("exit\n");
+	ft_putstr_fd("exit\n", STDERR_FILENO);
 	if (!argv[1])
+	{
+		rl_clear_history();
 		exit(shell->exit_status);
+	}
 	if (!is_numeric(argv[1]))
 	{
-		printf("minishell: exit: %s: numeric argument required\n", argv[1]);
+		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+		rl_clear_history();
+		ft_putstr_fd("numeric argument required\n", STDERR_FILENO);
 		exit(255);
 	}
 	if (argv[2])
 	{
-		printf("minishell: exit: too many arguments\n");
+		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 		return (1);
 	}
 	exit_code = ft_atoi(argv[1]) % 256;
+	rl_clear_history();
 	exit(exit_code);
 }

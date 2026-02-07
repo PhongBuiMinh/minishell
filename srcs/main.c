@@ -6,13 +6,45 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/06 14:08:43 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/07 19:13:26 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
 volatile sig_atomic_t	g_signal_received = 0;
+extern char				**environ;
+
+void	init_env_list(t_shell_state *shell, char **envp)
+{
+	int		i;
+	char	*eq_pos;
+	char	*name;
+	char	*value;
+
+	i = 0;
+	shell->env = NULL;
+	while (envp[i])
+	{
+		eq_pos = ft_strchr(envp[i], '=');
+		if (eq_pos)
+		{
+			name = ft_strndup(envp[i], eq_pos - envp[i]);
+			value = ft_strdup(eq_pos + 1);
+			add_env_var(&shell->env, name, value);
+			free(name);
+		}
+		i++;
+	}
+}
+
+void	init_shell(t_shell_state *shell)
+{
+	shell->env = NULL;
+	shell->envp = environ;
+	shell->exit_status = 0;
+	init_env_list(shell, environ);
+}
 
 int	main(void)
 {
@@ -20,10 +52,9 @@ int	main(void)
 	char			*line;
 	t_command_list	*commands;
 
-	// init_shell(&shell);
+	init_shell(&shell);
 	// init_signal_handlers();
 	shell.exit_status = 0;
-	// run_parser_tests();
 	while (1)
 	{
 		if (g_signal_received == SIGINT)

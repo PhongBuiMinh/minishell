@@ -9,7 +9,7 @@
 # include <unistd.h>
 
 # define MAX_ARGS 20
-# define PATH_MAX 20
+# define PATH_MAX 4096
 
 typedef struct s_env
 {
@@ -47,6 +47,9 @@ void					execute_command(t_exec_info *info);
 int						execute_pipeline(t_command_list *commands,
 							t_shell_state *shell);
 char					*find_command_path(char *cmd, t_shell_state *shell);
+char					**args_to_array(t_argument_list *args);
+
+int						setup_redirections(t_redirection_list *redirs);
 
 int						is_builtin(const char *cmd);
 int						handle_builtin(char *cmd, char **argv,

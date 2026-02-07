@@ -20,10 +20,11 @@ NAME = minishell
 # Direcories and source files
 SRC_DIR = srcs
 OBJ_DIR = objs
-SRCS = minishell.c \
+SRCS =	main.c \
 		lexer/lexer.c \
 		lexer/utils.c \
 		parser/parser_utils.c \
+		parser/parser_utils2.c \
 		parser/parser.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 DEPS = $(OBJS:.o=.d)

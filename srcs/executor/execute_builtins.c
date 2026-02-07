@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 09:57:52 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/07 01:49:12 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/07 17:30:45 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,3 +50,4 @@ int	is_builtin(const char *cmd)
 		|| (ft_strcmp(cmd, "export") == 0) || (ft_strcmp(cmd, "unset") == 0)
 		|| (ft_strcmp(cmd, "env") == 0));
 }
+// echo, pwd, env = child

@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/07 01:49:41 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/07 17:36:53 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ void	execute_command(t_exec_info *info)
 	int		builtin_ret;
 
 	setup_pipes(&info->pipe_info);
-	// if (setup_redirections() < 0)
-	// 	exit(1);
+	if (setup_redirections(info->cmd->redirs) < 0)
+		exit(1);
 	argv = args_to_array(info->cmd->args);
 	if (!argv || !argv[0])
 	{

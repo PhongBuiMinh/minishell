@@ -6,13 +6,13 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/06 20:33:23 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/07 01:08:41 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/07 18:21:09 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-void	ft_free_split(char **split)
+void	ft_free_paths(char **split)
 {
 	int	i;
 
@@ -65,11 +65,11 @@ char	*search_in_paths(char **paths, char *cmd)
 		if (!full_path)
 			return (NULL);
 		if (access(full_path, X_OK) == 0)
-			return (ft_free_split(paths), full_path);
+			return (ft_free_paths(paths), full_path);
 		free(full_path);
 		i++;		
 	}
-	ft_free_split(paths);
+	ft_free_paths(paths);
 	return (NULL);
 }
 
@@ -78,7 +78,6 @@ char	*find_command_path(char *cmd, t_shell_state *shell)
 	char	*path_env;
 	char	**paths;
 	
-	// dprintf(2, "DEBUG: find_command_path for '%s'\n", cmd);
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, X_OK) == 0)
@@ -86,7 +85,6 @@ char	*find_command_path(char *cmd, t_shell_state *shell)
 		return (NULL);
 	}
 	path_env = get_path_env(shell);
-	// dprintf(2, "DEBUG: PATH='%s'\n", path_env ? path_env : "NULL");
 	if (!path_env)
 		return (NULL);
 	paths = ft_split(path_env, ':');

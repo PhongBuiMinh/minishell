@@ -6,11 +6,22 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 07:44:56 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/03 18:45:20 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/06 21:53:36 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+char	*ft_getenv(t_env *env, char *name)
+{
+	while (env)
+	{
+		if (ft_strcmp(env->name, name) == 0)
+			return (env->value);
+		env = env->next;
+	}
+	return (NULL);
+}
 
 int	ft_cd(char **argv, t_shell_state *shell)
 {

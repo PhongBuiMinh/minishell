@@ -3,86 +3,135 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 07:49:57 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/01/18 21:41:52 by codespace        ###   ########.fr       */
+/*   Updated: 2026/02/07 02:04:38 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "exec.h"
 
-static void	print_export_list(t_env *env)
+// void	print_export_list(t_env *env)
+// {
+// 	while (env)
+// 	{
+// 		ft_putstr_fd("declare -x ", STDOUT_FILENO);
+// 		ft_putstr_fd(env->name, STDOUT_FILENO);
+// 		if (env->value)
+// 		{
+// 			ft_putstr_fd("=\"", STDOUT_FILENO);
+// 			ft_putstr_fd(env->value, STDOUT_FILENO);
+// 			ft_putstr_fd("\"", STDOUT_FILENO);
+// 		}
+// 		ft_putstr_fd("\n", STDOUT_FILENO);
+// 		env = env->next;
+// 	}
+// }
+
+// void	sort_env_list(t_env **env)
+// {
+// 	t_env	*current;
+// 	int		swapped;
+// 	char	*temp_name;
+// 	char	*temp_value;
+
+// 	if (!env || !*env)
+// 		return ;
+// 	swapped = 1;
+// 	while (swapped)
+// 	{
+// 		swapped = 0;
+// 		current = *env;
+// 		while (current && current->next)
+// 		{
+// 			if (ft_strcmp(current->name, current->next->name) > 0)
+// 			{
+// 				temp_name = current->name;
+// 				temp_value = current->value;
+// 				current->name = current->next->name;
+// 				current->value = current->next->value;
+// 				current->next->name = temp_name;
+// 				current->next->value = temp_value;
+// 				swapped = 1;
+// 			}
+// 			current = current->next;
+// 		}
+// 	}
+// }
+
+// int	valid_export_var(char *var)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (!ft_isalpha(var[i]) && var[i] != '_')
+// 		return (0);
+// 	i++;
+// 	while (var[i] && var[i] != '=')
+// 	{
+// 		if (!ft_isalnum(var[i]) && var[i] != '_')
+// 			return (0);
+// 		i++;
+// 	}
+// 	return (1);
+// }
+
+// int	process_export_arg(char *arg, t_shell_state *shell)
+// {
+// 	char	*name;
+// 	char	*value;
+// 	char	*eq_pos;
+// 	t_env	*existing;
+
+// 	eq_pos = ft_strchr(arg, '=');
+// 	if (!eq_pos)
+// 		return (0);
+// 	name = ft_strndup(arg, eq_pos - arg);
+// 	if (!name || !valid_export_var(name))
+// 	{
+// 		free(name);
+// 		return (1);
+// 	}
+// 	value = ft_strdup(eq_pos + 1);
+// 	existing = find_env_var(shell->env, name);
+// 	if (existing)
+// 	{
+// 		free(existing->value);
+// 		existing->value = value;
+// 	}
+// 	else
+// 		add_env_var(&shell->env, name, value);
+// 	free(name);
+// 	return (0);
+// }
+
+int	ft_export(char **args, t_shell_state *shell)
 {
-	while (env)
-	{
-		printf("declare -x %s", env->name);
-		if (env->value)
-			printf("=\"%s\"\n", env->value);
-		else
-			printf("\n");
-		env = env->next;
-	}
-}
+	// int	i;
+	int	exit_status;
 
-static void	sort_env_list(t_env **env)
-{
-	t_env	*current;
-	t_env	*next;
-	int		swapped;
-	char	*temp_name;
-	char	*temp_value;
-
-	if (!env || !*env)
-		return ;
-	swapped = 1;
-	while (swapped)
-	{
-		swapped = 0;
-		current = *env;
-		while (current && current->next)
-		{
-			if (ft_strcmp(current->name, current->next->name) > 0)
-			{
-				temp_name = current->name;
-				temp_value = current->value;
-				current->name = current->next->name;
-				current->value = current->next->value;
-				current->next->name = temp_name;
-				current->next->value = temp_value;
-				swapped = 1;
-			}
-			current = current->next;
-		}
-	}
-}
-
-int	ft_export(char **argv, t_env **env)
-{
-	int		i;
-	char	*equal;
-	char	*name_copy;
-
-	i = 1;
-	if (!argv[1])
-		return (sort_env_list(env), print_export_list(*env), 0);
-	while (argv[i])
-	{
-		equal = ft_strchr(argv[i], '=');
-		if (equal)
-		{
-			name_copy = ft_strndup(argv[i], equal - argv[i]);
-			if (is_valid_identifier(name_copy))
-				add_or_update_env(env, name_copy, equal + 1);
-			else
-				printf("export: `%s': not a valid identifier\n", name_copy);
-			free(name_copy);
-		}
-		else if (is_valid_identifier(argv[i]))
-			add_or_update_env(env, argv[i], NULL);
-		else
-			printf("export: `%s': not a valid identifier\n", argv[i]);
-		i++;
-	}
-	return (0);
+	(void)args;
+	(void)shell;
+	exit_status = 0;
+	// if (!args[1])
+	// {
+	// 	sort_env_list(&shell->env);
+	// 	print_export_list(shell->env);
+	// 	return (0);
+	// }
+	// i = 1;
+	// while (args[i])
+	// {
+	// 	if (!valid_export_var(args[i]))
+	// 	{
+	// 		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+	// 		ft_putstr_fd(args, STDERR_FILENO);
+	// 		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+	// 		return (1);
+	// 	}
+	// 	exit_status = process_export_arg(args[i], shell);
+	// 	i++;
+	// }
+	return (exit_status);
 }

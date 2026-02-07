@@ -6,11 +6,28 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:38:35 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/05 14:54:42 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/06 23:36:09 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+int	is_numeric(const char *str)
+{
+	if (!str || !*str)
+		return (0);
+	if (*str == '+' || *str == '-')
+		str++;
+	if (!*str)
+		return (0);
+	while (*str)
+	{
+		if (!isdigit(*str))
+			return (0);
+		str++;
+	}
+	return (1);
+}
 
 int	ft_exit(char **argv, t_shell_state *shell)
 {

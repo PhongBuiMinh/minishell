@@ -3,56 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:36:53 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/01/18 21:42:20 by codespace        ###   ########.fr       */
+/*   Updated: 2026/02/06 05:15:31 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "exec.h"
 
-static void	remove_env_node(t_env **env, const char *name)
+void	ft_unset_var(t_env **env, const char *name)
 {
-	t_env	*current;
+	t_env	*cur;
 	t_env	*prev;
 
-	if (!env || !*env)
+	if (!env || !*env || !name)
 		return ;
-	current = *env;
 	prev = NULL;
-	while (current)
+	cur = *env;
+	while (cur)
 	{
-		if (ft_strcmp(current->name, name) == 0)
+		if (ft_strcmp(cur->name, name) == 0)
 		{
 			if (prev)
-				prev->next = current->next;
+				prev->next = cur->next;
 			else
-				*env = current->next;
-			free(current->name);
-			free(current->value);
-			free(current);
+				*env = cur->next;
+			free(cur->name);
+			free(cur->value);
+			free(cur->full_var);
+			free(cur);
 			return ;
 		}
-		prev = current;
-		current = current->next;
+		prev = cur;
+		cur = cur->next;
 	}
 }
 
-int	ft_unset(char **argv, t_env **env)
+int	ft_unset(char **argv, t_shell_state *shell)
 {
 	int	i;
 
 	i = 1;
 	while (argv[i])
 	{
-		if (!is_valid_identifier(argv[i]))
-		{
-			printf("unset: `%s': not a valid identifier\n", argv[i]);
-			return (1);
-		}
-		else
-			remove_env_node(env, argv[i]);
+		ft_unset_var(&shell->env, argv[i]);
 		i++;
 	}
 	return (0);

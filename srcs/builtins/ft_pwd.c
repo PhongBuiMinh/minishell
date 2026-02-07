@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 07:44:20 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/03 19:03:16 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/06 23:40:42 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int ft_pwd(void)
 	if (getcwd(cwd, PATH_MAX))
 	{
 		ft_putstr_fd(cwd, STDOUT_FILENO);
-		write(STDOUT_FILENO, "\n", 1);
+		ft_putchar_fd('\n', STDOUT_FILENO);
 		return (0);
 	}
 	ft_putstr_fd("minishell: pwd: error retreiving current directory\n", STDERR_FILENO);

@@ -6,18 +6,11 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/05 22:15:40 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/07 01:49:41 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
-
-// void exec_external(char **argv, t_shell_state *shell)
-// {
-// 	char	*path;
-
-// 	if (execve(argv[0], argv))
-// }
 
 char	**args_to_array(t_argument_list *args)
 {
@@ -61,11 +54,11 @@ void	setup_pipes(t_pipe_info *info)
 
 void	exec_external(char **argv, t_shell_state *shell)
 {
+	char	*path;
+	
 	if (execve(argv[0], argv, shell->envp) < 0)
 	{
-		char	*path;
-
-		path = find_command_path();
+		path = find_command_path(argv[0], shell);
 		if (path)
 		{
 			execve(path, argv, shell->envp);
@@ -99,5 +92,5 @@ void	execute_command(t_exec_info *info)
 		free(argv);
 		exit(builtin_ret);
 	}
-	// exec_external();
+	exec_external(argv, info->shell);
 }

@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/03 19:07:28 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/07 00:03:55 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	wait_all_children(pid_t *pids, int num_cmds)
 	{
 		if (waitpid(pids[i], &status, 0) > 0)
 		{
-			if (i == num_cmds -1)
+			if (i == num_cmds - 1)
 			{
 				if ((status & 0x7F) == 0)
 					exit_status = (status >> 8) & 0xFF;
@@ -89,9 +89,9 @@ int	wait_all_children(pid_t *pids, int num_cmds)
 
 int	execute_pipeline(t_command_list *commands, t_shell_state *shell)
 {
-	t_exec_info		info;
-	t_command_list	*current;
-	int				i;
+	t_exec_info info;
+	t_command_list *current;
+	int i;
 
 	if (!commands)
 		return (0);

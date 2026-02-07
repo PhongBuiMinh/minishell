@@ -6,11 +6,13 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/03 16:16:51 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/06 14:08:43 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+volatile sig_atomic_t	g_signal_received = 0;
 
 int	main(void)
 {
@@ -18,9 +20,10 @@ int	main(void)
 	char			*line;
 	t_command_list	*commands;
 
-	init_shell(&shell);
-	init_signal_handlers();
+	// init_shell(&shell);
+	// init_signal_handlers();
 	shell.exit_status = 0;
+	// run_parser_tests();
 	while (1)
 	{
 		if (g_signal_received == SIGINT)
@@ -46,6 +49,6 @@ int	main(void)
 		}
 		free(line);
 	}
-	cleanup_shell(&shell);
+	// cleanup_shell(&shell);
 	return (shell.exit_status);
 }

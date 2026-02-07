@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/06 23:34:18 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/07 18:50:31 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 int ft_env(t_shell_state *shell)
 {
-	int	i;
+	t_env	*curr;
 
-	i = 0;
-	while (shell->envp && shell->envp[i])
+	curr = shell->env;
+	while (curr)
 	{
-		ft_putstr_fd(shell->envp[i], STDOUT_FILENO);
-		ft_putchar_fd('\n', STDOUT_FILENO);
-		i++;
+		ft_putendl_fd(curr->full_var, STDOUT_FILENO);
+		curr = curr->next;
 	}
 	return (0);
 }

@@ -50,6 +50,7 @@ int	count_commands(t_command_list *commands)
 
 void	child_process(t_exec_info *info)
 {
+	set_child_signals();
 	free(info->pids);
 	execute_command(info);
 	exit(1);

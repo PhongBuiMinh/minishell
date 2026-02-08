@@ -37,7 +37,8 @@ SRCS = main.c \
 		executor/execute_command.c \
 		executor/execute_pipeline.c \
 		executor/path_utils.c \
-		executor/setup_redirections.c 
+		executor/setup_redirections.c \
+		signals.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 DEPS = $(OBJS:.o=.d)
 

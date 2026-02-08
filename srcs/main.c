@@ -12,8 +12,6 @@
 
 #include "exec.h"
 
-volatile sig_atomic_t	g_signal_received = 0;
-
 void	init_env_list(t_shell_state *shell, char **envp)
 {
 	int		i;
@@ -53,7 +51,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	init_shell(&shell, envp);
-	// init_signal_handlers();
+	init_signal_handlers();
 	shell.exit_status = 0;
 	while (1)
 	{

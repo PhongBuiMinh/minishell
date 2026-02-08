@@ -13,7 +13,6 @@
 #include "exec.h"
 
 volatile sig_atomic_t	g_signal_received = 0;
-extern char				**environ;
 
 void	init_env_list(t_shell_state *shell, char **envp)
 {
@@ -38,21 +37,22 @@ void	init_env_list(t_shell_state *shell, char **envp)
 	}
 }
 
-void	init_shell(t_shell_state *shell)
+void	init_shell(t_shell_state *shell, char **envp)
 {
 	shell->env = NULL;
-	shell->envp = environ;
 	shell->exit_status = 0;
-	init_env_list(shell, environ);
+	init_env_list(shell, envp);
 }
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
 	t_shell_state	shell;
 	char			*line;
 	t_command_list	*commands;
 
-	init_shell(&shell);
+	(void)argc;
+	(void)argv;
+	init_shell(&shell, envp);
 	// init_signal_handlers();
 	shell.exit_status = 0;
 	while (1)

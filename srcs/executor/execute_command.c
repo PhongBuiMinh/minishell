@@ -54,20 +54,30 @@ void	setup_pipes(t_pipe_info *info)
 
 void	exec_external(char **argv, t_shell_state *shell)
 {
+	char	**env_array;
 	char	*path;
 	
-	if (execve(argv[0], argv, shell->envp) < 0)
+	env_array = env_to_array(shell->env);
+	if (!env_array)
 	{
-		path = find_command_path(argv[0], shell);
+		perror("env_to_array");
+		free(argv);
+		exit(1);
+	}
+	if (ft_strchr(argv[0], '/') == NULL)
+	{
+		path = find_command_path(argv[0], env_array);
 		if (path)
 		{
-			execve(path, argv, shell->envp);
+			execve(path, argv, env_array);
 			free(path);
 		}
-		perror(argv[0]);
-		free(argv);
-		exit(127);
 	}
+	execve(argv[0], argv, env_array);
+	perror(argv[0]);
+	free(env_array);
+	free(argv);
+	exit(127);
 }
 
 void	execute_command(t_exec_info *info)

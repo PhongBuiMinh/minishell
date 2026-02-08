@@ -30,7 +30,7 @@ typedef struct s_pipe_info
 typedef struct s_shell_state
 {
 	t_env				*env;
-	char				**envp;
+	// char				**envp;
 	int					exit_status;
 }						t_shell_state;
 
@@ -46,8 +46,9 @@ typedef struct s_exec_info
 void					execute_command(t_exec_info *info);
 int						execute_pipeline(t_command_list *commands,
 							t_shell_state *shell);
-char					*find_command_path(char *cmd, t_shell_state *shell);
+char 					*find_command_path(char *cmd, char **env_array);
 char					**args_to_array(t_argument_list *args);
+char					**env_to_array(t_env *env);
 
 int						setup_redirections(t_redirection_list *redirs);
 

@@ -20,12 +20,26 @@ NAME = minishell
 # Direcories and source files
 SRC_DIR = srcs
 OBJ_DIR = objs
-SRCS =	main.c \
+SRCS = main.c \
 		lexer/lexer.c \
 		lexer/utils.c \
 		parser/parser_utils.c \
 		parser/parser_utils2.c \
-		parser/parser.c 
+		parser/parser.c \
+		builtins/ft_cd.c \
+		builtins/ft_echo.c \
+		builtins/ft_env.c \
+		builtins/ft_exit.c \
+		builtins/ft_export.c \
+		builtins/ft_pwd.c \
+		builtins/ft_unset.c \
+		builtins/env_utils.c \
+		executor/execute_builtins.c \
+		executor/execute_command.c \
+		executor/execute_pipeline.c \
+		executor/path_utils.c \
+		executor/setup_redirections.c \
+		signals.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 DEPS = $(OBJS:.o=.d)
 
@@ -41,7 +55,7 @@ LIBFT = lib/libft/libft.a
 # Build targets
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(OBJS)
+$(NAME): $(LIBFT) $(OBJS) | $(OBJ_DIR)
 	@echo "$(GREEN)Linking files...$(DEFAULT)"
 	@$(CC) $(FLAGS) $^ -L$(LIBFT_PATH) -lft -lc -lreadline -o $@
 

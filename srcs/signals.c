@@ -20,11 +20,15 @@ volatile sig_atomic_t	g_signal_received = 0;
 static void	sigint_handler(int sig)
 {
 	g_signal_received = sig;
+	ft_putchar_fd('\n', STDOUT_FILENO);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
 static void	sigquit_handler(int sig)
 {
-	g_signal_received = sig;
+	(void)sig;
 }
 
 void	init_signal_handlers(void)

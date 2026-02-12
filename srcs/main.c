@@ -50,6 +50,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	rl_catch_signals = 0;
 	init_shell(&shell, envp);
 	init_signal_handlers();
 	shell.exit_status = 0;

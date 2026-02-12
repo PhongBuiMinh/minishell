@@ -53,30 +53,6 @@ char	**env_to_array(t_env *env)
 	return (array);
 }
 
-// char	*get_path_env(t_shell_state *shell)
-// {
-// 	char	**env_array;
-// 	char	*path_env;
-// 	int		i;
-
-// 	env_array = env_to_array(shell->env);
-// 	if (!env_array)
-// 		return (NULL);
-// 	i = 0;
-// 	while (env_array[i])
-// 	{
-// 		if (ft_strncmp(env_array[i], "PATH=", 5) == 0)
-// 		{
-// 			path_env = ft_strdup(env_array[i] + 5);
-// 			free(env_array);
-// 			return (path_env);
-// 		}
-// 		i++;
-// 	}
-// 	free(env_array);
-// 	return (NULL);
-// }
-
 char	*build_path(char *dir, char *cmd)
 {
 	char	*tmp;

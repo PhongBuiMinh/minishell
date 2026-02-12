@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/08 20:14:24 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/12 14:13:05 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,33 +19,26 @@ int	valid_var_char(char c)
 	return (0);
 }
 
-check_var()
-
 char	*find_var(char *str)
 {
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '$')
-			return (str + i);
-		i++;
-	}
-	return (NULL);
+	int	c;
+	
 }
 
 int	expand_envs(t_command_list *command)
 {
 	t_argument_list	*next;
-	char			*dollar_sign;
+	char			*var;
 
 	next = command->args;
 	while (next)
 	{
-		dollar_sign = find_var(next->string);
-		if (dollar_sign)
-			check_var(dollar_sign);
-		next = next->next;	
-	}
+		var = find_next_var(next->string);
+		while (var)
+		{
+			if (is_env(var))
+				expand_var();
+			var = find_next_var(var + 1);
+		}
+}
 }

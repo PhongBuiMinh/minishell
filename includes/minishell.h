@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/27 19:50:25 by bpetrovi          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2026/01/27 15:14:40 by codespace        ###   ########.fr       */
-=======
-/*   Updated: 2026/01/28 02:20:16 by bpetrovi         ###   ########.fr       */
->>>>>>> origin/parsing
+/*   Created: 2026/02/12 13:16:14 by bpetrovi          #+#    #+#             */
+/*   Updated: 2026/02/12 13:16:19 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

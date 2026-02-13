@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 19:50:25 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/12 14:14:19 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/12 16:46:07 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,14 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdbool.h>
+
+typedef struct s_env
+{
+	char				*name;
+	char				*value;
+	char				*full_var;
+	struct s_env		*next;
+}	t_env;				
 
 typedef enum e_token_type
 {

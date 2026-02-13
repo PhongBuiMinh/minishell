@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 18:36:03 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/07 21:00:48 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/13 19:31:46 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,5 +127,6 @@ int	parser(char *input, t_command_list **first_command)
 		printf("parser error\n");
 		return (-1);
 	}
+	expand_envs(*first_command);
 	return (0);
 }

@@ -87,16 +87,18 @@ int	valid_export_var(char *var)
 
 int	update_full_var(t_env *env_var, char *new_value)
 {
+	char	*temp;
+
 	free(env_var->full_var);
-	env_var->full_var = ft_strjoin(env_var->name, "=");
-	if (!env_var->full_var)
+	temp = ft_strjoin(env_var->name, "=");
+	if (!temp)
 		return (-1);
 	if (new_value)
-	{
-		env_var->full_var = ft_strjoin(env_var->full_var, new_value);
-		if (!env_var->full_var)
-			return (-1);
-	}
+		env_var->full_var = ft_strjoin(temp, new_value);
+	else
+		env_var->full_var = temp;
+	if (!env_var->full_var)
+		return (-1);
 	return (0);
 }
 

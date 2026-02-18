@@ -26,6 +26,7 @@ SRCS = main.c \
 		lexer/lexer.c \
 		lexer/utils.c \
 		parser/parser_utils.c \
+		parser/parser_utils2.c \
 		parser/parser.c \
 		builtins/ft_cd.c \
 		builtins/ft_echo.c \

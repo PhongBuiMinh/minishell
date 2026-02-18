@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 20:09:03 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/01/26 00:03:00 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/06 20:49:38 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,25 @@ char	*ft_strndup(const char *s1, size_t n)
 	}
 	dest[i] = '\0';
 	return (dest);
+}
+
+t_token	*create_token_node(void)
+{
+	t_token	*new;
+	new = malloc(sizeof(t_token));
+	if (!new)
+		return (NULL);
+	new->value = NULL;
+	new->type = INVALID_TOKEN;
+	return (new);
+}
+
+int	get_next(char *input, t_token *tok,
+			int just_peek, t_token_type *type)
+{
+	if (two_char_tokens(input, type))
+		return (2);
+	else if (one_char_tokens(input, type))
+		return (1);
+	return (string_token(input, tok, just_peek, type));
 }

@@ -12,7 +12,7 @@
 
 #include "exec.h"
 
-int	read_process_line(t_shell_state *shell, char **full_input)
+int	read_process_line(char **full_input)
 {
 	char	*line;
 	int		quote_state;
@@ -44,11 +44,10 @@ int	read_process_line(t_shell_state *shell, char **full_input)
 int	process_cmd_line(t_shell_state *shell, char *full_input)
 {
 	t_command_list	*commands;
-	int				result;
 
 	commands = NULL;
 	if (parser(full_input, &commands) == 0 && commands != NULL)
-		result = execute_pipeline(commands, shell);
+		execute_pipeline(commands, shell);
 	else
 		shell->exit_status = 2;
 	free(full_input);
@@ -71,7 +70,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		process_signal(&shell, &full_input);
-		input_status = read_process_line(&shell, &full_input);
+		input_status = read_process_line(&full_input);
 		if (input_status < 0)
 			break ;
 		if (input_status == 0)

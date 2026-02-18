@@ -21,6 +21,8 @@ NAME = minishell
 SRC_DIR = srcs
 OBJ_DIR = objs
 SRCS = main.c \
+		main_utils.c \
+		memory.c \
 		lexer/lexer.c \
 		lexer/utils.c \
 		parser/parser_utils.c \

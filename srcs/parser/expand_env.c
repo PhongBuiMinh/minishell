@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/21 20:10:18 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/21 20:30:03 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,17 +205,25 @@ void	replace_var(t_argument_list *arg, t_env *env, int i, int *remove_arg)
 void	find_and_expand(t_argument_list *arg, t_env *env, int *remove_arg)
 {
 	int		i;
+	int		dollar;
 	char	*str;
 
 	i = 0;
 	str = arg->string;
-	while (str[i])
+	while (1)
 	{
-		if (str[i] == '$')
+		dollar = 0;
+		while (str[i])
 		{
-			replace_var(arg, env, i, remove_arg);
+			if (str[i] == '$')
+			{
+				dollar = 1;
+				replace_var(arg, env, i, remove_arg);
+			}
+			i++;
 		}
-		i++;
+		if (!dollar)
+			break ;
 	}
 }
 

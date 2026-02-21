@@ -6,13 +6,44 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/13 20:44:43 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/21 20:10:18 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"	
+#include "../../includes/minishell.h"
+#include "../../includes/exec.h"
 
-t_env	*find_env_var(t_env *env, char *name, int len)
+void	init_env_list(t_shell_state *shell, char **envp)
+{
+	int		i;
+	char	*eq_pos;
+	char	*name;
+	char	*value;
+
+	i = 0;
+	shell->env = NULL;
+	while (envp[i])
+	{
+		eq_pos = ft_strchr(envp[i], '=');
+		if (eq_pos)
+		{
+			name = ft_strndup(envp[i], eq_pos - envp[i]);
+			value = ft_strdup(eq_pos + 1);
+			add_env_var(&shell->env, name, value);
+			free(name);
+		}
+		i++;
+	}
+}
+
+void	init_shell(t_shell_state *shell, char **envp)
+{
+	shell->env = NULL;
+	shell->exit_status = 0;
+	init_env_list(shell, envp);
+}
+
+t_env	*find_env(t_env *env, char *name, int len)
 {
 	while (env)
 	{
@@ -49,78 +80,131 @@ int	find_len(char *str)
 		i++;
 	}
 	if (brackets && str[i] != '}')
-		return (-1);
+		return (-1);	
 	return (i);
 }
 
-char	*create_new_str(char *old_str, t_env *var, int var_len, int i)
+void	var_not_found(t_argument_list *arg, int var_len, int i, int *remove_arg)
 {
-	int		brackets;
-	int		new_str_len;
 	char	*new_str;
+	char	*str;
+	int		new_len;
+	int		d;
 	int		c;
 
+	d = 0;
 	c = 0;
-	new_str_len = old_str - var_len + ft_strlen(var->value) + 1;
-	new_str = malloc(new_str_len);
-	if (!new_str)
-		return (NULL);
-	brackets = 0;
-	if (old_str[i + 1] == '{')
-		brackets = 1;
-	while (c < new_str_len)
+	str = arg->string;
+	new_len = ft_strlen(str) - (var_len + 1);
+	if (new_len == 0)
 	{
-		if (c == i)
-		{
-			ft_memcpy(new_str + c, var->value, ft_strlen(var->value));
-			c += ft_strlen(var->value);
-		}
-		new_str[c] = old_str[c];
-		c++;
-	}
-}
-
-
-char	*expand_str(t_argument_list *arg, t_env *var, int i, int var_len)
-{
-	char	*new_str;
-	char	**new_args;
-	char	*temp;
-	
-	new_str = create_new_str();
-	if (quoted)
-	{
-		temp = arg->string;
-		arg->string = new_str;
-		free(temp);
+		*remove_arg = 1;
 		return ;
 	}
-	new_args = ft_split(new_str, " ");
-	free(arg->string);
-	while (new_args)
+	new_str = malloc(new_len + 1);
+	while (c < new_len)
 	{
-		arg->string = *new_args;
-		*new_args++;
+		if (c == i)
+			d += var_len;
+		new_str[c] = str[d];
+		c++;
+		d++;
 	}
-	free(new_args);
+	new_str[new_len] = '\0';
+	free(arg->string);
+	arg->string = new_str;
 }
 
-int	replace_var(int i, t_argument_list *arg, t_env *env)
+char	*create_new_str(char *old_str, t_env *var, int i, int var_len)
+{
+	int		remove_len;
+	int		old_len;
+	int		value_len;
+	int		new_len;
+	char	*new_str;
+
+	remove_len = var_len + 1;
+	old_len = ft_strlen(old_str);
+	value_len = ft_strlen(var->value);
+	new_len = old_len - remove_len + value_len + 1;
+	new_str = malloc(new_len);	
+	if (!new_str)
+		return (NULL);
+	ft_memcpy(new_str, old_str, i);
+	ft_memcpy(new_str + i, var->value, value_len);
+	ft_memcpy(new_str + i + value_len, old_str + i + var_len, old_len - remove_len - i);
+	new_str[new_len - 1] = '\0';
+	return (new_str);
+}
+
+
+void	expand_str(t_argument_list *arg, t_env *var, int i, int var_len)
+{
+	char			*new_str;
+	char			**split;
+	char			*old_str;
+	t_argument_list	*current;
+	t_argument_list	*new_node;
+	int				j;
+	int				error;
+
+	error = 0;
+	old_str = arg->string;
+	if (arg->string[0] == '\'')
+		return ;
+	new_str = create_new_str(arg->string, var, i, var_len);
+	if (arg->string[0] == '"')
+	{
+		old_str = arg->string;
+		arg->string = new_str;
+		free(old_str);
+		return ;
+	}
+	split = ft_split(new_str, ' ');
+	if (!split)
+		return ;
+	free(new_str);
+	arg->string = ft_strdup(split[0]);
+	if (!arg->string)
+		return ;
+	free(old_str);
+	j = 1;
+	current = arg;
+	while (split[j])
+	{
+		new_node = create_arg_node(&error);
+		if (error)
+			return ;
+		new_node->string = ft_strdup(split[j]);
+		new_node->next = current->next;
+		current->next = new_node;
+		current = new_node;
+		j++;
+	}
+	j = 0;
+	while (split[j])
+		free(split[j++]);
+	free(split);
+}
+
+void	replace_var(t_argument_list *arg, t_env *env, int i, int *remove_arg)
 {
 	int		var_len;
 	char	*str;
 	t_env	*var;
 
 	str = arg->string;
-	var_len = find_var_len(str + i + 1);
-	var = find_env_var(env, str + i + 1, var_len);
-	expand_str(arg, var, i, var_len);
+	var_len = find_len(str + i + 1);
+	var = find_env(env, str + i + 1, var_len);
+	if (var)
+		expand_str(arg, var, i, var_len);
+	else
+		var_not_found(arg, var_len, i, remove_arg);
 }
 
-char	*find_and_expand(t_argument_list *arg, t_env *env)
+void	find_and_expand(t_argument_list *arg, t_env *env, int *remove_arg)
 {
 	int		i;
-	t_env	*var;
 	char	*str;
 
 	i = 0;
@@ -129,20 +213,78 @@ char	*find_and_expand(t_argument_list *arg, t_env *env)
 	{
 		if (str[i] == '$')
 		{
-			replace_var(i, arg, env);
+			replace_var(arg, env, i, remove_arg);
 		}
 		i++;
 	}
 }
 
-int	expand_envs(t_command_list *command, t_env *env)
+void	expand_envs(t_command_list *command, t_env *env)
 {
-	t_argument_list	*next;
+	t_argument_list	*current;
+	t_argument_list	*next_node;
+	t_argument_list	*prev;
+	int				remove_arg;
 
-	next = command->args;
-	while (next)
+	prev = NULL;
+	current = command->args;
+	while (current)
 	{
-		find_and_expand(next, env);
-		next = next->next;
+		remove_arg = 0;
+		next_node = current->next;
+		find_and_expand(current, env, &remove_arg);
+		if (remove_arg)
+			{
+				if (prev)
+					prev->next = next_node;
+				else
+					command->args = next_node;
+				free(current->string);
+				free(current);
+			}
+		else
+			prev = current;
+		current = next_node;
 	}
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	char				*input = "Hello whats up is $this parser frfr";
+	t_shell_state		shell;
+	t_command_list		*first_command = NULL;
+	t_command_list		*commands;
+	t_argument_list		*temp_arg;
+	t_redirection_list	*temp_redir;
+
+	(void)argc;
+	(void)argv;
+	init_shell(&shell, envp);
+	if (parser(input, &first_command) == -1)
+		return (printf("Parser failed"), -1);
+	expand_envs(first_command, shell.env);
+	commands = first_command;
+	while (commands)
+	{
+		temp_arg = commands->args;
+		temp_redir = commands->redirs;
+		printf("Current command: %s\n", temp_arg->string);
+		printf("All arguments: \n");
+		temp_arg = temp_arg->next;
+		while (temp_arg)
+		{
+			printf("%s\n", temp_arg->string);
+			temp_arg = temp_arg->next;
+		}
+		printf("All redirections: \n");
+		while (temp_redir)
+		{
+			printf("%i, %s\n", temp_redir->redir_type, temp_redir->target);
+			temp_redir = temp_redir->next;
+		}
+		printf("-----------------------------------------------\n");
+		commands = commands->next;
+	}
+	free_all(first_command);
+	return (0);
 }

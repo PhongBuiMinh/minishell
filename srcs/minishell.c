@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 23:08:40 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/07 21:00:43 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/15 21:21:17 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(void)
 	t_argument_list		*temp_arg;
 	t_redirection_list	*temp_redir;
 
-	char	*input;
+	char	*input = "Yo yo is this parser working or wat";
 	if (parser(input, &first_command) == -1)
 		return (printf("Parser failed"), -1);
 	commands = first_command;

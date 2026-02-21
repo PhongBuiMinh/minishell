@@ -20,7 +20,7 @@ NAME = minishell
 # Direcories and source files
 SRC_DIR = srcs
 OBJ_DIR = objs
-SRCS = main.c \
+SRCS = parser/expand_env.c \
 		lexer/lexer.c \
 		lexer/utils.c \
 		parser/parser_utils.c \

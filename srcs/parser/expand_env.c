@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/21 20:30:03 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/22 02:39:10 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,70 @@ void	init_shell(t_shell_state *shell, char **envp)
 	shell->env = NULL;
 	shell->exit_status = 0;
 	init_env_list(shell, envp);
+}
+
+int	is_single_quoted(t_argument_list *arg)
+{
+	return (arg->string[0] == '\'');
+}
+
+int	is_double_quoted(t_argument_list *arg)
+{
+	return (arg->string[0] == '"');
+}
+
+void	replace_argument_string(t_argument_list *arg, char *new_str)
+{
+	char	*old_str;
+
+	old_str = arg->string;
+	arg->string = new_str;
+	free(old_str);
+}
+
+void	insert_argument_strings(t_argument_list *arg, char **split, int *error)
+{
+	t_argument_list	*new_node;
+	t_argument_list	*current;
+	int				j;
+	
+	j = 1;
+	arg->string = ft_strdup(split[0]);
+	if (!arg->string)
+		return ;
+	current = arg;
+	while (split[j])
+	{
+		new_node = create_arg_node(error);
+		if (*error)
+			return ;
+		new_node->string = ft_strdup(split[j]);
+		if (!new_node->string)
+			return ;
+		new_node->next = current->next;
+		current->next = new_node;
+		new_node = current;
+		j++;
+	}
+}
+
+void	split_argument_string(t_argument_list *arg, char *new_str, int *error)
+{
+	char	**split;
+	char	*old_str;
+	int		j;
+
+	split = ft_split(new_str, ' ');
+	if (!split)
+		return ;
+	old_str = arg->string;
+	free(new_str);
+	insert_argument_strings(arg, split, error);
+	free(old_str);
+	j = 0;
+	while (split[j])
+		free(split[j++]);
+	free(split);
 }
 
 t_env	*find_env(t_env *env, char *name, int len)
@@ -87,29 +151,21 @@ int	find_len(char *str)
 void	var_not_found(t_argument_list *arg, int var_len, int i, int *remove_arg)
 {
 	char	*new_str;
-	char	*str;
+	char	*old_str;
 	int		new_len;
-	int		d;
-	int		c;
 
-	d = 0;
-	c = 0;
-	str = arg->string;
-	new_len = ft_strlen(str) - (var_len + 1);
+	old_str = arg->string;
+	new_len = ft_strlen(old_str) - (var_len + 1);
 	if (new_len == 0)
 	{
 		*remove_arg = 1;
 		return ;
 	}
 	new_str = malloc(new_len + 1);
-	while (c < new_len)
-	{
-		if (c == i)
-			d += var_len;
-		new_str[c] = str[d];
-		c++;
-		d++;
-	}
+	if (!new_str)
+		return ;
+	ft_memcpy(new_str, old_str, i);
+	ft_memcpy(new_str + i, old_str + var_len + i + 1, ft_strlen(old_str) - var_len - 1);
 	new_str[new_len] = '\0';
 	free(arg->string);
 	arg->string = new_str;
@@ -133,7 +189,7 @@ char	*create_new_str(char *old_str, t_env *var, int i, int var_len)
 	ft_memcpy(new_str, old_str, i);
 	ft_memcpy(new_str + i, var->value, value_len);
 	ft_memcpy(new_str + i + value_len, old_str + i + var_len, old_len - remove_len - i);
-	new_str[new_len - 1] = '\0';
+	new_str[new_len] = '\0';
 	return (new_str);
 }
 
@@ -141,50 +197,17 @@ char	*create_new_str(char *old_str, t_env *var, int i, int var_len)
 void	expand_str(t_argument_list *arg, t_env *var, int i, int var_len)
 {
 	char			*new_str;
-	char			**split;
-	char			*old_str;
-	t_argument_list	*current;
-	t_argument_list	*new_node;
-	int				j;
 	int				error;
 
 	error = 0;
-	old_str = arg->string;
-	if (arg->string[0] == '\'')
+	if (is_single_quoted(arg))
 		return ;
 	new_str = create_new_str(arg->string, var, i, var_len);
-	if (arg->string[0] == '"')
-	{
-		old_str = arg->string;
-		arg->string = new_str;
-		free(old_str);
+	if (!new_str)
 		return ;
-	}
-	split = ft_split(new_str, ' ');
-	if (!split)
-		return ;
-	free(new_str);
-	arg->string = ft_strdup(split[0]);
-	if (!arg->string)
-		return ;
-	free(old_str);
-	j = 1;
-	current = arg;
-	while (split[j])
-	{
-		new_node = create_arg_node(&error);
-		if (error)
-			return ;
-		new_node->string = ft_strdup(split[j]);
-		new_node->next = current->next;
-		current->next = new_node;
-		current = new_node;
-		j++;
-	}
-	j = 0;
-	while (split[j])
-		free(split[j++]);
-	free(split);
+	if (is_double_quoted(arg))
+		replace_argument_string(arg, new_str);
+	split_argument_string(arg, new_str, &error);
 }
 
 void	replace_var(t_argument_list *arg, t_env *env, int i, int *remove_arg)
@@ -193,9 +216,13 @@ void	replace_var(t_argument_list *arg, t_env *env, int i, int *remove_arg)
 	char	*str;
 	t_env	*var;
 
+	var = NULL;
 	str = arg->string;
 	var_len = find_len(str + i + 1);
-	var = find_env(env, str + i + 1, var_len);
+	if (var_len < 0)
+		return ;
+	else if (var_len > 0)
+		var = find_env(env, str + i + 1, var_len);
 	if (var)
 		expand_str(arg, var, i, var_len);
 	else
@@ -212,6 +239,7 @@ void	find_and_expand(t_argument_list *arg, t_env *env, int *remove_arg)
 	str = arg->string;
 	while (1)
 	{
+		i = 0;
 		dollar = 0;
 		while (str[i])
 		{
@@ -219,6 +247,9 @@ void	find_and_expand(t_argument_list *arg, t_env *env, int *remove_arg)
 			{
 				dollar = 1;
 				replace_var(arg, env, i, remove_arg);
+				if (remove_arg)
+					return ;
+				break ;
 			}
 			i++;
 		}

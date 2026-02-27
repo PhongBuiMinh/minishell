@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/22 02:39:10 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/27 15:40:33 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	insert_argument_strings(t_argument_list *arg, char **split, int *error)
 	t_argument_list	*new_node;
 	t_argument_list	*current;
 	int				j;
-	
+
 	j = 1;
 	arg->string = ft_strdup(split[0]);
 	if (!arg->string)
@@ -107,11 +107,11 @@ void	split_argument_string(t_argument_list *arg, char *new_str, int *error)
 	free(split);
 }
 
-t_env	*find_env(t_env *env, char *name, int len)
+t_env	*find_env(t_env *env, char *name)
 {
 	while (env)
 	{
-		if (ft_strncmp(env->name, name, len) == 0)
+		if (ft_strncmp(env->name, name, ft_strlen(env->name)) == 0)
 			return (env);
 		env = env->next;
 	}
@@ -165,7 +165,8 @@ void	var_not_found(t_argument_list *arg, int var_len, int i, int *remove_arg)
 	if (!new_str)
 		return ;
 	ft_memcpy(new_str, old_str, i);
-	ft_memcpy(new_str + i, old_str + var_len + i + 1, ft_strlen(old_str) - var_len - 1);
+	ft_memcpy(new_str + i, old_str + var_len + i + 1, 
+		ft_strlen(old_str) - var_len - 1);
 	new_str[new_len] = '\0';
 	free(arg->string);
 	arg->string = new_str;
@@ -183,12 +184,13 @@ char	*create_new_str(char *old_str, t_env *var, int i, int var_len)
 	old_len = ft_strlen(old_str);
 	value_len = ft_strlen(var->value);
 	new_len = old_len - remove_len + value_len + 1;
-	new_str = malloc(new_len);	
+	new_str = malloc(new_len);
 	if (!new_str)
 		return (NULL);
 	ft_memcpy(new_str, old_str, i);
 	ft_memcpy(new_str + i, var->value, value_len);
-	ft_memcpy(new_str + i + value_len, old_str + i + var_len, old_len - remove_len - i);
+	ft_memcpy(new_str + i + value_len, old_str + i + var_len,
+		old_len - remove_len - i);
 	new_str[new_len] = '\0';
 	return (new_str);
 }
@@ -222,7 +224,7 @@ void	replace_var(t_argument_list *arg, t_env *env, int i, int *remove_arg)
 	if (var_len < 0)
 		return ;
 	else if (var_len > 0)
-		var = find_env(env, str + i + 1, var_len);
+		var = find_env(env, str + i + 1);
 	if (var)
 		expand_str(arg, var, i, var_len);
 	else
@@ -273,57 +275,57 @@ void	expand_envs(t_command_list *command, t_env *env)
 		next_node = current->next;
 		find_and_expand(current, env, &remove_arg);
 		if (remove_arg)
-			{
-				if (prev)
-					prev->next = next_node;
-				else
-					command->args = next_node;
-				free(current->string);
-				free(current);
-			}
+		{
+			if (prev)
+				prev->next = next_node;
+			else
+				command->args = next_node;
+			free(current->string);
+			free(current);
+		}
 		else
 			prev = current;
 		current = next_node;
 	}
 }
 
-int	main(int argc, char **argv, char **envp)
-{
-	char				*input = "Hello whats up is $this parser frfr";
-	t_shell_state		shell;
-	t_command_list		*first_command = NULL;
-	t_command_list		*commands;
-	t_argument_list		*temp_arg;
-	t_redirection_list	*temp_redir;
+//int	main(int argc, char **argv, char **envp)
+//{
+//	char				*input = "Hello whats up is $name parser frfr";
+//	t_shell_state		shell;
+//	t_command_list		*first_command = NULL;
+//	t_command_list		*commands;
+//	t_argument_list		*temp_arg;
+//	t_redirection_list	*temp_redir;
 
-	(void)argc;
-	(void)argv;
-	init_shell(&shell, envp);
-	if (parser(input, &first_command) == -1)
-		return (printf("Parser failed"), -1);
-	expand_envs(first_command, shell.env);
-	commands = first_command;
-	while (commands)
-	{
-		temp_arg = commands->args;
-		temp_redir = commands->redirs;
-		printf("Current command: %s\n", temp_arg->string);
-		printf("All arguments: \n");
-		temp_arg = temp_arg->next;
-		while (temp_arg)
-		{
-			printf("%s\n", temp_arg->string);
-			temp_arg = temp_arg->next;
-		}
-		printf("All redirections: \n");
-		while (temp_redir)
-		{
-			printf("%i, %s\n", temp_redir->redir_type, temp_redir->target);
-			temp_redir = temp_redir->next;
-		}
-		printf("-----------------------------------------------\n");
-		commands = commands->next;
-	}
-	free_all(first_command);
-	return (0);
-}
+//	(void)argc;
+//	(void)argv;
+//	init_shell(&shell, envp);
+//	if (parser(input, &first_command) == -1)
+//		return (printf("Parser failed"), -1);
+//	expand_envs(first_command, shell.env);
+//	commands = first_command;
+//	while (commands)
+//	{
+//		temp_arg = commands->args;
+//		temp_redir = commands->redirs;
+//		printf("Current command: %s\n", temp_arg->string);
+//		printf("All arguments: \n");
+//		temp_arg = temp_arg->next;
+//		while (temp_arg)
+//		{
+//			printf("%s\n", temp_arg->string);
+//			temp_arg = temp_arg->next;
+//		}
+//		printf("All redirections: \n");
+//		while (temp_redir)
+//		{
+//			printf("%i, %s\n", temp_redir->redir_type, temp_redir->target);
+//			temp_redir = temp_redir->next;
+//		}
+//		printf("-----------------------------------------------\n");
+//		commands = commands->next;
+//	}
+//	free_all(first_command);
+//	return (0);
+//}

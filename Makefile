@@ -30,6 +30,8 @@ SRCS = main.c \
 		parser/parser_utils2.c \
 		parser/parser.c \
 		parser/expand_env.c \
+		parser/expand_env_utils.c \
+		parser/expand_env_utils2.c \
 		builtins/ft_cd.c \
 		builtins/ft_echo.c \
 		builtins/ft_env.c \
@@ -51,8 +53,8 @@ DEPS = $(OBJS:.o=.d)
 -include $(DEPS)
 
 # Libraries
-LIBFT_PATH = lib/libft
-LIBFT = lib/libft/libft.a
+LIBFT_PATH = libft
+LIBFT = libft/libft.a
 
 # Targets
 .PHONY: all clean fclean re test benchmark install uninstall
@@ -74,7 +76,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 # Library build
 $(LIBFT):
 	@echo "$(GREEN)Compling library...$(DEFAULT)"
-	@make -C lib/libft
+	@make -C ${LIBFT_PATH}
 
 # Cleanup
 clean:

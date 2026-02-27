@@ -6,16 +6,24 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 18:36:03 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/15 21:16:13 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/27 20:10:10 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+int	skip_and_expect(t_lexer *lexer, int *error)
+{
+	lexer_skip(lexer);
+	if (lexer_peek(lexer) != STRING)
+		return (set_error(error, PARSE_ERR_INVALID_REDIR), 0);
+	return (1);
+}
+
 void	parse_string(t_lexer *lexer, char **str_pointer, int *error)
 {
 	t_token	*token_string;
-	
+
 	token_string = NULL;
 	token_string = lexer_advance(lexer);
 	if (!token_string)
@@ -83,7 +91,8 @@ void	parse_command(t_lexer *lexer, t_command_list **command,	int *error)
 	}
 }
 
-void	parse_pipeline(t_lexer *lexer, t_command_list **first_command, int *error)
+void	parse_pipeline(t_lexer *lexer,
+	t_command_list **first_command, int *error)
 {
 	t_command_list	*new_command;
 	t_command_list	*prev_command;

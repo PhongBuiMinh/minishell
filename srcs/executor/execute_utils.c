@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbui-min <fbui-min@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 14:20:51 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/13 14:20:51 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/27 20:57:11 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "exec.h"
+#include "minishell.h"
 
 int	count_commands(t_command_list *commands)
 {
@@ -114,5 +114,3 @@ int	wait_all_children(pid_t *pids, int num_cmds)
 	}
 	return (exit_status);
 }
-
- 

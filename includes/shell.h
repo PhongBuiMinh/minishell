@@ -1,37 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   shell.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/28 09:57:52 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 19:50:20 by bpetrovi         ###   ########.fr       */
+/*   Created: 2026/02/27 20:03:02 by bpetrovi          #+#    #+#             */
+/*   Updated: 2026/02/27 20:38:55 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef SHELL_H
+# define SHELL_H
 
-int	ft_echo(char **argv)
+# include "env.h"
+
+typedef struct s_shell_state
 {
-	int	i;
-	int	newline;
+	t_env	*env;
+	int		exit_status;
+}			t_shell_state;
 
-	i = 1;
-	newline = 1;
-	if (argv[i] && argv[i][0] == '-' && argv[i][1] == 'n')
-	{
-		newline = 0;
-		i++;
-	}
-	while (argv[i])
-	{
-		ft_putstr_fd(argv[i], STDOUT_FILENO);
-		if (argv[i + 1])
-			ft_putchar_fd(' ', STDOUT_FILENO);
-		i++;
-	}
-	if (newline)
-		ft_putchar_fd('\n', STDOUT_FILENO);
-	return (0);
-}
+/* shell lifecycle */
+void		init_shell(t_shell_state *shell, char **envp);
+
+/* input helpers */
+char		*join_lines(char *old, char *new);
+char		*ft_strjoin_free(char *s1, char *s2);
+int			check_unclosed_quotes(const char *str);
+
+#endif

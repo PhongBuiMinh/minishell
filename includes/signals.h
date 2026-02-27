@@ -1,37 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/28 09:57:52 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 19:50:20 by bpetrovi         ###   ########.fr       */
+/*   Created: 2026/02/27 19:45:20 by bpetrovi          #+#    #+#             */
+/*   Updated: 2026/02/27 19:47:20 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef SIGNALS_H
+# define SIGNALS_H
 
-int	ft_echo(char **argv)
-{
-	int	i;
-	int	newline;
+# include <signal.h>
+# include "exec.h"
 
-	i = 1;
-	newline = 1;
-	if (argv[i] && argv[i][0] == '-' && argv[i][1] == 'n')
-	{
-		newline = 0;
-		i++;
-	}
-	while (argv[i])
-	{
-		ft_putstr_fd(argv[i], STDOUT_FILENO);
-		if (argv[i + 1])
-			ft_putchar_fd(' ', STDOUT_FILENO);
-		i++;
-	}
-	if (newline)
-		ft_putchar_fd('\n', STDOUT_FILENO);
-	return (0);
-}
+extern volatile sig_atomic_t	g_signal_received;
+
+void	init_signal_handlers(void);
+void	set_child_signals(void);
+int		process_signal(t_shell_state *shell, char **full_input);
+
+#endif

@@ -29,6 +29,7 @@ SRCS = main.c \
 		parser/parser_utils.c \
 		parser/parser_utils2.c \
 		parser/parser.c \
+		parser/expand_env.c \
 		builtins/ft_cd.c \
 		builtins/ft_echo.c \
 		builtins/ft_env.c \

@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/27 15:40:33 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/02/27 16:33:21 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,6 @@ void	init_env_list(t_shell_state *shell, char **envp)
 		}
 		i++;
 	}
-}
-
-void	init_shell(t_shell_state *shell, char **envp)
-{
-	shell->env = NULL;
-	shell->exit_status = 0;
-	init_env_list(shell, envp);
 }
 
 int	is_single_quoted(t_argument_list *arg)
@@ -195,7 +188,6 @@ char	*create_new_str(char *old_str, t_env *var, int i, int var_len)
 	return (new_str);
 }
 
-
 void	expand_str(t_argument_list *arg, t_env *var, int i, int var_len)
 {
 	char			*new_str;
@@ -268,6 +260,8 @@ void	expand_envs(t_command_list *command, t_env *env)
 	int				remove_arg;
 
 	prev = NULL;
+	if (!command)
+		return ;
 	current = command->args;
 	while (current)
 	{

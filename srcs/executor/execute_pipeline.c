@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipeline.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/07 17:09:18 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/27 16:26:55 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,13 @@ int	execute_pipeline(t_command_list *cmds, t_shell_state *shell)
 	int				i;
 	int				ret;
 
+	current = NULL;
 	if (!cmds || !shell)
 		return (0);
 	ret = handle_single_builtin(cmds, shell);
 	if (ret != -1)
 		return (ret);
+	expand_envs(current, shell->env);
 	info = init_exec_info(cmds, shell);
 	current = cmds;
 	i = 0;

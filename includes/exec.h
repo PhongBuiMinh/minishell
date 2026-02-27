@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/08 18:50:31 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/02/27 16:12:30 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,6 @@ char	*ft_strjoin_free(char *s1, char *s2);
 void	free_env_var(t_env *var);
 void					run_parser_tests(void);
 void					print_cmd_list(t_command_list *commands);
+void					expand_envs(t_command_list *command, t_env *env);
 
 #endif

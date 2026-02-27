@@ -24,35 +24,6 @@ void	ft_free_paths(char **split)
 	free(split);
 }
 
-char	**env_to_array(t_env *env)
-{
-	char	**array;
-	t_env	*tmp;
-	int		i;
-
-	if (!env)
-		return (NULL);
-	i = 0;
-	tmp = env;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	array = malloc(sizeof(char *) * (i + 1));
-	if (!array)
-		return (NULL);
-	i = 0;
-	tmp = env;
-	while (tmp)
-	{
-		array[i++] = tmp->full_var;
-		tmp = tmp->next;
-	}
-	array[i] = NULL;
-	return (array);
-}
-
 char	*build_path(char *dir, char *cmd)
 {
 	char	*tmp;

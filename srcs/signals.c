@@ -17,6 +17,21 @@
 
 volatile sig_atomic_t	g_signal_received = 0;
 
+int	process_signal(t_shell_state *shell, char **full_input)
+{
+	if (g_signal_received == SIGINT)
+	{
+		shell->exit_status = 130;
+		g_signal_received = 0;
+		free(*full_input);
+		*full_input = NULL;
+		return (1);
+	}
+	else if (g_signal_received == SIGQUIT)
+		g_signal_received = 0;
+	return (0);
+}
+
 static void	sigint_handler(int sig)
 {
 	g_signal_received = sig;

@@ -12,31 +12,6 @@
 
 #include "exec.h"
 
-char	**args_to_array(t_argument_list *args)
-{
-	int				i;
-	int				count;
-	char			**argv;
-	t_argument_list	*tmp;
-
-	count = 0;
-	tmp = args;
-	while (tmp && ++count)
-		tmp = tmp->next;
-	argv = malloc(sizeof(char *) * (count + 1));
-	if (!argv)
-		return (NULL);
-	i = 0;
-	while (args)
-	{
-		argv[i] = args->string;
-		args = args->next;
-		i++;
-	}
-	argv[i] = NULL;
-	return (argv);
-}
-
 void	setup_pipes(t_pipe_info *info)
 {
 	if (!info->is_first)
@@ -56,11 +31,10 @@ void	exec_external(char **argv, t_shell_state *shell)
 {
 	char	**env_array;
 	char	*path;
-	
+
 	env_array = env_to_array(shell->env);
 	if (!env_array)
 	{
-		perror("env_to_array");
 		free(argv);
 		exit(1);
 	}
@@ -74,7 +48,6 @@ void	exec_external(char **argv, t_shell_state *shell)
 		}
 	}
 	execve(argv[0], argv, env_array);
-	perror(argv[0]);
 	free(env_array);
 	free(argv);
 	exit(127);
@@ -90,9 +63,11 @@ void	execute_command(t_exec_info *info)
 	if (setup_redirections(info->cmd->redirs) < 0)
 		exit(1);
 	argv = args_to_array(info->cmd->args);
-	if (!argv || !argv[0])
+	if (!argv)
+		exit(1);
+	if (!argv[0])
 	{
-		ft_putstr_fd("minishell: command not found\n", STDERR_FILENO);
+		free(argv);
 		exit(127);
 	}
 	cmd = argv[0];

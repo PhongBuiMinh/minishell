@@ -20,7 +20,10 @@ NAME = minishell
 # Direcories and source files
 SRC_DIR = srcs
 OBJ_DIR = objs
-SRCS = parser/expand_env.c \
+
+SRCS = main.c \
+		main_utils.c \
+		memory.c \
 		lexer/lexer.c \
 		lexer/utils.c \
 		parser/parser_utils.c \
@@ -38,6 +41,7 @@ SRCS = parser/expand_env.c \
 		executor/execute_command.c \
 		executor/execute_pipeline.c \
 		executor/path_utils.c \
+		executor/execute_utils.c \
 		executor/setup_redirections.c \
 		signals.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

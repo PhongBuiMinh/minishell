@@ -55,3 +55,26 @@ int	ft_exit(char **argv, t_shell_state *shell)
 	rl_clear_history();
 	exit(exit_code);
 }
+
+// int	ft_exit(char **argv, t_shell_state *shell)
+// {
+// 	ft_putstr_fd("exit\n", STDERR_FILENO);
+// 	if (!argv[1])
+// 		return (shell->exit_status % 256);
+// 	if (!is_numeric(argv[1]))
+// 	{
+// 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
+// 		ft_putstr_fd(argv[1], STDERR_FILENO);
+// 		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+// 		if (getpid() != getppid())  // Child process
+// 			exit(255);
+// 		return (255);
+// 	}
+// 	if (argv[2])
+// 	{
+// 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+// 		return (1);
+// 	}
+// 	rl_clear_history();
+// 	exit(ft_atoi(argv[1]) % 256);
+// }

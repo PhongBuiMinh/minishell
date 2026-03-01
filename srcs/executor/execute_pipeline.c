@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 19:50:20 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/01 17:48:10 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ int	execute_pipeline(t_command_list *cmds, t_shell_state *shell)
 	current = NULL;
 	if (!cmds || !shell)
 		return (0);
+	expand_envs(cmds, shell->env);
 	ret = handle_single_builtin(cmds, shell);
 	if (ret != -1)
 		return (ret);
-	expand_envs(current, shell->env);
 	info = init_exec_info(cmds, shell);
 	current = cmds;
 	i = 0;

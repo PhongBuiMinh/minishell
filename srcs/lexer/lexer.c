@@ -6,31 +6,53 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 13:28:29 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/12 13:28:31 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/01 19:22:03 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"	
 
+int	contains_quotes(char *s, char *quote_char)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == '\'' || s[i] == '"')
+		{
+			*quote_char = s[i];
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
 int	string_token(char *input, t_token *tok, int just_peek, t_token_type *type)
 {
 	int		i;
-	char	quote_char;
+	char	quote;
 
 	i = 0;
-	if (input[i] == '\'' || input[i] == '"')
+	quote = 0;
+	while (input[i])
 	{
-		quote_char = input[i++];
-		while (input[i] && input[i] != quote_char)
-			i++;
-		if (input[i] == '\0')
-			return (*type = INVALID_TOKEN, -2);
+		if (quote == 0)
+		{
+			if (input[i] == '\'' || input[i] == '"')
+				quote = input[i];
+			else if (ft_isspace(input[i]) || input[i] == '|'
+				|| input[i] == '<' || input[i] == '>')
+				break ;
+		}
+		else
+		{
+			if (input[i] == quote)
+				quote = 0;
+		}
 		i++;
 	}
-	else
-		while (input[i] && !ft_isspace(input[i]) && input[i] != '|'
-			&& input[i] != '<' && input[i] != '>')
-			i++;
 	*type = STRING;
 	if (just_peek)
 		return (i);

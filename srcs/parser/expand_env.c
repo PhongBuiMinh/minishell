@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/27 19:52:02 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/01 17:45:53 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	var_not_found(t_argument_list *arg, int var_len, int i, int *remove_arg)
 
 	old_str = arg->string;
 	new_len = ft_strlen(old_str) - (var_len + 1);
-	if (new_len == 0)
+	if (new_len <= 0)
 	{
 		*remove_arg = 1;
 		return ;
@@ -29,7 +29,7 @@ void	var_not_found(t_argument_list *arg, int var_len, int i, int *remove_arg)
 	if (!new_str)
 		return ;
 	ft_memcpy(new_str, old_str, i);
-	ft_memcpy(new_str + i, old_str + var_len + i + 1, 
+	ft_memcpy(new_str + i, old_str + var_len + i + 1,
 		ft_strlen(old_str) - var_len - 1);
 	new_str[new_len] = '\0';
 	free(arg->string);
@@ -52,21 +52,22 @@ void	expand_str(t_argument_list *arg, t_env *var, int i, int var_len)
 	split_argument_string(arg, new_str, &error);
 }
 
-void	replace_var(t_argument_list *arg, t_env *env, int i, int *remove_arg)
+void	replace_var(t_argument_list *arg, t_env *env_list,
+		int i, int *remove_arg)
 {
 	int		var_len;
 	char	*str;
-	t_env	*var;
+	t_env	*env;
 
-	var = NULL;
+	env = NULL;
 	str = arg->string;
 	var_len = find_len(str + i + 1);
 	if (var_len < 0)
 		return ;
 	else if (var_len > 0)
-		var = find_env(env, str + i + 1);
-	if (var)
-		expand_str(arg, var, i, var_len);
+		env = find_env(env_list, str + i + 1, var_len);
+	if (env)
+		expand_str(arg, env, i, var_len);
 	else
 		var_not_found(arg, var_len, i, remove_arg);
 }
@@ -100,40 +101,53 @@ void	find_and_expand(t_argument_list *arg, t_env *env, int *remove_arg)
 	}
 }
 
-void	expand_envs(t_command_list *command, t_env *env)
+void	expand_args(t_command_list *command,
+		t_argument_list *arg, t_env *env)
 {
-	t_argument_list	*current;
-	t_argument_list	*next_node;
+	t_argument_list	*next;
 	t_argument_list	*prev;
 	int				remove_arg;
 
 	prev = NULL;
-	if (!command)
-		return ;
-	current = command->args;
-	while (current)
+	while (arg)
 	{
 		remove_arg = 0;
-		next_node = current->next;
-		find_and_expand(current, env, &remove_arg);
+		next = arg->next;
+		find_and_expand(arg, env, &remove_arg);
 		if (remove_arg)
 		{
 			if (prev)
-				prev->next = next_node;
+				prev->next = next;
 			else
-				command->args = next_node;
-			free(current->string);
-			free(current);
+				command->args = next;
+			free(arg->string);
+			free(arg);
 		}
 		else
-			prev = current;
-		current = next_node;
+			prev = arg;
+		arg = next;
+	}
+}
+
+void	expand_envs(t_command_list *command, t_env *env)
+{
+	t_command_list	*current;
+	t_argument_list	*arg;
+
+	if (!command)
+		return ;
+	current = command;
+	while (current)
+	{
+		arg = current->args;
+		expand_args(current, arg, env);
+		current = current->next;
 	}
 }
 
 //int	main(int argc, char **argv, char **envp)
 //{
-//	char				*input = "Hello whats up is $name parser frfr";
+//	char				*input = "Hello whats up is $namee parser frfr | ${whats}";
 //	t_shell_state		shell;
 //	t_command_list		*first_command = NULL;
 //	t_command_list		*commands;
@@ -167,6 +181,12 @@ void	expand_envs(t_command_list *command, t_env *env)
 //		}
 //		printf("-----------------------------------------------\n");
 //		commands = commands->next;
+//	}
+//	while (shell.env)
+//	{
+//		t_env *temp = shell.env;
+//		shell.env = shell.env->next;
+//		free(temp);
 //	}
 //	free_all(first_command);
 //	return (0);

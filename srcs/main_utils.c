@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 16:44:54 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 19:52:06 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/01 01:08:49 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	init_shell(t_shell_state *shell, char **envp)
 		{
 			name = ft_strndup(envp[i], eq_pos - envp[i]);
 			value = ft_strdup(eq_pos + 1);
-			 if (name && value)
+			if (name && value)
 				add_env_var(&shell->env, name, value);
 			free(name);
 			free(value);

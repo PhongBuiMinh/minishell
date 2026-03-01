@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 19:42:20 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/27 20:25:46 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/01 00:21:25 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@ typedef struct s_env
 }	t_env;
 
 /* env utils */
-t_env	*find_env(t_env *env, char *name);
+t_env	*find_env(t_env *env, char *name, int i);
 t_env	*find_env_var(t_env *env, char *name);
+int		env_cmp(char *env, char *var, int var_len);
 void	update_env(t_env **env_list, char *name, char *value);
 void	add_env_var(t_env **env_list, char *name, char *value);
 void	free_env_var(t_env *var);

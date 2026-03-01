@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:11:20 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/27 19:51:59 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/01 01:27:36 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	find_len(char *str)
 		i++;
 	}
 	if (brackets && str[i] != '}')
-		return (-1);	
+		return (-1);
 	return (i);
 }
 
@@ -101,4 +101,18 @@ void	split_argument_string(t_argument_list *arg, char *new_str, int *error)
 	while (split[j])
 		free(split[j++]);
 	free(split);
+}
+
+int	env_cmp(char *env, char *var, int var_len)
+{
+	int	i;
+
+	i = 0;
+	if (!env || !var || var_len < 0)
+		return (1);
+	while (env[i] && var[i] && i < var_len && env[i] == var[i])
+		i++;
+	if (i == var_len && env[i] == '\0')
+		return (0);
+	return (1);
 }

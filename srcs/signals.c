@@ -36,9 +36,13 @@ static void	sigint_handler(int sig)
 {
 	g_signal_received = sig;
 	ft_putchar_fd('\n', STDOUT_FILENO);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	/* only manipulate readline when we're actually reading a line */
+	if (RL_ISSTATE(RL_STATE_READCMD))
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 
 static void	sigquit_handler(int sig)

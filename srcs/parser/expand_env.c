@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/01 17:45:53 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/02 02:02:11 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@ void	var_not_found(t_argument_list *arg, int var_len, int i, int *remove_arg)
 {
 	char	*new_str;
 	char	*old_str;
+	int		old_len;
 	int		new_len;
 
 	old_str = arg->string;
-	new_len = ft_strlen(old_str) - (var_len + 1);
+	old_len = ft_strlen(old_str);
+	new_len = old_len - (var_len + 1);
 	if (new_len <= 0)
 	{
 		*remove_arg = 1;
@@ -30,7 +32,7 @@ void	var_not_found(t_argument_list *arg, int var_len, int i, int *remove_arg)
 		return ;
 	ft_memcpy(new_str, old_str, i);
 	ft_memcpy(new_str + i, old_str + var_len + i + 1,
-		ft_strlen(old_str) - var_len - 1);
+		old_len - var_len - 1);
 	new_str[new_len] = '\0';
 	free(arg->string);
 	arg->string = new_str;
@@ -49,25 +51,31 @@ void	expand_str(t_argument_list *arg, t_env *var, int i, int var_len)
 		return ;
 	if (is_double_quoted(arg))
 		replace_argument_string(arg, new_str);
-	split_argument_string(arg, new_str, &error);
+	else
+		split_argument_string(arg, new_str, &error);
 }
 
 void	replace_var(t_argument_list *arg, t_env *env_list,
 		int i, int *remove_arg)
 {
 	int		var_len;
+	int		brackets;
 	char	*str;
 	t_env	*env;
 
+	brackets = 0;
 	env = NULL;
 	str = arg->string;
-	var_len = find_len(str + i + 1);
+	var_len = find_len(str + i + 1, &brackets);
 	if (var_len < 0)
 		return ;
 	else if (var_len > 0)
-		env = find_env(env_list, str + i + 1, var_len);
+		env = find_env(env_list, str + i + 1, var_len, brackets);
 	if (env)
+	{
+		printf("env found : %s\n", env->name);
 		expand_str(arg, env, i, var_len);
+	}
 	else
 		var_not_found(arg, var_len, i, remove_arg);
 }
@@ -129,6 +137,60 @@ void	expand_args(t_command_list *command,
 	}
 }
 
+char	*remove_quotes_str(char *str)
+{
+	char	*new_str;
+	int		i;
+	int		j;
+	char	quote;
+
+	i = 0;
+	j = 0;
+	quote = 0;
+	new_str = malloc(ft_strlen(str) + 1);
+	if (!new_str)
+		return (NULL);
+	while (str[i])
+	{
+		if ((str[i] == '\'' || str[i] == '"') && quote == 0)
+			quote = str[i];
+		else if (str[i] == quote)
+			quote = 0;
+		else
+		{
+			new_str[j] = str[i];
+			j++;
+		}
+		i++;
+	}
+	new_str[j] = '\0';
+	return (new_str);
+}
+
+void	remove_quotes(t_command_list *command)
+{
+	t_argument_list	*argument;
+	char			*new_str;
+
+	argument = NULL;
+	while (command)
+	{
+		argument = command->args;
+		while (argument)
+		{
+			new_str = remove_quotes_str(argument->string);
+			if (new_str)
+			{
+				free(argument->string);
+				argument->string = new_str;
+			}
+			argument = argument->next;
+		}
+		command = command->next;
+	}
+
+}
+
 void	expand_envs(t_command_list *command, t_env *env)
 {
 	t_command_list	*current;
@@ -143,6 +205,8 @@ void	expand_envs(t_command_list *command, t_env *env)
 		expand_args(current, arg, env);
 		current = current->next;
 	}
+	current = command;
+	remove_quotes(current);
 }
 
 //int	main(int argc, char **argv, char **envp)

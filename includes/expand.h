@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 19:44:45 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/27 19:44:46 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/02 00:57:04 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 int		is_allowed(char c);
 int		is_single_quoted(t_argument_list *arg);
 int		is_double_quoted(t_argument_list *arg);
-int		find_len(char *str);
+int		find_len(char *str, int *brackets);
+t_env	*find_env(t_env *env, char *name, int i, int brackets);
 void	replace_argument_string(t_argument_list *arg, char *new_str);
 void	split_argument_string(t_argument_list *arg,
 			char *new_str, int *error);

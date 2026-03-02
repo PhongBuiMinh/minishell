@@ -6,17 +6,22 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:07:36 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/01 00:06:10 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/02 02:05:40 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-t_env	*find_env(t_env *env, char *name, int name_len)
+t_env	*find_env(t_env *env, char *name, int name_len, int brackets)
 {
 	while (env)
 	{
-		if (env_cmp(env->name, name, name_len) == 0)
+		if (brackets)
+		{
+			if (env_cmp(env->name, name + 1, name_len - 2) == 0)
+				return (env);
+		}
+		else if (env_cmp(env->name, name, name_len) == 0)
 			return (env);
 		env = env->next;
 	}

@@ -6,33 +6,31 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:11:20 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/01 01:27:36 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/02 01:56:52 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	find_len(char *str)
+int	find_len(char *str, int *brackets)
 {
 	int	i;
-	int	brackets;
 
 	i = 0;
-	brackets = 0;
 	if (str[i] == '{')
 	{
-		brackets = 1;
+		*brackets = 1;
 		i++;
 	}
 	while (str[i] && is_allowed(str[i]))
 	{
-		if (i == 0 && !ft_isalpha(str[i]))
+		if (i == 0 && !(ft_isalpha(str[i]) || str[i] == '_'))
 			return (0);
 		i++;
 	}
-	if (brackets && str[i] != '}')
+	if (*brackets && str[i] != '}')
 		return (-1);
-	return (i);
+	return (i + *brackets);
 }
 
 char	*create_new_str(char *old_str, t_env *var, int i, int var_len)
@@ -46,8 +44,8 @@ char	*create_new_str(char *old_str, t_env *var, int i, int var_len)
 	remove_len = var_len + 1;
 	old_len = ft_strlen(old_str);
 	value_len = ft_strlen(var->value);
-	new_len = old_len - remove_len + value_len + 1;
-	new_str = malloc(new_len);
+	new_len = old_len - remove_len + value_len;
+	new_str = malloc(new_len + 1);
 	if (!new_str)
 		return (NULL);
 	ft_memcpy(new_str, old_str, i);
@@ -62,12 +60,15 @@ void	insert_argument_strings(t_argument_list *arg, char **split, int *error)
 {
 	t_argument_list	*new_node;
 	t_argument_list	*current;
+	char			*str;
 	int				j;
 
 	j = 1;
+	str = arg->string;
 	arg->string = ft_strdup(split[0]);
 	if (!arg->string)
 		return ;
+	free(str);
 	current = arg;
 	while (split[j])
 	{
@@ -79,7 +80,7 @@ void	insert_argument_strings(t_argument_list *arg, char **split, int *error)
 			return ;
 		new_node->next = current->next;
 		current->next = new_node;
-		new_node = current;
+		current = new_node;
 		j++;
 	}
 }
@@ -87,16 +88,13 @@ void	insert_argument_strings(t_argument_list *arg, char **split, int *error)
 void	split_argument_string(t_argument_list *arg, char *new_str, int *error)
 {
 	char	**split;
-	char	*old_str;
 	int		j;
 
 	split = ft_split(new_str, ' ');
 	if (!split)
 		return ;
-	old_str = arg->string;
 	free(new_str);
 	insert_argument_strings(arg, split, error);
-	free(old_str);
 	j = 0;
 	while (split[j])
 		free(split[j++]);

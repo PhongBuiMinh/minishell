@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/02 02:02:11 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/04 01:47:09 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,7 @@ void	replace_var(t_argument_list *arg, t_env *env_list,
 	else if (var_len > 0)
 		env = find_env(env_list, str + i + 1, var_len, brackets);
 	if (env)
-	{
-		printf("env found : %s\n", env->name);
 		expand_str(arg, env, i, var_len);
-	}
 	else
 		var_not_found(arg, var_len, i, remove_arg);
 }
@@ -87,9 +84,9 @@ void	find_and_expand(t_argument_list *arg, t_env *env, int *remove_arg)
 	char	*str;
 
 	i = 0;
-	str = arg->string;
 	while (1)
 	{
+		str = arg->string;
 		i = 0;
 		dollar = 0;
 		while (str[i])
@@ -98,7 +95,7 @@ void	find_and_expand(t_argument_list *arg, t_env *env, int *remove_arg)
 			{
 				dollar = 1;
 				replace_var(arg, env, i, remove_arg);
-				if (remove_arg)
+				if (*remove_arg)
 					return ;
 				break ;
 			}
@@ -134,7 +131,7 @@ void	expand_args(t_command_list *command,
 		else
 			prev = arg;
 		arg = next;
-	}
+	}	
 }
 
 char	*remove_quotes_str(char *str)

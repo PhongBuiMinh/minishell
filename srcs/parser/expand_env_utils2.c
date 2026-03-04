@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:11:20 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/02 01:56:52 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/04 01:23:29 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*create_new_str(char *old_str, t_env *var, int i, int var_len)
 		return (NULL);
 	ft_memcpy(new_str, old_str, i);
 	ft_memcpy(new_str + i, var->value, value_len);
-	ft_memcpy(new_str + i + value_len, old_str + i + var_len,
+	ft_memcpy(new_str + i + value_len, old_str + i + remove_len,
 		old_len - remove_len - i);
 	new_str[new_len] = '\0';
 	return (new_str);

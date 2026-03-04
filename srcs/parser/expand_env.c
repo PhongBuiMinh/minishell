@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/04 01:47:09 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 00:38:22 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,23 +77,62 @@ void	replace_var(t_argument_list *arg, t_env *env_list,
 		var_not_found(arg, var_len, i, remove_arg);
 }
 
-void	find_and_expand(t_argument_list *arg, t_env *env, int *remove_arg)
+void	handle_exit_status(t_argument_list *arg, int i, int exit_status)
+{
+	char	*new_str;
+	char	*status_str;
+	int		len_after;
+	int		len_status;
+
+	status_str = ft_itoa(exit_status);
+	if (!status_str)
+		return ;
+	len_after = ft_strlen(arg->string + i + 2);
+	len_status = ft_strlen(status_str);
+	new_str = malloc(i + len_status + len_after);
+	if (!new_str)
+		return (free(status_str));
+	ft_memcpy(new_str, arg->string, i);
+	ft_memcpy(new_str, status_str, len_status);
+	ft_memcpy(new_str, arg->string + i + 2, len_after);
+	new_str[i + len_status + len_after] = '\0';
+	free(status_str);
+	free(arg->string);
+	arg->string = new_str;
+
+}
+
+void	find_and_expand(t_argument_list *arg, t_env *env, int *remove_arg, int exit_status)
 {
 	int		i;
 	int		dollar;
+	int		inside_quotes;
 	char	*str;
 
 	i = 0;
 	while (1)
 	{
+		inside_quotes = 0;
 		str = arg->string;
 		i = 0;
 		dollar = 0;
 		while (str[i])
 		{
-			if (str[i] == '$')
+			if (str[i] == '\'')
+			{
+				if (inside_quotes)
+					inside_quotes = 0;
+				else
+					inside_quotes = 1;
+			}
+			if (str[i] == '$' && !inside_quotes)
 			{
 				dollar = 1;
+				if (str[i + 1] == '?')
+				{
+					handle_exit_status(arg, i, exit_status);
+					break ;
+				}
 				replace_var(arg, env, i, remove_arg);
 				if (*remove_arg)
 					return ;
@@ -107,7 +146,7 @@ void	find_and_expand(t_argument_list *arg, t_env *env, int *remove_arg)
 }
 
 void	expand_args(t_command_list *command,
-		t_argument_list *arg, t_env *env)
+		t_argument_list *arg, t_env *env, int exit_status)
 {
 	t_argument_list	*next;
 	t_argument_list	*prev;
@@ -118,7 +157,7 @@ void	expand_args(t_command_list *command,
 	{
 		remove_arg = 0;
 		next = arg->next;
-		find_and_expand(arg, env, &remove_arg);
+		find_and_expand(arg, env, &remove_arg, exit_status);
 		if (remove_arg)
 		{
 			if (prev)
@@ -188,7 +227,7 @@ void	remove_quotes(t_command_list *command)
 
 }
 
-void	expand_envs(t_command_list *command, t_env *env)
+void	expand_envs(t_command_list *command, t_env *env, int exit_status)
 {
 	t_command_list	*current;
 	t_argument_list	*arg;
@@ -199,7 +238,7 @@ void	expand_envs(t_command_list *command, t_env *env)
 	while (current)
 	{
 		arg = current->args;
-		expand_args(current, arg, env);
+		expand_args(current, arg, env, exit_status);
 		current = current->next;
 	}
 	current = command;

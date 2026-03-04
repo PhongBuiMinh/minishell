@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 19:44:45 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/02 00:57:04 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 00:28:13 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,6 @@ void	split_argument_string(t_argument_list *arg,
 			char *new_str, int *error);
 char	*create_new_str(char *old_str, t_env *var,
 			int i, int var_len);
-void	expand_envs(t_command_list *command, t_env *env);
+void	expand_envs(t_command_list *command, t_env *env, int exit_status);
 
 #endif

@@ -46,10 +46,10 @@ int	process_cmd_line(t_shell_state *shell, char *full_input)
 	t_command_list	*commands;
 
 	commands = NULL;
-	if (parser(full_input, &commands) == 0 && commands != NULL)
-		execute_pipeline(commands, shell);
-	else
+	if (parser(full_input, &commands) == -1)
 		shell->exit_status = 2;
+	else if (commands != NULL)
+		shell->exit_status = execute_pipeline(commands, shell);
 	free(full_input);
 	return (shell->exit_status);
 }

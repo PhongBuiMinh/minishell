@@ -34,23 +34,26 @@ void	exec_external(char **argv, t_shell_state *shell)
 
 	env_array = env_to_array(shell->env);
 	if (!env_array)
-	{
-		free(argv);
-		exit(1);
-	}
+		return (free(argv), (void)exit(1));
+	path = argv[0];
 	if (ft_strchr(argv[0], '/') == NULL)
 	{
 		path = find_command_path(argv[0], env_array);
-		if (path)
+		if (!path)
 		{
-			execve(path, argv, env_array);
-			free(path);
+			ft_putstr_fd("minishell: command not found\n", STDERR_FILENO);
+			free(env_array);
+			free(argv);
+			exit(127);
 		}
 	}
-	execve(argv[0], argv, env_array);
+	execve(path, argv, env_array);
+	perror(argv[0]);
+	if (path != argv[0])
+		free(path);
 	free(env_array);
 	free(argv);
-	exit(127);
+	exit(126);
 }
 
 void	execute_command(t_exec_info *info)

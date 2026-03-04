@@ -12,13 +12,6 @@
 
 #include "minishell.h"
 
-// void	child_process(t_exec_info *info)
-// {
-// 	set_child_signals();
-// 	free(info->pids);
-// 	execute_command(info);
-// }
-
 void	parent_cleanup(t_pipe_info *pipe_info)
 {
 	if (pipe_info->prev_pipe != STDIN_FILENO)
@@ -53,21 +46,37 @@ int	fork_command(t_exec_info *info, int i)
 	return (0);
 }
 
+void	restore_fds(int saved_stdin, int saved_stdout)
+{
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	close(saved_stdin);
+	close(saved_stdout);
+}
+
 int	handle_single_builtin(t_command_list *cmds, t_shell_state *shell)
 {
 	char	**argv;
 	int		bltin_status;
+	int		saved_stdin;
+	int		saved_stdout;
 
+	if (cmds->next != NULL)
+		return (-1);
 	if (!cmds->args)
 		return (0);
 	argv = args_to_array(cmds->args);
 	if (!argv || !argv[0])
 		return (free(argv), 0);
-	if (is_builtin(argv[0]))
-		bltin_status = handle_builtin(argv[0], argv, shell);
-	else
-		bltin_status = -1;
+	if (!is_builtin(argv[0]))
+		return (free(argv), -1);
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
+	if (setup_redirections(cmds->redirs) < 0)
+		return (free(argv), restore_fds(saved_stdin, saved_stdout), 1);
+	bltin_status = handle_builtin(argv[0], argv, shell);
 	free(argv);
+	restore_fds(saved_stdin, saved_stdout);
 	return (bltin_status);
 }
 
@@ -81,7 +90,7 @@ int	execute_pipeline(t_command_list *cmds, t_shell_state *shell)
 	current = NULL;
 	if (!cmds || !shell)
 		return (0);
-	expand_envs(cmds, shell->env);
+	expand_envs(cmds, shell->env, shell->exit_status); // set up for $? expansion
 	ret = handle_single_builtin(cmds, shell);
 	if (ret != -1)
 		return (ret);

@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 18:15:15 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/05 18:39:22 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int	process_cmd_line(t_shell_state *shell, char *full_input)
 	commands = NULL;
 	if (parser(full_input, &commands) == -1)
 		shell->exit_status = 2;
-	else if (commands != NULL)
-		shell->exit_status = execute_pipeline(commands, shell);
 	free(full_input);
+	if (commands != NULL)
+		shell->exit_status = execute_pipeline(commands, shell);
 	return (shell->exit_status);
 }
 

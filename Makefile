@@ -40,13 +40,15 @@ SRCS = main.c \
 		builtins/ft_pwd.c \
 		builtins/ft_unset.c \
 		builtins/env_utils.c \
+		builtins/env_utils2.c \
 		executor/execute_builtins.c \
 		executor/execute_command.c \
 		executor/execute_pipeline.c \
 		executor/path_utils.c \
 		executor/execute_utils.c \
 		executor/setup_redirections.c \
-		signals.c 
+		signals/signals.c \
+		signals/signal_utils.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 DEPS = $(OBJS:.o=.d)
 

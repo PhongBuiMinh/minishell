@@ -18,6 +18,7 @@
 
 extern volatile sig_atomic_t	g_signal_received;
 
+void	set_signal_action(int signo, void (*handler)(int));
 void	set_interactive_signals(void);
 void	set_parent_wait_signals(void);
 void	set_child_signals(void);

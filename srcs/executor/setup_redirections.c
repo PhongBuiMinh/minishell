@@ -14,7 +14,7 @@
 
 int	setup_redir_out(t_redirection_list *redir)
 {
-	int fd;
+	int	fd;
 
 	if (redir->redir_type == REDIR_OUT)
 		fd = open(redir->target, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -64,7 +64,7 @@ void	read_heredoc(int write_fd, char *delimiter)
 	}
 }
 
-int setup_redir_heredoc(t_redirection_list *redir)
+int	setup_redir_heredoc(t_redirection_list *redir)
 {
 	int		fd[2];
 	pid_t	pid;

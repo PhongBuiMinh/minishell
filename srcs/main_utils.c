@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int check_unclosed_quotes(const char *str)
+int	check_unclosed_quotes(const char *str)
 {
 	int	single;
 	int	double_q;
@@ -36,10 +36,10 @@ int check_unclosed_quotes(const char *str)
 	return (0);
 }
 
-char *join_lines(char *old, char *new)
+char	*join_lines(char *old, char *new)
 {
-	char *with_newline;
-	char *result;
+	char	*with_newline;
+	char	*result;
 
 	if (!old)
 		return (ft_strdup(new));

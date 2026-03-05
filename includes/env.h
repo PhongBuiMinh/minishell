@@ -28,5 +28,7 @@ void	update_env(t_env **env_list, char *name, char *value);
 void	add_env_var(t_env **env_list, char *name, char *value);
 void	free_env_var(t_env *var);
 char	**env_to_array(t_env *env);
+void	swap_env_nodes(t_env *a, t_env *b);
+void	sort_env_list(t_env **env);
 
 #endif

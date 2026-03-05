@@ -90,7 +90,7 @@ int	execute_pipeline(t_command_list *cmds, t_shell_state *shell)
 	current = NULL;
 	if (!cmds || !shell)
 		return (0);
-	expand_envs(cmds, shell->env, shell->exit_status); // set up for $? expansion
+	expand_envs(cmds, shell->env, shell->exit_status);
 	ret = handle_single_builtin(cmds, shell);
 	if (ret != -1)
 		return (ret);

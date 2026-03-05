@@ -17,19 +17,6 @@
 
 volatile sig_atomic_t	g_signal_received = 0;
 
-int	process_signal(t_shell_state *shell, char **full_input)
-{
-	if (g_signal_received == SIGINT)
-	{
-		shell->exit_status = 130;
-		g_signal_received = 0;
-		free(*full_input);
-		*full_input = NULL;
-		return (1);
-	}
-	return (0);
-}
-
 static void	sigint_handler(int sig)
 {
 	g_signal_received = sig;
@@ -44,7 +31,7 @@ static void	sigquit_handler(int sig)
 	(void)sig;
 }
 
-static void	set_signal_action(int signo, void (*handler)(int))
+void	set_signal_action(int signo, void (*handler)(int))
 {
 	struct sigaction	sa;
 
@@ -58,16 +45,4 @@ void	set_interactive_signals(void)
 {
 	set_signal_action(SIGINT, sigint_handler);
 	set_signal_action(SIGQUIT, sigquit_handler);
-}
-
-void	set_parent_wait_signals(void)
-{
-	set_signal_action(SIGINT, SIG_IGN);
-	set_signal_action(SIGQUIT, SIG_IGN);
-}
-
-void	set_child_signals(void)
-{
-	set_signal_action(SIGINT, SIG_DFL);
-	set_signal_action(SIGQUIT, SIG_DFL);
 }

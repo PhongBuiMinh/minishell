@@ -25,7 +25,7 @@ int	count_commands(t_command_list *commands)
 	return (count);
 }
 
-t_exec_info init_exec_info(t_command_list *cmds, t_shell_state *shell)
+t_exec_info	init_exec_info(t_command_list *cmds, t_shell_state *shell)
 {
 	t_exec_info	info;
 
@@ -97,25 +97,21 @@ int	wait_all_children(pid_t *pids, int num_cmds)
 	int	exit_status;
 
 	exit_status = 0;
-	i = 0;
-	while (i < num_cmds)
+	i = -1;
+	while (++i < num_cmds)
 	{
-		if (waitpid(pids[i], &status, 0) > 0)
+		if (waitpid(pids[i], &status, 0) > 0 && i == num_cmds - 1)
 		{
-			if (i == num_cmds - 1)
+			if ((status & 0x7F) == SIGINT)
 			{
-				if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-				{
-					ft_putchar_fd('\n', STDOUT_FILENO);
-					exit_status = 130;
-				}
-				else if (WIFSIGNALED(status))
-					exit_status = 128 + WTERMSIG(status);
-				else if (WIFEXITED(status))
-					exit_status = WEXITSTATUS(status);
+				ft_putchar_fd('\n', STDOUT_FILENO);
+				exit_status = 130;
 			}
+			else if ((status & 0x7F) != 0 && (status & 0x7F) != 0x7F)
+				exit_status = 128 + (status & 0x7F);
+			else
+				exit_status = (status >> 8) & 0xFF;
 		}
-		i++;
 	}
 	return (exit_status);
 }

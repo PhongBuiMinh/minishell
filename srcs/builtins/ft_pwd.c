@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int ft_pwd(void)
+int	ft_pwd(void)
 {
 	char	cwd[PATH_MAX];
 
@@ -22,6 +22,7 @@ int ft_pwd(void)
 		ft_putchar_fd('\n', STDOUT_FILENO);
 		return (0);
 	}
-	ft_putstr_fd("minishell: pwd: error retreiving current directory\n", STDERR_FILENO);
+	ft_putstr_fd("minishell: pwd: error retreiving current directory\n",
+		STDERR_FILENO);
 	return (1);
 }

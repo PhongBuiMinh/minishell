@@ -18,7 +18,8 @@
 
 extern volatile sig_atomic_t	g_signal_received;
 
-void	init_signal_handlers(void);
+void	set_interactive_signals(void);
+void	set_parent_wait_signals(void);
 void	set_child_signals(void);
 int		process_signal(t_shell_state *shell, char **full_input);
 

@@ -95,6 +95,7 @@ int	execute_pipeline(t_command_list *cmds, t_shell_state *shell)
 	if (ret != -1)
 		return (ret);
 	info = init_exec_info(cmds, shell);
+	set_parent_wait_signals();
 	current = cmds;
 	i = 0;
 	while (current)
@@ -103,10 +104,11 @@ int	execute_pipeline(t_command_list *cmds, t_shell_state *shell)
 		info.pipe_info.is_first = (i == 0);
 		info.pipe_info.is_last = (current->next == NULL);
 		if (fork_command(&info, i) < 0)
-			return (free(info.pids), 1);
+			return (set_interactive_signals(), free(info.pids), 1);
 		current = current->next;
 		i++;
 	}
 	ret = wait_all_children(info.pids, info.num_cmds);
+	set_interactive_signals();
 	return (free(info.pids), ret);
 }

@@ -64,7 +64,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	rl_catch_signals = 0;
 	init_shell(&shell, envp);
-	init_signal_handlers();
+	set_interactive_signals();
 	shell.exit_status = 0;
 	full_input = NULL;
 	while (1)

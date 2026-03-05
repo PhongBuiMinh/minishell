@@ -83,7 +83,9 @@ int setup_redir_heredoc(t_redirection_list *redir)
 		read_heredoc(fd[1], redir->target);
 	}
 	close(fd[1]);
+	set_parent_wait_signals();
 	waitpid(pid, NULL, 0);
+	set_interactive_signals();
 	if (dup2(fd[0], STDIN_FILENO) < 0)
 		return (close(fd[0]), -1);
 	close(fd[0]);

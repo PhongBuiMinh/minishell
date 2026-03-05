@@ -27,8 +27,6 @@ int	process_signal(t_shell_state *shell, char **full_input)
 		*full_input = NULL;
 		return (1);
 	}
-	else if (g_signal_received == SIGQUIT)
-		g_signal_received = 0;
 	return (0);
 }
 
@@ -36,13 +34,9 @@ static void	sigint_handler(int sig)
 {
 	g_signal_received = sig;
 	ft_putchar_fd('\n', STDOUT_FILENO);
-	/* only manipulate readline when we're actually reading a line */
-	if (RL_ISSTATE(RL_STATE_READCMD))
-	{
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
 static void	sigquit_handler(int sig)
@@ -50,23 +44,30 @@ static void	sigquit_handler(int sig)
 	(void)sig;
 }
 
-void	init_signal_handlers(void)
+static void	set_signal_action(int signo, void (*handler)(int))
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
+	struct sigaction	sa;
 
-	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = 0;
-	sa_int.sa_handler = sigint_handler;
-	sigaction(SIGINT, &sa_int, NULL);
-	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = 0;
-	sa_quit.sa_handler = sigquit_handler;
-	sigaction(SIGQUIT, &sa_quit, NULL);
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = handler;
+	sigaction(signo, &sa, NULL);
+}
+
+void	set_interactive_signals(void)
+{
+	set_signal_action(SIGINT, sigint_handler);
+	set_signal_action(SIGQUIT, sigquit_handler);
+}
+
+void	set_parent_wait_signals(void)
+{
+	set_signal_action(SIGINT, SIG_IGN);
+	set_signal_action(SIGQUIT, SIG_IGN);
 }
 
 void	set_child_signals(void)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	set_signal_action(SIGINT, SIG_DFL);
+	set_signal_action(SIGQUIT, SIG_DFL);
 }

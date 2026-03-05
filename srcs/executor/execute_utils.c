@@ -104,10 +104,15 @@ int	wait_all_children(pid_t *pids, int num_cmds)
 		{
 			if (i == num_cmds - 1)
 			{
-				if ((status & 0x7F) == 0)
-					exit_status = (status >> 8) & 0xFF;
-				else
-					exit_status = 128 + (status & 0x7F);
+				if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+				{
+					ft_putchar_fd('\n', STDOUT_FILENO);
+					exit_status = 130;
+				}
+				else if (WIFSIGNALED(status))
+					exit_status = 128 + WTERMSIG(status);
+				else if (WIFEXITED(status))
+					exit_status = WEXITSTATUS(status);
 			}
 		}
 		i++;

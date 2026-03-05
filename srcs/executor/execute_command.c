@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 13:40:08 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/05 19:10:37 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	execute_command(t_exec_info *info)
 	{
 		builtin_ret = handle_builtin(cmd, argv, info->shell);
 		free(argv);
+		free_env_list(info->shell->env);
 		exit(builtin_ret);
 	}
 	exec_external(argv, info->shell);

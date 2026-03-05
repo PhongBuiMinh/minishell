@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 07:49:57 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 18:14:39 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/05 19:11:19 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	update_full_var(t_env *env_var, char *new_value)
 	if (!temp)
 		return (-1);
 	if (new_value)
-		env_var->full_var = ft_strjoin(temp, new_value);
+		env_var->full_var = ft_strjoin_free(temp, new_value);
 	else
 		env_var->full_var = temp;
 	if (!env_var->full_var)
@@ -82,6 +82,7 @@ int	process_export_arg(char *arg, t_shell_state *shell)
 	{
 		free(existing->value);
 		existing->value = value;
+		free(name);
 		return (update_full_var(existing, value));
 	}
 	add_env_var(&shell->env, name, value);

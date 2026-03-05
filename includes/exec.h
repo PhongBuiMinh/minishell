@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 12:32:02 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/05 13:48:29 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,13 @@ t_exec_info							init_exec_info(t_command_list *cmds,
 										t_shell_state *shell);
 
 /* redir */
+void								read_heredoc(int write_fd, char *delim,
+										int expand, t_shell_state *shell);
+int									setup_redir_heredoc(
+										t_redirection_list *redir,
+										t_shell_state *shell);
 int									setup_redirections(
-										t_redirection_list *redirs);
+										t_redirection_list *redirs,
+										t_shell_state *shell);
 
 #endif

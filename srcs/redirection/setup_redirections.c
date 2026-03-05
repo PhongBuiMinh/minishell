@@ -41,58 +41,7 @@ int	setup_redir_in(char *target)
 	return (0);
 }
 
-void	read_heredoc(int write_fd, char *delimiter)
-{
-	char	*line;
-
-	while (1)
-	{
-		line = readline("> ");
-		if (!line || ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			close(write_fd);
-			exit(0);
-		}
-		ft_putendl_fd(line, write_fd);
-		free(line);
-		if (g_signal_received == SIGINT)
-		{
-			close(write_fd);
-			exit(130);
-		}
-	}
-}
-
-int	setup_redir_heredoc(t_redirection_list *redir)
-{
-	int		fd[2];
-	pid_t	pid;
-
-	if (pipe(fd) < 0)
-		return (-1);
-	pid = fork();
-	if (pid < 0)
-		return (close(fd[0]), close(fd[1]), -1);
-	if (pid == 0)
-	{
-		rl_catch_signals = 0;
-		set_child_signals();
-		signal(SIGQUIT, SIG_IGN);
-		close(fd[0]);
-		read_heredoc(fd[1], redir->target);
-	}
-	close(fd[1]);
-	set_parent_wait_signals();
-	waitpid(pid, NULL, 0);
-	set_interactive_signals();
-	if (dup2(fd[0], STDIN_FILENO) < 0)
-		return (close(fd[0]), -1);
-	close(fd[0]);
-	return (0);
-}
-
-int	setup_redirections(t_redirection_list *redirs)
+int	setup_redirections(t_redirection_list *redirs, t_shell_state *shell)
 {
 	while (redirs)
 	{
@@ -109,7 +58,7 @@ int	setup_redirections(t_redirection_list *redirs)
 		}
 		else if (redirs->redir_type == REDIR_HEREDOC)
 		{
-			if (setup_redir_heredoc(redirs) < 0)
+			if (setup_redir_heredoc(redirs, shell) < 0)
 				return (-1);
 		}
 		redirs = redirs->next;

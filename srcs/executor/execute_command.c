@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/01 18:03:36 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 13:40:08 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	execute_command(t_exec_info *info)
 	int		builtin_ret;
 
 	setup_pipes(&info->pipe_info);
-	if (setup_redirections(info->cmd->redirs) < 0)
+	if (setup_redirections(info->cmd->redirs, info->shell) < 0)
 		exit(1);
 	argv = args_to_array(info->cmd->args);
 	if (!argv)

@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 12:30:10 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/05 13:33:01 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	handle_single_builtin(t_command_list *cmds, t_shell_state *shell)
 		return (free(argv), -1);
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
-	if (setup_redirections(cmds->redirs) < 0)
+	if (setup_redirections(cmds->redirs, shell) < 0)
 		return (free(argv), restore_fds(saved_stdin, saved_stdout), 1);
 	bltin_status = handle_builtin(argv[0], argv, shell);
 	free(argv);

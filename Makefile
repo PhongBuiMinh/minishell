@@ -47,7 +47,9 @@ SRCS = main.c \
 		executor/execute_pipeline.c \
 		executor/paths.c \
 		executor/execute_utils.c \
-		executor/setup_redirections.c \
+		redirection/setup_redirections.c \
+		redirection/setup_heredoc.c \
+		parser/expand_heredoc.c \
 		signals/signals.c \
 		signals/signal_utils.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

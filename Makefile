@@ -53,9 +53,6 @@ SRCS = main.c \
 		signals/signals.c \
 		signals/signal_utils.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
-DEPS = $(OBJS:.o=.d)
-
--include $(DEPS)
 
 # Libraries
 LIBFT_PATH = libft
@@ -72,11 +69,11 @@ $(NAME): $(LIBFT) $(OBJS) | $(OBJ_DIR)
 	@$(CC) $(FLAGS) $^ -L$(LIBFT_PATH) -lft -lc -lreadline -o $@
 
 # Object file rules
-
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	@echo "$(GREEN)Compiling source files...$(DEFAULT)"
 	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -MMD -MP -c $< -o $@
+# 	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -c $< -o $@
 
 # Library build
 $(LIBFT):

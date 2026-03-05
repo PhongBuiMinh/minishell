@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 16:42:54 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 19:50:20 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 18:15:23 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,16 @@ void	free_env_var(t_env *var)
 	free(var->value);
 	free(var->full_var);
 	free(var);
+}
+
+void	free_env_list(t_env *env)
+{
+	t_env	*next;
+
+	while (env)
+	{
+		next = env->next;
+		free_env_var(env);
+		env = next;
+	}
 }

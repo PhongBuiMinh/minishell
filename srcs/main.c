@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 19:50:20 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 18:15:15 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,6 @@ int	main(int argc, char **argv, char **envp)
 		shell.exit_status = process_cmd_line(&shell, full_input);
 		full_input = NULL;
 	}
+	free_env_list(shell.env);
 	return (shell.exit_status);
 }

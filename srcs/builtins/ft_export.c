@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 07:49:57 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 19:50:20 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 18:14:39 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,7 @@ int	process_export_arg(char *arg, t_shell_state *shell)
 		return (0);
 	name = ft_strndup(arg, eq_pos - arg);
 	if (!name || !valid_export_var(name))
-	{
-		free(name);
-		return (1);
-	}
+		return (free(name), 1);
 	value = ft_strdup(eq_pos + 1);
 	existing = find_env_var(shell->env, name);
 	if (existing)
@@ -88,8 +85,7 @@ int	process_export_arg(char *arg, t_shell_state *shell)
 		return (update_full_var(existing, value));
 	}
 	add_env_var(&shell->env, name, value);
-	free(name);
-	return (0);
+	return (free(name), free(value), 0);
 }
 
 int	ft_export(char **args, t_shell_state *shell)

@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:38:35 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 19:50:20 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 18:14:21 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	clean_exit(t_shell_state *shell, char **argv, int code)
+{
+	rl_clear_history();
+	free_env_list(shell->env);
+	free(argv);
+	exit(code);
+}
 
 int	is_numeric(const char *str)
 {
@@ -35,16 +43,12 @@ int	ft_exit(char **argv, t_shell_state *shell)
 
 	ft_putstr_fd("exit\n", STDERR_FILENO);
 	if (!argv[1])
-	{
-		rl_clear_history();
-		exit(shell->exit_status);
-	}
+		clean_exit(shell, argv, shell->exit_status);
 	if (!is_numeric(argv[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-		rl_clear_history();
 		ft_putstr_fd("numeric argument required\n", STDERR_FILENO);
-		exit(255);
+		clean_exit(shell, argv, 255);
 	}
 	if (argv[2])
 	{
@@ -52,29 +56,6 @@ int	ft_exit(char **argv, t_shell_state *shell)
 		return (1);
 	}
 	exit_code = ft_atoi(argv[1]) % 256;
-	rl_clear_history();
-	exit(exit_code);
+	clean_exit(shell, argv, exit_code);
+	return (0);
 }
-
-// int	ft_exit(char **argv, t_shell_state *shell)
-// {
-// 	ft_putstr_fd("exit\n", STDERR_FILENO);
-// 	if (!argv[1])
-// 		return (shell->exit_status % 256);
-// 	if (!is_numeric(argv[1]))
-// 	{
-// 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-// 		ft_putstr_fd(argv[1], STDERR_FILENO);
-// 		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-// 		if (getpid() != getppid())  // Child process
-// 			exit(255);
-// 		return (255);
-// 	}
-// 	if (argv[2])
-// 	{
-// 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-// 		return (1);
-// 	}
-// 	rl_clear_history();
-// 	exit(ft_atoi(argv[1]) % 256);
-// }

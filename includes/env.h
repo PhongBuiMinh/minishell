@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 19:42:20 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/02 00:57:36 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 18:15:30 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int		env_cmp(char *env, char *var, int var_len);
 void	update_env(t_env **env_list, char *name, char *value);
 void	add_env_var(t_env **env_list, char *name, char *value);
 void	free_env_var(t_env *var);
+void	free_env_list(t_env *env);
 char	**env_to_array(t_env *env);
 void	swap_env_nodes(t_env *a, t_env *b);
 void	sort_env_list(t_env **env);

@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 09:57:52 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 12:29:52 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/05 18:14:58 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	update_env_value(t_env *env_var, char *new_value)
 	env_var->value = ft_strdup(new_value);
 	free(env_var->full_var);
 	env_var->full_var = ft_strjoin(env_var->name, "=");
-	env_var->full_var = ft_strjoin(env_var->full_var, new_value);
+	env_var->full_var = ft_strjoin_free(env_var->full_var, new_value);
 }
 
 void	update_env(t_env **env_list, char *name, char *value)

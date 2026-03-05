@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/05 00:38:22 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 20:13:35 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,12 @@ void	handle_exit_status(t_argument_list *arg, int i, int exit_status)
 		return ;
 	len_after = ft_strlen(arg->string + i + 2);
 	len_status = ft_strlen(status_str);
-	new_str = malloc(i + len_status + len_after);
+	new_str = malloc(i + len_status + len_after + 1);
 	if (!new_str)
 		return (free(status_str));
 	ft_memcpy(new_str, arg->string, i);
-	ft_memcpy(new_str, status_str, len_status);
-	ft_memcpy(new_str, arg->string + i + 2, len_after);
+	ft_memcpy(new_str + i, status_str, len_status);
+	ft_memcpy(new_str + i + len_status, arg->string + i + 2, len_after);
 	new_str[i + len_status + len_after] = '\0';
 	free(status_str);
 	free(arg->string);

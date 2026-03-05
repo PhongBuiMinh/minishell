@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/13 14:20:51 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 20:57:11 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 12:30:14 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_exec_info	init_exec_info(t_command_list *cmds, t_shell_state *shell)
 
 	info.shell = shell;
 	info.num_cmds = count_commands(cmds);
-	info.pids = malloc(sizeof(pid_t) * info.num_cmds);
+	info.pids = ft_calloc(info.num_cmds, sizeof(pid_t));
 	if (!info.pids)
 		return (info);
 	info.pipe_info.prev_pipe = STDIN_FILENO;

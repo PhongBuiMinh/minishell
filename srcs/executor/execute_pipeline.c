@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipeline.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 00:29:23 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/05 12:30:05 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parent_cleanup(t_pipe_info *pipe_info)
+void	manage_pipe_fds(t_pipe_info *pipe_info)
 {
 	if (pipe_info->prev_pipe != STDIN_FILENO)
 		close(pipe_info->prev_pipe);
@@ -42,52 +42,32 @@ int	fork_command(t_exec_info *info, int i)
 		execute_command(info);
 	}
 	info->pids[i] = pid;
-	parent_cleanup(&info->pipe_info);
+	manage_pipe_fds(&info->pipe_info);
 	return (0);
 }
 
-void	restore_fds(int saved_stdin, int saved_stdout)
+int	run_pipeline(t_exec_info *info, t_command_list *cmds)
 {
-	dup2(saved_stdin, STDIN_FILENO);
-	dup2(saved_stdout, STDOUT_FILENO);
-	close(saved_stdin);
-	close(saved_stdout);
-}
+	int	i;
 
-int	handle_single_builtin(t_command_list *cmds, t_shell_state *shell)
-{
-	char	**argv;
-	int		bltin_status;
-	int		saved_stdin;
-	int		saved_stdout;
-
-	if (cmds->next != NULL)
-		return (-1);
-	if (!cmds->args)
-		return (0);
-	argv = args_to_array(cmds->args);
-	if (!argv || !argv[0])
-		return (free(argv), 0);
-	if (!is_builtin(argv[0]))
-		return (free(argv), -1);
-	saved_stdin = dup(STDIN_FILENO);
-	saved_stdout = dup(STDOUT_FILENO);
-	if (setup_redirections(cmds->redirs) < 0)
-		return (free(argv), restore_fds(saved_stdin, saved_stdout), 1);
-	bltin_status = handle_builtin(argv[0], argv, shell);
-	free(argv);
-	restore_fds(saved_stdin, saved_stdout);
-	return (bltin_status);
+	i = 0;
+	while (cmds)
+	{
+		info->cmd = cmds;
+		info->pipe_info.is_first = (i == 0);
+		info->pipe_info.is_last = (cmds->next == NULL);
+		if (fork_command(info, i++) < 0)
+			return (-1);
+		cmds = cmds->next;
+	}
+	return (0);
 }
 
 int	execute_pipeline(t_command_list *cmds, t_shell_state *shell)
 {
-	t_exec_info		info;
-	t_command_list	*current;
-	int				i;
-	int				ret;
+	t_exec_info	info;
+	int			ret;
 
-	current = NULL;
 	if (!cmds || !shell)
 		return (0);
 	expand_envs(cmds, shell->env, shell->exit_status);
@@ -95,20 +75,11 @@ int	execute_pipeline(t_command_list *cmds, t_shell_state *shell)
 	if (ret != -1)
 		return (ret);
 	info = init_exec_info(cmds, shell);
+	if (!info.pids)
+		return (1);
 	set_parent_wait_signals();
-	current = cmds;
-	i = 0;
-	while (current)
-	{
-		info.cmd = current;
-		info.pipe_info.is_first = (i == 0);
-		info.pipe_info.is_last = (current->next == NULL);
-		if (fork_command(&info, i) < 0)
-			return (set_interactive_signals(), free(info.pids), 1);
-		current = current->next;
-		i++;
-	}
+	if (run_pipeline(&info, cmds) < 0)
+		return (set_interactive_signals(), free(info.pids), 1);
 	ret = wait_all_children(info.pids, info.num_cmds);
-	set_interactive_signals();
-	return (free(info.pids), ret);
+	return (free(info.pids), set_interactive_signals(), ret);
 }

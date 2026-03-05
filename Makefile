@@ -39,12 +39,13 @@ SRCS = main.c \
 		builtins/ft_export.c \
 		builtins/ft_pwd.c \
 		builtins/ft_unset.c \
-		builtins/env_utils.c \
-		builtins/env_utils2.c \
-		executor/execute_builtins.c \
+		builtins/builtin_dispatcher.c \
+		env/env_utils.c \
+		env/env_utils2.c \
+		executor/execute_single_builtin.c \
 		executor/execute_command.c \
 		executor/execute_pipeline.c \
-		executor/path_utils.c \
+		executor/paths.c \
 		executor/execute_utils.c \
 		executor/setup_redirections.c \
 		signals/signals.c \

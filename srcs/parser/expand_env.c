@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/05 20:13:35 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/06 20:08:17 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	var_not_found(t_argument_list *arg, int var_len, int i, int *remove_arg)
 		return ;
 	ft_memcpy(new_str, old_str, i);
 	ft_memcpy(new_str + i, old_str + var_len + i + 1,
-		old_len - var_len - 1);
+		old_len - i - var_len - 1);
 	new_str[new_len] = '\0';
 	free(arg->string);
 	arg->string = new_str;

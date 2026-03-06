@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 18:36:03 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/01 18:38:38 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/06 18:01:26 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ int	parser(char *input, t_command_list **first_command)
 	if (error)
 	{
 		free_all(*first_command);
+		*first_command = NULL;
 		printf("parser error\n");
 		return (-1);
 	}

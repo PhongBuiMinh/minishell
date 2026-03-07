@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_utils2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:11:20 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/04 01:23:29 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/07 10:45:26 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,15 @@ void	split_argument_string(t_argument_list *arg, char *new_str, int *error)
 	if (!split)
 		return ;
 	free(new_str);
+	if (!split[0])
+	{
+		free(split);
+		free(arg->string);
+		arg->string = ft_strdup("");
+		if (!arg->string)
+			*error = 1;
+		return ;
+	}
 	insert_argument_strings(arg, split, error);
 	j = 0;
 	while (split[j])

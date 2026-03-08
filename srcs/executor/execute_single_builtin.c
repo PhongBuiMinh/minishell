@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 13:33:01 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/07 23:14:45 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,18 @@ int	handle_single_builtin(t_command_list *cmds, t_shell_state *shell)
 	int		saved_stdin;
 	int		saved_stdout;
 
-	if (cmds->next != NULL)
+	if (cmds->next)
 		return (-1);
-	if (!cmds->args)
-		return (0);
 	argv = args_to_array(cmds->args);
-	if (!argv || !argv[0])
-		return (free(argv), 0);
-	if (!is_builtin(argv[0]))
+	if (argv && argv[0] && !is_builtin(argv[0]))
 		return (free(argv), -1);
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
 	if (setup_redirections(cmds->redirs, shell) < 0)
 		return (free(argv), restore_fds(saved_stdin, saved_stdout), 1);
-	bltin_status = handle_builtin(argv[0], argv, shell);
+	bltin_status = 0;
+	if (argv && argv[0])
+		bltin_status = handle_builtin(argv[0], argv, shell);
 	free(argv);
 	restore_fds(saved_stdin, saved_stdout);
 	return (bltin_status);

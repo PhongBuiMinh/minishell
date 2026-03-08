@@ -50,6 +50,7 @@ SRCS = main.c \
 		executor/execute_command.c \
 		executor/execute_pipeline.c \
 		executor/paths.c \
+		executor/paths2.c \
 		executor/execute_utils.c \
 		redirection/setup_redirections.c \
 		redirection/setup_heredoc.c \

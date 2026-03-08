@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 19:10:37 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/08 06:34:04 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,10 @@ void	exec_external(char **argv, t_shell_state *shell)
 	env_array = env_to_array(shell->env);
 	if (!env_array)
 		return (free(argv), (void)exit(1));
-	path = argv[0];
-	if (ft_strchr(argv[0], '/') == NULL)
-	{
-		path = find_command_path(argv[0], env_array);
-		if (!path)
-		{
-			ft_putstr_fd("minishell: command not found\n", STDERR_FILENO);
-			free(env_array);
-			free(argv);
-			exit(127);
-		}
-	}
+	path = get_exec_path(argv, env_array);
+	if (!path)
+		exit(127);
+	check_exec_path(argv, path, env_array);
 	execve(path, argv, env_array);
 	perror(argv[0]);
 	if (path != argv[0])

@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 13:48:29 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/08 06:33:48 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,11 @@ char								*find_command_path(char *cmd,
 										char **env_array);
 t_exec_info							init_exec_info(t_command_list *cmds,
 										t_shell_state *shell);
+int	is_directory(char *path);
+void	check_exec_path(char **argv, char *path, char **env);
+char	*get_exec_path(char **argv, char **env_array);
+
+
 
 /* redir */
 void								read_heredoc(int write_fd, char *delim,

@@ -21,6 +21,7 @@
 # include <stdbool.h>
 # include <fcntl.h>
 # include <sys/wait.h>
+# include <dirent.h>
 
 /* project headers */
 # include "env.h"

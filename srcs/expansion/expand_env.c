@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/08 02:51:23 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/08 04:01:42 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ void	replace_var(t_shell_info *shell, t_argument_list *arg, int i)
 		var_value = ft_itoa(shell->exit_status);
 		if (!var_value)
 			return ;
-		var_len = ft_strlen(var_value);
-		return (expand_str(arg, var_value, i, var_len));
+		return (expand_str(arg, var_value, i, 1));
 	}
 	var_len = find_len(str + i + 1, &brackets);
 	if (var_len < 0)

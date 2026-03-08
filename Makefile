@@ -25,13 +25,17 @@ SRCS = main.c \
 		main_utils.c \
 		memory.c \
 		lexer/lexer.c \
-		lexer/utils.c \
+		lexer/lexer2.c \
+		lexer/lexer_utils.c \
 		parser/parser_utils.c \
 		parser/parser_utils2.c \
 		parser/parser.c \
-		parser/expand_env.c \
-		parser/expand_env_utils.c \
-		parser/expand_env_utils2.c \
+		parser/parser2.c \
+		expansion/expand_env.c \
+		expansion/expand_env2.c \
+		expansion/expand_env_utils.c \
+		expansion/expand_env_utils2.c \
+		expansion/remove_quotes.c \
 		builtins/ft_cd.c \
 		builtins/ft_echo.c \
 		builtins/ft_env.c \
@@ -49,7 +53,6 @@ SRCS = main.c \
 		executor/execute_utils.c \
 		redirection/setup_redirections.c \
 		redirection/setup_heredoc.c \
-		parser/expand_heredoc.c \
 		signals/signals.c \
 		signals/signal_utils.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

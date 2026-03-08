@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_heredoc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 00:00:00 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/05 15:04:59 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/08 00:37:15 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@ void	read_heredoc(int write_fd, char *delim, int expand,
 	char	*line;
 	char	*exp_line;
 
+	(void)expand;
+	(void)shell;
+	(void)exp_line;
+
 	while (1)
 	{
 		line = readline("> ");
@@ -34,16 +38,16 @@ void	read_heredoc(int write_fd, char *delim, int expand,
 			close(write_fd);
 			exit(0);
 		}
-		if (expand)
-		{
-			exp_line = expand_hd_line(ft_strdup(line), shell->env,
-					shell->exit_status);
-			if (exp_line)
-				ft_putendl_fd(exp_line, write_fd);
-			free(exp_line);
-		}
-		else
-			ft_putendl_fd(line, write_fd);
+		//if (expand)
+		//{
+		//	exp_line = expand_hd_line(ft_strdup(line), shell->env,
+		//			shell->exit_status);
+		//	if (exp_line)
+		//		ft_putendl_fd(exp_line, write_fd);
+		//	free(exp_line);
+		//}
+		//else
+		//	ft_putendl_fd(line, write_fd);
 		free(line);
 	}
 }

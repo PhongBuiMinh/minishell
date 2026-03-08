@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 19:43:12 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/27 19:43:30 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/08 01:19:36 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,13 @@ typedef struct s_lexer
 /* lexer utils */
 int					ft_isspace(char c);
 int					is_redirection(t_token_type type);
+int					contains_quotes(char *s, char *quote_char);
+char				*ft_strndup(const char *s1, size_t n);
 void				free_token(t_token *token);
 
 /* lexer core */
 int					string_token(char *input, t_token *next_tok, int just_peek,
 						t_token_type *next_tok_type);
-int					one_char_tokens(char *input, t_token_type *next_tok_type);
-int					two_char_tokens(char *input, t_token_type *next_tok_type);
 int					get_next(char *input, t_token *tok, int just_peek,
 						t_token_type *type);
 void				lexer_skip(t_lexer *lex);

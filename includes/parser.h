@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 19:43:41 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/02/27 20:09:28 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/08 00:46:22 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,13 @@ typedef struct s_command_list
 /* parser */
 int								parser(char *input,
 									t_command_list **first_command);
+int								skip_and_expect(t_lexer *lexer, int *error);
 void							free_all(t_command_list *commands);
 void							init_command(t_command_list *command);
+void							parse_string(t_lexer *lexer, char **str_pointer,
+									int *error);
+void							parse_argument(t_lexer *lexer,
+									t_command_list *command, int *error);
 void							set_error(int *error, t_parse_error err_reason);
 t_argument_list					*create_arg_node(int *error);
 t_redirection_list				*create_redir_node(int *error);

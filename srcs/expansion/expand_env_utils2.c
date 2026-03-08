@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_utils2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:11:20 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/07 10:45:26 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/08 02:21:57 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	find_len(char *str, int *brackets)
 	return (i + *brackets);
 }
 
-char	*create_new_str(char *old_str, t_env *var, int i, int var_len)
+char	*create_new_str(char *old_str, char *var_value, int i, int var_len)
 {
 	int		remove_len;
 	int		old_len;
@@ -43,13 +43,13 @@ char	*create_new_str(char *old_str, t_env *var, int i, int var_len)
 
 	remove_len = var_len + 1;
 	old_len = ft_strlen(old_str);
-	value_len = ft_strlen(var->value);
+	value_len = ft_strlen(var_value);
 	new_len = old_len - remove_len + value_len;
 	new_str = malloc(new_len + 1);
 	if (!new_str)
 		return (NULL);
 	ft_memcpy(new_str, old_str, i);
-	ft_memcpy(new_str + i, var->value, value_len);
+	ft_memcpy(new_str + i, var_value, value_len);
 	ft_memcpy(new_str + i + value_len, old_str + i + remove_len,
 		old_len - remove_len - i);
 	new_str[new_len] = '\0';
@@ -94,15 +94,6 @@ void	split_argument_string(t_argument_list *arg, char *new_str, int *error)
 	if (!split)
 		return ;
 	free(new_str);
-	if (!split[0])
-	{
-		free(split);
-		free(arg->string);
-		arg->string = ft_strdup("");
-		if (!arg->string)
-			*error = 1;
-		return ;
-	}
 	insert_argument_strings(arg, split, error);
 	j = 0;
 	while (split[j])

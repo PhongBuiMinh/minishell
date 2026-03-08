@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/08 04:01:42 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/08 23:49:42 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ void	replace_var(t_shell_info *shell, t_argument_list *arg, int i)
 		var_not_found(shell, arg, var_len, i);
 }
 
-static int	find_dollar(char *str)
+static int	find_dollar(char *str, int starting_pos)
 {
 	int	inside_quotes;
 	int	i;
 
-	i = 0;
+	i = starting_pos;
 	inside_quotes = 0;
 	while (str[i])
 	{
@@ -67,14 +67,13 @@ void	find_and_expand(t_shell_info *shell, t_argument_list *arg)
 {
 	int	pos;
 
-	while (1)
+	pos = find_dollar(arg->string, 0);
+	while (pos != -1)
 	{
-		pos = find_dollar(arg->string);
-		if (pos == -1)
-			break ;
 		replace_var(shell, arg, pos);
 		if (shell->remove_arg)
 			return ;
+		pos = find_dollar(arg->string, pos);
 	}
 }
 

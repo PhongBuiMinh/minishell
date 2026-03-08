@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/14 18:36:03 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/08 00:44:52 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/09 00:25:36 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ void	parse_command(t_lexer *lexer, t_command_list **command,	int *error)
 		return (set_error(error, PARSE_ERR_MALLOC));
 	init_command(*command);
 	type = lexer_peek(lexer);
-	if (type != STRING && !is_redirection(type))
-		return (set_error(error, PARSE_ERR_UNEXPECTED_TOKEN));
 	while (type == STRING || is_redirection(type))
 	{
 		if (type == STRING)
@@ -68,17 +66,22 @@ void	parse_pipeline(t_lexer *lexer,
 	{
 		parse_command(lexer, &new_command, error);
 		if (*error)
-			return (printf("error code: %i\n", *error), free_all(new_command));
+			return (free_all(new_command));
 		if (!prev_command && !(*first_command))
 			*first_command = new_command;
 		else
 			prev_command->next = new_command;
 		prev_command = new_command;
 		if (lexer_peek(lexer) == PIPE)
+		{
 			lexer_skip(lexer);
+			type = lexer_peek(lexer);
+			if (type == EOF_TOKEN || type == PIPE)
+				return (set_error(error, PARSE_ERR_UNEXPECTED_TOKEN));
+		}
 		type = lexer_peek(lexer);
 	}
-}				
+}
 
 int	parser(char *input, t_command_list **first_command)
 {
@@ -91,13 +94,13 @@ int	parser(char *input, t_command_list **first_command)
 	lexer.pos = 0;
 	next_token = lexer_peek(&lexer);
 	if (next_token == PIPE)
-		return (printf("Syntax error at beggining of line"), -1);
+		return (printf("Pipe at beggining of line"), -1);
 	parse_pipeline(&lexer, first_command, &error);
 	if (error)
 	{
 		free_all(*first_command);
 		*first_command = NULL;
-		printf("parser error\n");
+		printf("parser error: %d\n", error);
 		return (-1);
 	}
 	return (0);

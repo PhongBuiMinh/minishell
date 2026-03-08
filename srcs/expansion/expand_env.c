@@ -6,13 +6,14 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/08 23:49:42 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/09 00:42:11 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	replace_var(t_shell_info *shell, t_argument_list *arg, int i)
+void	replace_var(t_shell_info *shell, t_argument_list *arg, int pos,
+			int *skip_character)
 {
 	int		var_len;
 	int		brackets;
@@ -22,22 +23,24 @@ void	replace_var(t_shell_info *shell, t_argument_list *arg, int i)
 	brackets = 0;
 	var_value = NULL;
 	str = arg->string;
-	if (str[i + 1] == '?')
+	if (str[pos + 1] == '?')
 	{
 		var_value = ft_itoa(shell->exit_status);
 		if (!var_value)
 			return ;
-		return (expand_str(arg, var_value, i, 1));
+		return (expand_str(arg, var_value, pos, 1));
 	}
-	var_len = find_len(str + i + 1, &brackets);
-	if (var_len < 0)
+	var_len = find_len(str + pos + 1, &brackets);
+	if (var_len <= 0)
+	{
+		*skip_character = 1;
 		return ;
-	else if (var_len > 0)
-		var_value = find_env(shell->env, str + i + 1, var_len, brackets);
+	}
+	var_value = find_env(shell->env, str + pos + 1, var_len, brackets);
 	if (var_value)
-		expand_str(arg, var_value, i, var_len);
+		expand_str(arg, var_value, pos, var_len);
 	else
-		var_not_found(shell, arg, var_len, i);
+		var_not_found(shell, arg, var_len, pos);
 }
 
 static int	find_dollar(char *str, int starting_pos)
@@ -66,13 +69,17 @@ static int	find_dollar(char *str, int starting_pos)
 void	find_and_expand(t_shell_info *shell, t_argument_list *arg)
 {
 	int	pos;
+	int	skip_character;
 
 	pos = find_dollar(arg->string, 0);
 	while (pos != -1)
 	{
-		replace_var(shell, arg, pos);
+		skip_character = 0;
+		replace_var(shell, arg, pos, &skip_character);
 		if (shell->remove_arg)
 			return ;
+		if (skip_character)
+			pos++;
 		pos = find_dollar(arg->string, pos);
 	}
 }

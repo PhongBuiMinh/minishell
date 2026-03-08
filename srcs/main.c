@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 19:10:34 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/08 05:09:28 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	rl_catch_signals = 0;
 	init_shell(&shell, envp);
 	set_interactive_signals();
 	shell.exit_status = 0;
@@ -84,3 +83,7 @@ int	main(int argc, char **argv, char **envp)
 	free_env_list(shell.env);
 	return (shell.exit_status);
 }
+
+// Disabling bracketed paste mode
+// ft_putstr_fd("\033[?2004l", STDOUT_FILENO);
+// rl_variable_bind("enable-bracketed-paste", "off");

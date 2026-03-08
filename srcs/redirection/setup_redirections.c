@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 17:40:24 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 19:50:20 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/08 05:30:22 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,26 +41,31 @@ int	setup_redir_in(char *target)
 	return (0);
 }
 
+static int	setup_redir_file(t_redirection_list *redir)
+{
+	char	*clean;
+
+	clean = remove_quotes_str(redir->target);
+	if (!clean)
+		return (-1);
+	free(redir->target);
+	redir->target = clean;
+	if (redir->redir_type == REDIR_OUT || redir->redir_type == REDIR_APPEND)
+		return (setup_redir_out(redir));
+	return (setup_redir_in(redir->target));
+}
+
 int	setup_redirections(t_redirection_list *redirs, t_shell_state *shell)
 {
 	while (redirs)
 	{
-		if (redirs->redir_type == REDIR_OUT
-			|| redirs->redir_type == REDIR_APPEND)
-		{
-			if (setup_redir_out(redirs) < 0)
-				return (-1);
-		}
-		else if (redirs->redir_type == REDIR_IN)
-		{
-			if (setup_redir_in(redirs->target) < 0)
-				return (-1);
-		}
-		else if (redirs->redir_type == REDIR_HEREDOC)
+		if (redirs->redir_type == REDIR_HEREDOC)
 		{
 			if (setup_redir_heredoc(redirs, shell) < 0)
 				return (-1);
 		}
+		else if (setup_redir_file(redirs) < 0)
+			return (-1);
 		redirs = redirs->next;
 	}
 	return (0);

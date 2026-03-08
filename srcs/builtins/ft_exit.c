@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:38:35 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 18:14:21 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/08 05:24:52 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,15 @@ int	ft_exit(char **argv, t_shell_state *shell)
 {
 	int	exit_code;
 
-	ft_putstr_fd("exit\n", STDERR_FILENO);
+	if (isatty(STDIN_FILENO))
+		ft_putstr_fd("exit\n", STDERR_FILENO);
 	if (!argv[1])
 		clean_exit(shell, argv, shell->exit_status);
 	if (!is_numeric(argv[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd("numeric argument required\n", STDERR_FILENO);
-		clean_exit(shell, argv, 255);
+		clean_exit(shell, argv, 2);
 	}
 	if (argv[2])
 	{

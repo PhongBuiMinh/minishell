@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 19:44:45 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/08 02:39:26 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/09 01:03:50 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ typedef struct s_shell_info
 }			t_shell_info;
 
 int		is_allowed(char c);
-int		is_single_quoted(t_argument_list *arg);
-int		is_double_quoted(t_argument_list *arg);
+int		is_double_quoted(char *str, int dollar_pos);
 int		find_len(char *str, int *brackets);
 char	*find_env(t_env *env, char *name, int i, int brackets);
 void	replace_argument_string(t_argument_list *arg, char *new_str);

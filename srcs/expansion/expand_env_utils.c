@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:07:36 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/08 02:51:45 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/09 01:03:10 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,22 @@ int	is_allowed(char c)
 	return (1);
 }
 
-int	is_single_quoted(t_argument_list *arg)
+int	is_double_quoted(char *str, int dollar_pos)
 {
-	return (arg->string[0] == '\'');
-}
+	int	inside_quotes;
+	int	i;
 
-int	is_double_quoted(t_argument_list *arg)
-{
-	return (arg->string[0] == '"');
+	i = 0;
+	inside_quotes = 0;
+	while (str[i] && i <= dollar_pos)
+	{
+		if (str[i] == '"')
+			inside_quotes = !inside_quotes;
+		if (i == dollar_pos && inside_quotes)
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 void	replace_argument_string(t_argument_list *arg, char *new_str)

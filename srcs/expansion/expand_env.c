@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/09 00:42:11 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/09 01:27:04 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,21 +45,20 @@ void	replace_var(t_shell_info *shell, t_argument_list *arg, int pos,
 
 static int	find_dollar(char *str, int starting_pos)
 {
-	int	inside_quotes;
+	int	inside_single_quotes;
+	int	inside_double_quotes;
 	int	i;
 
 	i = starting_pos;
-	inside_quotes = 0;
+	inside_double_quotes = 0;
+	inside_single_quotes = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'')
-		{
-			if (inside_quotes)
-				inside_quotes = 0;
-			else
-				inside_quotes = 1;
-		}
-		if (str[i] == '$' && !inside_quotes)
+		if (str[i] == '\'' && !inside_double_quotes)
+			inside_single_quotes = !inside_single_quotes;
+		else if (str[i] == '"' && !inside_single_quotes)
+			inside_double_quotes = !inside_double_quotes;
+		if (str[i] == '$' && !inside_single_quotes)
 			return (i);
 		i++;
 	}

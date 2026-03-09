@@ -6,14 +6,14 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/09 17:35:42 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/09 18:25:24 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void	replace_var(t_shell_info *shell, t_argument_list *arg, int pos,
-			int *skip_character)
+		int *skip_character)
 {
 	int		var_len;
 	int		brackets;
@@ -21,9 +21,8 @@ void	replace_var(t_shell_info *shell, t_argument_list *arg, int pos,
 	char	*var_value;
 
 	brackets = 0;
-	var_value = NULL;
 	str = arg->string;
-	if (str[pos + 1] == '?')
+	if (arg->string[pos + 1] == '?')
 	{
 		var_value = ft_itoa(shell->exit_status);
 		if (!var_value)
@@ -32,8 +31,8 @@ void	replace_var(t_shell_info *shell, t_argument_list *arg, int pos,
 	}
 	var_len = find_len(str + pos + 1, &brackets);
 	if (var_len <= 0 && brackets)
-        return (ft_putstr_fd("minishell: bad substitution\n", STDERR_FILENO),
-            (void)(shell->bad_substitution = 1));
+		return (ft_putstr_fd("minishell: bad substitution\n", STDERR_FILENO),
+			(void)(shell->bad_substitution = 1));
 	if (var_len <= 0)
 		return ((*skip_character = 1), (void)0);
 	var_value = find_env(shell->env, str + pos + 1, var_len, brackets);
@@ -84,7 +83,7 @@ void	find_and_expand(t_shell_info *shell, t_argument_list *arg)
 }
 
 void	expand_args(t_shell_info *shell, t_command_list *current,
-			t_argument_list *arg)
+		t_argument_list *arg)
 {
 	t_argument_list	*next;
 	t_argument_list	*prev;
@@ -107,7 +106,7 @@ void	expand_args(t_shell_info *shell, t_command_list *current,
 		else
 			prev = arg;
 		arg = next;
-	}	
+	}
 }
 
 int	expand_envs(t_command_list *command, t_env *env, int exit_status)
@@ -137,9 +136,9 @@ int	expand_envs(t_command_list *command, t_env *env, int exit_status)
 	return (0);
 }
 
-//int	main(int argc, char **argv, char **envp)
+// int	main(int argc, char **argv, char **envp)
 //{
-//	char				*input = "Hello whats up is $namee 
+//	char				*input = "Hello whats up is $namee
 //							parser frfr | ${whats}";
 //	t_shell_state		shell;
 //	t_command_list		*first_command = NULL;

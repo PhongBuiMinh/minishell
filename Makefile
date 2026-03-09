@@ -36,6 +36,7 @@ SRCS = main.c \
 		expansion/expand_env_utils.c \
 		expansion/expand_env_utils2.c \
 		expansion/remove_quotes.c \
+		expansion/expand_heredoc.c \
 		builtins/ft_cd.c \
 		builtins/ft_echo.c \
 		builtins/ft_env.c \

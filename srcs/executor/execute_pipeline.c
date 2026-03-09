@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 15:41:16 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 12:30:05 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/09 16:59:51 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ int	execute_pipeline(t_command_list *cmds, t_shell_state *shell)
 
 	if (!cmds || !shell)
 		return (0);
-	expand_envs(cmds, shell->env, shell->exit_status);
+	if (expand_envs(cmds, shell->env, shell->exit_status) < 0)
+		return (1);
 	ret = handle_single_builtin(cmds, shell);
 	if (ret != -1)
 		return (ret);

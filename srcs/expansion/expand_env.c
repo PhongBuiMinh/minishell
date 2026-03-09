@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/09 01:27:04 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/09 17:35:42 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	replace_var(t_shell_info *shell, t_argument_list *arg, int pos,
 			int *skip_character)
@@ -31,11 +31,11 @@ void	replace_var(t_shell_info *shell, t_argument_list *arg, int pos,
 		return (expand_str(arg, var_value, pos, 1));
 	}
 	var_len = find_len(str + pos + 1, &brackets);
+	if (var_len <= 0 && brackets)
+        return (ft_putstr_fd("minishell: bad substitution\n", STDERR_FILENO),
+            (void)(shell->bad_substitution = 1));
 	if (var_len <= 0)
-	{
-		*skip_character = 1;
-		return ;
-	}
+		return ((*skip_character = 1), (void)0);
 	var_value = find_env(shell->env, str + pos + 1, var_len, brackets);
 	if (var_value)
 		expand_str(arg, var_value, pos, var_len);
@@ -75,7 +75,7 @@ void	find_and_expand(t_shell_info *shell, t_argument_list *arg)
 	{
 		skip_character = 0;
 		replace_var(shell, arg, pos, &skip_character);
-		if (shell->remove_arg)
+		if (shell->remove_arg || shell->bad_substitution)
 			return ;
 		if (skip_character)
 			pos++;
@@ -110,27 +110,31 @@ void	expand_args(t_shell_info *shell, t_command_list *current,
 	}	
 }
 
-void	expand_envs(t_command_list *command, t_env *env, int exit_status)
+int	expand_envs(t_command_list *command, t_env *env, int exit_status)
 {
 	t_shell_info	shell;
 	t_command_list	*current;
 	t_argument_list	*arg;
 
 	shell.remove_arg = 0;
+	shell.bad_substitution = 0;
 	shell.exit_status = exit_status;
 	shell.command = command;
 	shell.env = env;
 	if (!command)
-		return ;
+		return (-1);
 	current = command;
 	while (current)
 	{
 		arg = current->args;
 		expand_args(&shell, current, arg);
+		if (shell.bad_substitution)
+			return (-1);
 		current = current->next;
 	}
 	current = command;
 	remove_quotes(current);
+	return (0);
 }
 
 //int	main(int argc, char **argv, char **envp)

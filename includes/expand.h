@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 19:44:45 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/09 01:03:50 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/09 17:39:38 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct s_shell_info
 	t_command_list				*command;
 	t_env						*env;
 	int							exit_status;
+	int							bad_substitution;
 	int							remove_arg;
 }			t_shell_info;
 
@@ -38,7 +39,7 @@ char	*create_new_str(char *old_str, char *var_value,
 			int i, int var_len);
 char	*remove_quotes_str(char *str);
 void	remove_quotes(t_command_list *command);
-void	expand_envs(t_command_list *command, t_env *env, int exit_status);
+int		expand_envs(t_command_list *command, t_env *env, int exit_status);
 char	*remove_quotes_str(char *str);
 //char	*expand_hd_line(char *str, t_env *env, int exit_status);
 

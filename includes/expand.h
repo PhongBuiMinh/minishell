@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 19:44:45 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/09 17:39:38 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/09 18:08:06 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,6 @@ char	*remove_quotes_str(char *str);
 void	remove_quotes(t_command_list *command);
 int		expand_envs(t_command_list *command, t_env *env, int exit_status);
 char	*remove_quotes_str(char *str);
-//char	*expand_hd_line(char *str, t_env *env, int exit_status);
+char	*expand_hd_line(char *str, t_env *env, int exit_status);
 
 #endif

@@ -3,31 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   setup_heredoc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 00:00:00 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/08 00:37:15 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/09 18:11:00 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-** Reads lines from stdin until delim is matched or EOF.
-** If expand = 1, each line is passed to expand_hd_line before writing.
-** expand_hd_line receives a heap-allocated copy of the line and must return
-** a heap-allocated expanded string.
-** Runs inside the child process — always terminates via exit().
-*/
 void	read_heredoc(int write_fd, char *delim, int expand,
 		t_shell_state *shell)
 {
 	char	*line;
 	char	*exp_line;
-
-	(void)expand;
-	(void)shell;
-	(void)exp_line;
 
 	while (1)
 	{
@@ -38,21 +27,20 @@ void	read_heredoc(int write_fd, char *delim, int expand,
 			close(write_fd);
 			exit(0);
 		}
-		//if (expand)
-		//{
-		//	exp_line = expand_hd_line(ft_strdup(line), shell->env,
-		//			shell->exit_status);
-		//	if (exp_line)
-		//		ft_putendl_fd(exp_line, write_fd);
-		//	free(exp_line);
-		//}
-		//else
-		//	ft_putendl_fd(line, write_fd);
+		if (expand)
+		{
+			exp_line = expand_hd_line(ft_strdup(line), shell->env,
+					shell->exit_status);
+			if (exp_line)
+				ft_putendl_fd(exp_line, write_fd);
+			free(exp_line);
+		}
+		else
+			ft_putendl_fd(line, write_fd);
 		free(line);
 	}
 }
 
-// Child-side setup: reset signals, close unused pipe end, start reading.
 void	setup_heredoc_child(int *fd, char *delim, int expand,
 		t_shell_state *shell)
 {
@@ -62,11 +50,6 @@ void	setup_heredoc_child(int *fd, char *delim, int expand,
 	read_heredoc(fd[1], delim, expand, shell);
 }
 
-/*
-** Forks a child to collect heredoc input into a pipe
-** If the delimiter is quoted (<< 'EOF' or << "EOF") -> no $VAR substitution
-** If the delimiter is unquoted (<< EOF) -> each line of the body has $VAR and $? expanded
-*/
 int	setup_redir_heredoc(t_redirection_list *redir, t_shell_state *shell)
 {
 	int		fd[2];

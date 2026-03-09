@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 00:00:00 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/08 03:07:36 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/09 18:03:03 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	expand_hd_var(char **str, int i, t_env *env, int exit_status)
 {
 	int		brackets;
 	int		var_len;
-	t_env	*found;
+	char	*found;
 	char	*new;
 
 	if ((*str)[i + 1] == '?')
@@ -46,7 +46,7 @@ int	expand_hd_var(char **str, int i, t_env *env, int exit_status)
 		return (-1);
 	found = find_env(env, *str + i + 1, var_len, brackets);
 	if (found)
-		new = create_new_str(*str, found->value, i, var_len);
+		new = create_new_str(*str, found, i, var_len);
 	else
 		new = create_new_str(*str, "", i, var_len);
 	if (!new)
@@ -54,7 +54,7 @@ int	expand_hd_var(char **str, int i, t_env *env, int exit_status)
 	free(*str);
 	*str = new;
 	if (found)
-		return ((int)ft_strlen(found->value));
+		return ((int)ft_strlen(found));
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/28 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/09 18:14:13 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/10 21:08:33 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ char								*get_exec_path(char **argv,
 /* redir */
 void								read_heredoc(int write_fd, char *delim,
 										int expand, t_shell_state *shell);
+int									setup_redir_file(t_redirection_list *redir);
 int									setup_redir_heredoc(
 										t_redirection_list *redir,
 										t_shell_state *shell);

@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 09:57:52 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/02/27 19:50:20 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/10 18:55:45 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_valid_n_flag(const char *arg)
+{
+	int	j;
+
+	j = 1;
+	if (arg[0] != '-' || arg[1] != 'n')
+		return (0);
+	while (arg[j])
+	{
+		if (arg[j] != 'n')
+			return (0);
+		j++;
+	}
+	return (1);
+}
 
 int	ft_echo(char **argv)
 {
@@ -19,7 +35,7 @@ int	ft_echo(char **argv)
 
 	i = 1;
 	newline = 1;
-	if (argv[i] && argv[i][0] == '-' && argv[i][1] == 'n')
+	while (argv[i] && is_valid_n_flag(argv[i]))
 	{
 		newline = 0;
 		i++;

@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/08 05:09:28 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/13 20:35:33 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ int	process_cmd_line(t_shell_state *shell, char *full_input)
 	t_command_list	*commands;
 
 	commands = NULL;
+	if (g_signal_received == SIGINT)
+	{
+		shell->exit_status = 130;
+		g_signal_received = 0;
+	}
 	if (parser(full_input, &commands) == -1)
 		shell->exit_status = 2;
 	free(full_input);
@@ -71,7 +76,8 @@ int	main(int argc, char **argv, char **envp)
 	full_input = NULL;
 	while (1)
 	{
-		process_signal(&shell, &full_input);
+		// if (process_signal(&shell, &full_input))
+		// 	continue ;
 		input_status = read_process_line(&full_input);
 		if (input_status < 0)
 			break ;

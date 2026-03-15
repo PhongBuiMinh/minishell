@@ -56,6 +56,7 @@ int	setup_redir_heredoc(t_redirection_list *redir, t_shell_state *shell)
 	pid_t	pid;
 	char	*delim;
 	int		expand;
+	int		status;
 
 	expand = !(redir->target[0] == '\'' || redir->target[0] == '"');
 	if (expand)
@@ -72,8 +73,15 @@ int	setup_redir_heredoc(t_redirection_list *redir, t_shell_state *shell)
 	free(delim);
 	close(fd[1]);
 	set_parent_wait_signals();
-	waitpid(pid, NULL, 0);
+	waitpid(pid, &status, 0);
 	set_interactive_signals();
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		close(fd[0]);
+		ft_putchar_fd('\n', STDOUT_FILENO);
+		shell->exit_status = 130;
+		return (-1);
+	}
 	if (dup2(fd[0], STDIN_FILENO) < 0)
 		return (close(fd[0]), -1);
 	return (close(fd[0]), 0);

@@ -56,7 +56,7 @@ void	execute_command(t_exec_info *info)
 
 	setup_pipes(&info->pipe_info);
 	if (setup_redirections(info->cmd->redirs, info->shell) < 0)
-		exit(1);
+		exit(info->shell->exit_status);
 	argv = args_to_array(info->cmd->args);
 	if (!argv)
 		exit(1);

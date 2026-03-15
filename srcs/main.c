@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/13 20:35:33 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/14 23:52:08 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ int	main(int argc, char **argv, char **envp)
 	full_input = NULL;
 	while (1)
 	{
-		// if (process_signal(&shell, &full_input))
-		// 	continue ;
+		if (process_signal(&shell, &full_input))
+			continue ;
 		input_status = read_process_line(&full_input);
 		if (input_status < 0)
 			break ;

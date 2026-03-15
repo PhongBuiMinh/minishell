@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/05 12:30:26 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/15 12:00:00 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ int	process_signal(t_shell_state *shell, char **full_input)
 
 void	set_parent_wait_signals(void)
 {
-	set_signal_action(SIGINT, SIG_IGN);
-	set_signal_action(SIGQUIT, SIG_IGN);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 void	set_child_signals(void)
 {
-	set_signal_action(SIGINT, SIG_DFL);
-	set_signal_action(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }

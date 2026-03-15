@@ -16,6 +16,7 @@
 
 #include "minishell.h"
 #include <errno.h>
+#include <termios.h>
 
 volatile sig_atomic_t	g_signal_received = 0;
 
@@ -49,7 +50,7 @@ void	set_interactive_signals(void)
 
 	if (tcgetattr(STDIN_FILENO, &term) != -1)
 	{
-		term.c_lflag &= ~ECHOCTL;
+		term.c_lflag |= ECHOCTL;
 		tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	}
 	set_signal_action(SIGINT, sigint_handler);

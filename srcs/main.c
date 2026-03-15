@@ -6,38 +6,33 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/10 10:38:03 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/14 23:52:08 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/13 20:35:33 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	read_process_line(char **full_input)
+int	read_process_line(t_shell_state *shell, char **full_input)
 {
 	char	*line;
 	int		quote_state;
 
-	if (*full_input)
-		line = readline("> ");
-	else
-		line = readline("minishell$ ");
+	*full_input = NULL;
+	line = readline("minishell$ ");
 	if (!line)
-	{
-		if (*full_input)
-			ft_putstr_fd("minishell: unclosed quote\n", STDERR_FILENO);
-		printf("exit\n");
-		free(*full_input);
-		return (-1);
-	}
-	*full_input = join_lines(*full_input, line);
-	free(line);
-	if (!*full_input)
-		return (0);
-	quote_state = check_unclosed_quotes(*full_input);
+		return (printf("exit\n"), -1);
+	if (*line == '\0')
+		return (free(line), 0);
+	quote_state = check_unclosed_quotes(line);
 	if (quote_state != 0)
+	{
+		ft_putstr_fd("minishell: unclosed quote\n", STDERR_FILENO);
+		shell->exit_status = 1;
+		free(line);
 		return (0);
-	if (**full_input != '\0')
-		add_history(*full_input);
+	}
+	*full_input = line;
+	add_history(*full_input);
 	return (1);
 }
 
@@ -62,30 +57,38 @@ int	process_cmd_line(t_shell_state *shell, char *full_input)
 	return (shell->exit_status);
 }
 
+static int	shell_loop(t_shell_state *shell)
+{
+	char	*full_input;
+	int		input_status;
+
+	full_input = NULL;
+	while (1)
+	{
+		if (process_signal(shell, &full_input))
+			continue ;
+		input_status = read_process_line(shell, &full_input);
+		if (input_status < 0)
+			break ;
+		if (input_status == 0)
+			continue ;
+		shell->exit_status = process_cmd_line(shell, full_input);
+		full_input = NULL;
+	}
+	free(full_input);
+	return (shell->exit_status);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_shell_state	shell;
-	char			*full_input;
-	int				input_status;
 
 	(void)argc;
 	(void)argv;
 	init_shell(&shell, envp);
 	set_interactive_signals();
 	shell.exit_status = 0;
-	full_input = NULL;
-	while (1)
-	{
-		if (process_signal(&shell, &full_input))
-			continue ;
-		input_status = read_process_line(&full_input);
-		if (input_status < 0)
-			break ;
-		if (input_status == 0)
-			continue ;
-		shell.exit_status = process_cmd_line(&shell, full_input);
-		full_input = NULL;
-	}
+	shell_loop(&shell);
 	free_env_list(shell.env);
 	return (shell.exit_status);
 }
@@ -93,3 +96,54 @@ int	main(int argc, char **argv, char **envp)
 // Disabling bracketed paste mode
 // ft_putstr_fd("\033[?2004l", STDOUT_FILENO);
 // rl_variable_bind("enable-bracketed-paste", "off");
+
+// int	read_process_line(char **full_input)
+// {
+// 	char	*line;
+// 	int		quote_state;
+
+// 	if (*full_input)
+// 		line = readline("> ");
+// 	else
+// 		line = readline("minishell$ ");
+// 	if (!line)
+// 	{
+// 		if (*full_input)
+// 			ft_putstr_fd("minishell: unclosed quote\n", STDERR_FILENO);
+// 		printf("exit\n");
+// 		free(*full_input);
+// 		return (-1);
+// 	}
+// 	*full_input = join_lines(*full_input, line);
+// 	free(line);
+// 	if (!*full_input)
+// 		return (0);
+// 	quote_state = check_unclosed_quotes(*full_input);
+// 	if (quote_state != 0)
+// 		return (0);
+// 	if (**full_input != '\0')
+// 		add_history(*full_input);
+// 	return (1);
+// }
+
+// static int	shell_loop(t_shell_state *shell)
+// {
+// 	char	*full_input;
+// 	int		input_status;
+
+// 	full_input = NULL;
+// 	while (1)
+// 	{
+// 		if (process_signal(shell, &full_input))
+// 			continue ;
+// 		input_status = read_process_line(&full_input);
+// 		if (input_status < 0)
+// 			break ;
+// 		if (input_status == 0)
+// 			continue ;
+// 		shell->exit_status = process_cmd_line(shell, full_input);
+// 		full_input = NULL;
+// 	}
+// 	free(full_input);
+// 	return (shell->exit_status);
+// }

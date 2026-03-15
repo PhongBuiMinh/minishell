@@ -70,7 +70,6 @@ void	execute_command(t_exec_info *info)
 	{
 		builtin_ret = handle_builtin(cmd, argv, info->shell);
 		free(argv);
-		free_env_list(info->shell->env);
 		exit(builtin_ret);
 	}
 	exec_external(argv, info->shell);

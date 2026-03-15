@@ -90,28 +90,30 @@ char	**args_to_array(t_argument_list *args)
 	return (argv);
 }
 
-int	wait_all_children(pid_t *pids, int num_cmds)
+int wait_all_children(pid_t *pids, int num_cmds)
 {
 	int	i;
 	int	status;
 	int	exit_status;
+	int	sig;
 
 	exit_status = 0;
-	i = -1;
-	while (++i < num_cmds)
+	i = 0;
+	while (i < num_cmds)
 	{
-		if (waitpid(pids[i], &status, 0) > 0 && i == num_cmds - 1)
+		if (waitpid(pids[i], &status, 0) > 0)
 		{
-			if ((status & 0x7F) == SIGINT)
+			if (WIFSIGNALED(status))
 			{
-				ft_putchar_fd('\n', STDOUT_FILENO);
-				exit_status = 130;
+				sig = WTERMSIG(status);
+				if (sig == SIGINT)
+					ft_putchar_fd('\n', STDOUT_FILENO);
+				exit_status = 128 + sig;
 			}
-			else if ((status & 0x7F) != 0 && (status & 0x7F) != 0x7F)
-				exit_status = 128 + (status & 0x7F);
-			else
-				exit_status = (status >> 8) & 0xFF;
+			else if (WIFEXITED(status))
+				exit_status = WEXITSTATUS(status);
 		}
+		i++;
 	}
 	return (exit_status);
 }

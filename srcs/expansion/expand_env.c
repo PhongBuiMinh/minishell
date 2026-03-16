@@ -27,7 +27,7 @@ void	replace_var(t_shell_info *shell, t_argument_list *arg, int pos,
 		var_value = ft_itoa(shell->exit_status);
 		if (!var_value)
 			return ;
-		return (expand_str(arg, var_value, pos, 1));
+		return (expand_str(arg, var_value, pos, 1), free(var_value));
 	}
 	var_len = find_len(str + pos + 1, &brackets);
 	if (var_len <= 0 && brackets)

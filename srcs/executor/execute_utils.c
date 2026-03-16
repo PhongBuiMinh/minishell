@@ -90,7 +90,7 @@ char	**args_to_array(t_argument_list *args)
 	return (argv);
 }
 
-int wait_all_children(pid_t *pids, int num_cmds)
+int	wait_all_children(pid_t *pids, int num_cmds)
 {
 	int	i;
 	int	status;

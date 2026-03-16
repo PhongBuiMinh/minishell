@@ -94,7 +94,7 @@ int	parser(char *input, t_command_list **first_command)
 	lexer.pos = 0;
 	next_token = lexer_peek(&lexer);
 	if (next_token == PIPE)
-		return (printf("Pipe at beggining of line"), -1);
+		return (printf("Pipe at beggining of line\n"), -1);
 	parse_pipeline(&lexer, first_command, &error);
 	if (error)
 	{

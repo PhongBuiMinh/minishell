@@ -96,11 +96,11 @@ int	ft_export(char **args, t_shell_state *shell)
 
 	exit_status = 0;
 	if (!args[1])
-	{
-		sort_env_list(&shell->env);
-		print_export_list(shell->env);
-		return (0);
-	}
+		return (sort_env_list(&shell->env),
+			print_export_list(shell->env), 0);
+	if (args[1][0] == '-' && args[1][1])
+		return (ft_putstr_fd("minishell: no option\n", STDERR_FILENO),
+			2);
 	i = 1;
 	while (args[i])
 	{

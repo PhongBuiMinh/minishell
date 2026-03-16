@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 21:00:56 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/10 21:00:59 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/16 03:47:00 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,15 @@ int	setup_redir_in(char *target)
 
 	fd = open(target, O_RDONLY);
 	if (fd < 0)
-		return (perror(target), -1);
+	{
+		perror(target);
+		return (-1);
+	}
 	if (dup2(fd, STDIN_FILENO) < 0)
-		return (close(fd), -1);
+	{
+		close(fd);
+		return (-1);
+	}
 	close(fd);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 17:40:24 by fbui-min          #+#    #+#             */
-/*   Updated: 2026/03/10 21:20:54 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/16 03:47:00 by fbui-min         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,14 @@ int	setup_redirections(t_redirection_list *redirs, t_shell_state *shell)
 			if (handle_heredoc_redir(cur, last_heredoc, shell) < 0)
 				return (-1);
 		}
-		else if (setup_redir_file(cur) < 0)
-			return (-1);
+		else
+		{
+			if (setup_redir_file(cur) < 0)
+			{
+				shell->exit_status = 1;
+				return (-1);
+			}
+		}
 		cur = cur->next;
 	}
 	return (0);

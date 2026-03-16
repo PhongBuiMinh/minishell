@@ -48,7 +48,8 @@ char	*get_exec_path(char **argv, char **env_array)
 {
 	char	*path;
 
-	if (!argv[0] || !argv[0][0])
+	if (!argv[0] || !argv[0][0]
+			|| (argv[0][0] == '.' && !argv[0][1]))
 		return ((void)free(env_array), free(argv), NULL);
 	if (ft_strchr(argv[0], '/') == NULL)
 	{

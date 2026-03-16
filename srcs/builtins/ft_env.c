@@ -12,15 +12,22 @@
 
 #include "minishell.h"
 
-int	ft_env(t_shell_state *shell)
+int	ft_env(char **args, t_shell_state *shell)
 {
 	t_env	*curr;
 
-	curr = shell->env;
-	while (curr)
+	if (!args[1])
 	{
-		ft_putendl_fd(curr->full_var, STDOUT_FILENO);
-		curr = curr->next;
+		curr = shell->env;
+		while (curr)
+		{
+			ft_putendl_fd(curr->full_var, STDOUT_FILENO);
+			curr = curr->next;
+		}
+		return (0);
 	}
-	return (0);
+	ft_putstr_fd("minishell: env: ", STDERR_FILENO);
+	ft_putstr_fd(args[1], STDERR_FILENO);
+	ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+	return (127);
 }

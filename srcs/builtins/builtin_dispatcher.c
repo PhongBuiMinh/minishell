@@ -37,7 +37,7 @@ int	handle_builtin(char *cmd, char **argv, t_shell_state *shell)
 	if (ft_strcmp(cmd, "unset") == 0)
 		return (ft_unset(argv, shell));
 	if (ft_strcmp(cmd, "env") == 0)
-		return (ft_env(shell));
+		return (ft_env(argv, shell));
 	return (127);
 }
 

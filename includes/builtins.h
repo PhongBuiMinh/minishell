@@ -22,7 +22,7 @@ int		handle_builtin(char *cmd, char **argv, t_shell_state *shell);
 /* builtins */
 int		ft_cd(char **argv, t_shell_state *shell);
 int		ft_echo(char **argv);
-int		ft_env(t_shell_state *shell);
+int		ft_env(char **args, t_shell_state *shell);
 int		ft_exit(char **argv, t_shell_state *shell);
 int		ft_export(char **args, t_shell_state *shell);
 int		ft_pwd(void);

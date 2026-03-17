@@ -56,14 +56,13 @@ void	execute_command(t_exec_info *info)
 
 	setup_pipes(&info->pipe_info);
 	if (setup_redirections(info->cmd->redirs, info->shell) < 0)
-		exit(info->shell->exit_status);
-	argv = args_to_array(info->cmd->args);
-	if (!argv)
 		exit(1);
-	if (!argv[0])
+	argv = args_to_array(info->cmd->args);
+	if (!argv || !argv[0])
 	{
-		free(argv);
-		exit(127);
+		if (argv)
+			free(argv);
+		exit(0);
 	}
 	cmd = argv[0];
 	if (is_builtin(cmd))

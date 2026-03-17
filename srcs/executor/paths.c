@@ -49,8 +49,15 @@ char	*get_exec_path(char **argv, char **env_array)
 	char	*path;
 
 	if (!argv[0] || !argv[0][0]
-			|| (argv[0][0] == '.' && !argv[0][1]))
-		return ((void)free(env_array), free(argv), NULL);
+			|| ft_strcmp(argv[0], ".") == 0
+			|| ft_strcmp(argv[0], "..") == 0)
+	{
+		ft_putstr_fd(argv[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		free(env_array);
+		free(argv);
+		return (NULL);
+	}
 	if (ft_strchr(argv[0], '/') == NULL)
 	{
 		path = find_command_path(argv[0], env_array);

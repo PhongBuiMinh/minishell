@@ -29,5 +29,5 @@ int	ft_env(char **args, t_shell_state *shell)
 	ft_putstr_fd("minishell: env: ", STDERR_FILENO);
 	ft_putstr_fd(args[1], STDERR_FILENO);
 	ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-	return (127);
+	return (1);
 }

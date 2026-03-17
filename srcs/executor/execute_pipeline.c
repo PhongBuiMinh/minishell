@@ -21,17 +21,14 @@ void	manage_pipe_fds(t_pipe_info *pipe_info)
 		close(pipe_info->pipe_fd[1]);
 		pipe_info->prev_pipe = pipe_info->pipe_fd[0];
 	}
-	else
-	{
-		close(pipe_info->pipe_fd[0]);
-		close(pipe_info->pipe_fd[1]);
-	}
 }
 
 int	fork_command(t_exec_info *info, int i)
 {
 	pid_t	pid;
 
+	info->pipe_info.pipe_fd[0] = -1;
+	info->pipe_info.pipe_fd[1] = -1;
 	if (!info->pipe_info.is_last)
 	{
 		if (pipe(info->pipe_info.pipe_fd) < 0)

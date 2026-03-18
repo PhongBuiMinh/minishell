@@ -44,26 +44,28 @@ int	read_process_line(t_shell_state *shell, char **full_input)
 int	process_cmd_line(t_shell_state *shell, char *full_input)
 {
 	t_command_list	*commands;
+	char			**pipelines;
+	int				i;
 
-	commands = NULL;
-	if (g_signal_received == SIGINT)
-	{
-		shell->exit_status = 130;
-		g_signal_received = 0;
-	}
-	if (parser(full_input, &commands) == -1)
-	{
-		free(full_input);
-		if (commands)
-			free_all(commands);
-		return (2);
-	}
+	pipelines = ft_split(full_input, '\n');
 	free(full_input);
-	if (commands != NULL)
+	if (!pipelines)
+		return (shell->exit_status);
+	i = 0;
+	while (pipelines[i])
 	{
-		shell->exit_status = execute_pipeline(commands, shell);
-		free_all(commands);
+		commands = NULL;
+		if (parser(pipelines[i], &commands) != -1)
+		{
+			if (commands)
+				shell->exit_status = execute_pipeline(commands, shell);
+			free_all(commands);
+		}
+		else
+			shell->exit_status = 2;
+		free(pipelines[i++]);
 	}
+	free(pipelines);
 	return (shell->exit_status);
 }
 
@@ -82,6 +84,11 @@ static int	shell_loop(t_shell_state *shell)
 			break ;
 		if (input_status == 0)
 			continue ;
+		if (g_signal_received == SIGINT)
+		{
+			shell->exit_status = 130;
+			g_signal_received = 0;
+		}
 		shell->exit_status = process_cmd_line(shell, full_input);
 	}
 	free(full_input);
@@ -105,6 +112,32 @@ int	main(int argc, char **argv, char **envp)
 // Disabling bracketed paste mode
 // ft_putstr_fd("\033[?2004l", STDOUT_FILENO);
 // rl_variable_bind("enable-bracketed-paste", "off");
+
+// int	process_cmd_line(t_shell_state *shell, char *full_input)
+// {
+// 	t_command_list	*commands;
+
+// 	commands = NULL;
+// 	if (g_signal_received == SIGINT)
+// 	{
+// 		shell->exit_status = 130;
+// 		g_signal_received = 0;
+// 	}
+// 	if (parser(full_input, &commands) == -1)
+// 	{
+// 		free(full_input);
+// 		if (commands)
+// 			free_all(commands);
+// 		return (2);
+// 	}
+// 	free(full_input);
+// 	if (commands != NULL)
+// 	{
+// 		shell->exit_status = execute_pipeline(commands, shell);
+// 		free_all(commands);
+// 	}
+// 	return (shell->exit_status);
+// }
 
 // char	*join_lines(char *old, char *new)
 // {

@@ -16,6 +16,11 @@ void	print_export_list(t_env *env)
 {
 	while (env)
 	{
+		if (ft_strcmp(env->name, "_") == 0)
+		{
+			env = env->next;
+			continue ;
+		}
 		ft_putstr_fd("declare -x ", STDOUT_FILENO);
 		ft_putstr_fd(env->name, STDOUT_FILENO);
 		if (env->value)
@@ -29,7 +34,7 @@ void	print_export_list(t_env *env)
 	}
 }
 
-int	valid_export_var(char *var)
+int	is_valid_identifier(char *var)
 {
 	int	i;
 
@@ -74,7 +79,7 @@ int	process_export_arg(char *arg, t_shell_state *shell)
 	if (!eq_pos)
 		return (0);
 	name = ft_strndup(arg, eq_pos - arg);
-	if (!name || !valid_export_var(name))
+	if (!name || !is_valid_identifier(name))
 		return (free(name), 1);
 	value = ft_strdup(eq_pos + 1);
 	existing = find_env_var(shell->env, name);
@@ -101,10 +106,10 @@ int	ft_export(char **args, t_shell_state *shell)
 	if (args[1][0] == '-' && args[1][1])
 		return (ft_putstr_fd("minishell: no option\n", STDERR_FILENO),
 			2);
-	i = 1;
-	while (args[i])
+	i = 0;
+	while (args[++i])
 	{
-		if (!valid_export_var(args[i]))
+		if (!is_valid_identifier(args[i]))
 		{
 			ft_putstr_fd("minishell: export: `", STDERR_FILENO);
 			ft_putstr_fd(args[i], STDERR_FILENO);
@@ -113,7 +118,6 @@ int	ft_export(char **args, t_shell_state *shell)
 		}
 		else if (process_export_arg(args[i], shell) != 0)
 			exit_status = 1;
-		i++;
 	}
 	return (exit_status);
 }

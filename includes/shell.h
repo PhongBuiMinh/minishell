@@ -25,7 +25,7 @@ typedef struct s_shell_state
 void		init_shell(t_shell_state *shell, char **envp);
 
 /* input helpers */
-char		*join_lines(char *old, char *new);
+char		*ft_get_next_line(int fd);
 char		*ft_strjoin_free(char *s1, char *s2);
 int			check_unclosed_quotes(const char *str);
 

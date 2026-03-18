@@ -31,5 +31,7 @@ void	free_env_list(t_env *env);
 char	**env_to_array(t_env *env);
 void	swap_env_nodes(t_env *a, t_env *b);
 void	sort_env_list(t_env **env);
+void	update_env_value(t_env *env_var, char *new_value);
+char	*build_path(char *dir, char *cmd);
 
 #endif

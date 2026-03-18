@@ -23,17 +23,15 @@ char	*ft_get_next_line(int fd)
 	line = malloc(1000);
 	if (!line)
 		return (NULL);
-	while ((res = read(fd, &c, 1)) > 0)
+	res = read(fd, &c, 1);
+	while (res > 0)
 	{
-		if (c == '\n')
-			break;
+		if (c == '\n' || i >= 999)
+			break ;
 		line[i++] = c;
-		if (i >= 999)
-			break;
+		res = read(fd, &c, 1);
 	}
-	if (res < 0)
-		return (free(line), NULL);
-	if (res == 0 && i == 0)
+	if (res < 0 || (res == 0 && i == 0))
 		return (free(line), NULL);
 	line[i] = '\0';
 	return (line);
@@ -63,7 +61,7 @@ int	check_unclosed_quotes(const char *str)
 	return (0);
 }
 
-void increment_shlvl(t_env **env_list)
+void	increment_shlvl(t_env **env_list)
 {
 	t_env	*node;
 	int		lvl;

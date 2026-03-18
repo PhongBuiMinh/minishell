@@ -12,6 +12,33 @@
 
 #include "minishell.h"
 
+char	*ft_get_next_line(int fd)
+{
+	char	*line;
+	char	c;
+	int		i;
+	int		res;
+
+	i = 0;
+	line = malloc(1000);
+	if (!line)
+		return (NULL);
+	while ((res = read(fd, &c, 1)) > 0)
+	{
+		if (c == '\n')
+			break;
+		line[i++] = c;
+		if (i >= 999)
+			break;
+	}
+	if (res < 0)
+		return (free(line), NULL);
+	if (res == 0 && i == 0)
+		return (free(line), NULL);
+	line[i] = '\0';
+	return (line);
+}
+
 int	check_unclosed_quotes(const char *str)
 {
 	int	single;
@@ -36,20 +63,26 @@ int	check_unclosed_quotes(const char *str)
 	return (0);
 }
 
-char	*join_lines(char *old, char *new)
+void increment_shlvl(t_env **env_list)
 {
-	char	*with_newline;
-	char	*result;
+	t_env	*node;
+	int		lvl;
+	char	*tmp;
 
-	if (!old)
-		return (ft_strdup(new));
-	with_newline = ft_strjoin(old, "\n");
-	if (!with_newline)
-		return (NULL);
-	result = ft_strjoin(with_newline, new);
-	free(with_newline);
-	free(old);
-	return (result);
+	node = find_env_var(*env_list, "SHLVL");
+	if (node && node->value)
+	{
+		lvl = ft_atoi(node->value);
+		if (lvl < 0)
+			lvl = 0;
+		else
+			lvl++;
+		tmp = ft_itoa(lvl);
+		update_env_value(node, tmp);
+		free(tmp);
+	}
+	else
+		add_env_var(env_list, "SHLVL", "1");
 }
 
 void	init_shell(t_shell_state *shell, char **envp)
@@ -62,7 +95,7 @@ void	init_shell(t_shell_state *shell, char **envp)
 	i = 0;
 	shell->env = NULL;
 	shell->exit_status = 0;
-	while (envp[i])
+	while (envp && envp[i])
 	{
 		eq_pos = ft_strchr(envp[i], '=');
 		if (eq_pos)
@@ -76,4 +109,5 @@ void	init_shell(t_shell_state *shell, char **envp)
 		}
 		i++;
 	}
+	increment_shlvl(&shell->env);
 }

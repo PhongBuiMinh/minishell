@@ -18,22 +18,27 @@ int	read_process_line(t_shell_state *shell, char **full_input)
 	int		quote_state;
 
 	*full_input = NULL;
-	line = readline("minishell$ ");
+	if (isatty(STDIN_FILENO))
+		line = readline("minishell$ ");
+	else
+		line = ft_get_next_line(STDIN_FILENO);
 	if (!line)
-		return (printf("exit\n"), -1);
+	{
+		if (isatty(STDIN_FILENO))
+			printf("exit\n");
+		return (-1);
+	}
 	if (*line == '\0')
 		return (free(line), 0);
 	quote_state = check_unclosed_quotes(line);
 	if (quote_state != 0)
 	{
 		ft_putstr_fd("minishell: unclosed quote\n", STDERR_FILENO);
-		shell->exit_status = 1;
-		free(line);
-		return (0);
+		shell->exit_status = 2;
+		return (free(line), 0);
 	}
 	*full_input = line;
-	add_history(*full_input);
-	return (1);
+	return (add_history(*full_input), 1);
 }
 
 int	process_cmd_line(t_shell_state *shell, char *full_input)
@@ -47,7 +52,12 @@ int	process_cmd_line(t_shell_state *shell, char *full_input)
 		g_signal_received = 0;
 	}
 	if (parser(full_input, &commands) == -1)
-		shell->exit_status = 2;
+	{
+		free(full_input);
+		if (commands)
+			free_all(commands);
+		return (2);
+	}
 	free(full_input);
 	if (commands != NULL)
 	{
@@ -62,9 +72,9 @@ static int	shell_loop(t_shell_state *shell)
 	char	*full_input;
 	int		input_status;
 
-	full_input = NULL;
 	while (1)
 	{
+		full_input = NULL;
 		if (process_signal(shell, &full_input))
 			continue ;
 		input_status = read_process_line(shell, &full_input);
@@ -73,7 +83,6 @@ static int	shell_loop(t_shell_state *shell)
 		if (input_status == 0)
 			continue ;
 		shell->exit_status = process_cmd_line(shell, full_input);
-		full_input = NULL;
 	}
 	free(full_input);
 	return (shell->exit_status);
@@ -96,6 +105,22 @@ int	main(int argc, char **argv, char **envp)
 // Disabling bracketed paste mode
 // ft_putstr_fd("\033[?2004l", STDOUT_FILENO);
 // rl_variable_bind("enable-bracketed-paste", "off");
+
+// char	*join_lines(char *old, char *new)
+// {
+// 	char	*with_newline;
+// 	char	*result;
+
+// 	if (!old)
+// 		return (ft_strdup(new));
+// 	with_newline = ft_strjoin(old, "\n");
+// 	if (!with_newline)
+// 		return (NULL);
+// 	result = ft_strjoin(with_newline, new);
+// 	free(with_newline);
+// 	free(old);
+// 	return (result);
+// }
 
 // int	read_process_line(char **full_input)
 // {

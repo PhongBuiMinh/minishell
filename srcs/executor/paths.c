@@ -44,29 +44,45 @@ void	check_exec_path(char **argv, char *path, char **env)
 	}
 }
 
+static char	*find_path_logic(char *cmd, char **env_array)
+{
+	char	*path;
+	char	*cwd;
+
+	if (ft_strchr(cmd, '/'))
+		return (ft_strdup(cmd));
+	path = find_command_path(cmd, env_array);
+	if (!path)
+	{
+		cwd = getcwd(NULL, 0);
+		path = build_path(cwd, cmd);
+		free(cwd);
+		if (access(path, F_OK | X_OK) != 0)
+		{
+			free(path);
+			return (NULL);
+		}
+	}
+	return (path);
+}
+
 char	*get_exec_path(char **argv, char **env_array)
 {
 	char	*path;
 
 	if (!argv[0] || !argv[0][0]
-			|| ft_strcmp(argv[0], ".") == 0
-			|| ft_strcmp(argv[0], "..") == 0)
+		|| ft_strcmp(argv[0], ".") == 0 || ft_strcmp(argv[0], "..") == 0)
 	{
 		ft_putstr_fd(argv[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		free(env_array);
-		free(argv);
 		return (NULL);
 	}
-	if (ft_strchr(argv[0], '/') == NULL)
+	path = find_path_logic(argv[0], env_array);
+	if (!path)
 	{
-		path = find_command_path(argv[0], env_array);
-		if (!path)
-		{
-			ft_putstr_fd("minishell: command not found\n", STDERR_FILENO);
-			return (free(env_array), free(argv), NULL);
-		}
-		return (path);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(argv[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 	}
-	return (argv[0]);
+	return (path);
 }

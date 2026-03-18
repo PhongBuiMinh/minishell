@@ -44,11 +44,12 @@ int	ft_unset(char **argv, t_shell_state *shell)
 {
 	int	i;
 
-	i = 1;
-	while (argv[i])
-	{
+	if (!argv[1])
+		return (0);
+	if (argv[1][0] == '-' && argv[1][1])
+		return (ft_putstr_fd("minishell: unset: no options\n", 2), 2);
+	i = 0;
+	while (argv[++i])
 		ft_unset_var(&shell->env, argv[i]);
-		i++;
-	}
 	return (0);
 }

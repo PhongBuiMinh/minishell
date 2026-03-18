@@ -22,15 +22,11 @@ volatile sig_atomic_t	g_signal_received = 0;
 
 static void	sigint_handler(int sig)
 {
-	int	saved_errno;
-
-	saved_errno = errno;
 	g_signal_received = sig;
 	ft_putchar_fd('\n', STDOUT_FILENO);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
-	errno = saved_errno;
 }
 
 void	set_signal_action(int signo, void (*handler)(int))

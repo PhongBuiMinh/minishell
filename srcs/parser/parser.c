@@ -83,6 +83,26 @@ void	parse_pipeline(t_lexer *lexer,
 	}
 }
 
+void	handle_parse_error(int error, t_lexer *lexer)
+{
+	t_token_type	type;
+
+	if (error == PARSE_ERR_UNEXPECTED_TOKEN)
+	{
+		type = lexer_peek(lexer);
+		ft_putstr_fd("minishell: syntax error near unexpected token ",
+			STDERR_FILENO);
+		if (type == EOF_TOKEN || type == NEWLINE)
+			ft_putstr_fd("`newline'\n", STDERR_FILENO);
+		else if (type == PIPE)
+			ft_putstr_fd("`|'\n", STDERR_FILENO);
+		else if (type == REDIR_OUT)
+			ft_putstr_fd("`>'\n", STDERR_FILENO);
+	}
+	else if (error == PARSE_ERR_MALLOC)
+		ft_putstr_fd("minishell: memory allocation error\n", STDERR_FILENO);
+}
+
 int	parser(char *input, t_command_list **first_command)
 {
 	t_lexer			lexer;
@@ -94,13 +114,17 @@ int	parser(char *input, t_command_list **first_command)
 	lexer.pos = 0;
 	next_token = lexer_peek(&lexer);
 	if (next_token == PIPE)
-		return (printf("Pipe at beggining of line\n"), -1);
+	{
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n",
+			STDERR_FILENO);
+		return (-1);
+	}
 	parse_pipeline(&lexer, first_command, &error);
 	if (error)
 	{
+		handle_parse_error(error, &lexer);
 		free_all(*first_command);
 		*first_command = NULL;
-		printf("parser error: %d\n", error);
 		return (-1);
 	}
 	return (0);

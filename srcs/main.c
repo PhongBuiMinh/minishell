@@ -58,7 +58,7 @@ int	process_cmd_line(t_shell_state *shell, char *full_input)
 		if (parser(pipelines[i], &commands) != -1)
 		{
 			if (commands)
-				shell->exit_status = execute_pipeline(commands, shell);
+				shell->exit_status = execution(commands, shell);
 			free_all(commands);
 		}
 		else

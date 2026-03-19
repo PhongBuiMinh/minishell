@@ -35,6 +35,7 @@ typedef struct s_redirection_list
 {
 	int							redir_type;
 	char						*target;
+	char						*temp_file;
 	struct s_redirection_list	*next;
 }								t_redirection_list;
 

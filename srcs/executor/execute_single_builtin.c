@@ -23,7 +23,7 @@ void	restore_fds(int saved_stdin, int saved_stdout)
 int	handle_single_builtin(t_command_list *cmds, t_shell_state *shell)
 {
 	char	**argv;
-	int		bltin_status;
+	int		status;
 	int		saved_stdin;
 	int		saved_stdout;
 
@@ -37,10 +37,10 @@ int	handle_single_builtin(t_command_list *cmds, t_shell_state *shell)
 	if (setup_redirections(cmds->redirs, shell) < 0)
 		return (free(argv), restore_fds(saved_stdin, saved_stdout),
 			shell->exit_status);
-	bltin_status = 0;
+	status = 0;
 	if (argv && argv[0])
-		bltin_status = handle_builtin(argv[0], argv, shell);
+		status = handle_builtin(argv[0], argv, shell);
 	free(argv);
 	restore_fds(saved_stdin, saved_stdout);
-	return (bltin_status);
+	return (status);
 }

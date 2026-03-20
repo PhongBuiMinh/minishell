@@ -44,7 +44,7 @@ typedef struct s_exec_info
 void								execute_command(t_exec_info *info);
 int									handle_single_builtin(t_command_list *cmds,
 										t_shell_state *shell);
-int									execute_pipeline(t_command_list *commands,
+int									execution(t_command_list *commands,
 										t_shell_state *shell);
 int									count_commands(t_command_list *commands);
 int									wait_all_children(pid_t *pids,
@@ -68,14 +68,14 @@ char								*get_exec_path(char **argv,
 										char **env_array);
 
 /* redir */
-void								read_heredoc(int write_fd, char *delim,
-										int expand, t_shell_state *shell);
-int									setup_redir_file(t_redirection_list *redir);
-int									setup_redir_heredoc(
-										t_redirection_list *redir,
-										t_shell_state *shell);
 int									setup_redirections(
 										t_redirection_list *redirs,
 										t_shell_state *shell);
+void								unlink_heredocs(t_command_list *cmds);
+int									collect_heredocs(t_command_list *cmds,
+										t_shell_state *shell);
+void								assign_heredoc_filenames(
+										t_command_list *cmds);
+void								print_eof_warning(char *delim);
 
 #endif

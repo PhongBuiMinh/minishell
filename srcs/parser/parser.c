@@ -86,7 +86,7 @@ void	handle_parse_error(int error, t_lexer *lexer)
 {
 	t_token_type	type;
 
-	if (error == PARSE_ERR_UNEXPECTED_TOKEN)
+	if (error == 3)
 	{
 		type = lexer_peek(lexer);
 		ft_putstr_fd("minishell: syntax error near unexpected token ",
@@ -97,6 +97,10 @@ void	handle_parse_error(int error, t_lexer *lexer)
 			ft_putstr_fd("`|'\n", STDERR_FILENO);
 		else if (type == REDIR_OUT)
 			ft_putstr_fd("`>'\n", STDERR_FILENO);
+		else if (type == REDIR_IN)
+			ft_putstr_fd("` < '\n", STDERR_FILENO);
+		else
+			ft_putstr_fd("`syntax error'\n", STDERR_FILENO);
 	}
 	else if (error == PARSE_ERR_MALLOC)
 		ft_putstr_fd("minishell: memory allocation error\n", STDERR_FILENO);

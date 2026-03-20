@@ -23,7 +23,7 @@ void	manage_pipe_fds(t_pipe_info *pipe_info)
 	}
 }
 
-int	fork_command(t_exec_info *info, int i)
+int	start_process(t_exec_info *info, int i)
 {
 	pid_t	pid;
 
@@ -48,7 +48,7 @@ int	fork_command(t_exec_info *info, int i)
 	return (0);
 }
 
-int	run_pipeline(t_exec_info *info, t_command_list *cmds)
+int	create_processes(t_exec_info *info, t_command_list *cmds)
 {
 	int	i;
 
@@ -58,31 +58,36 @@ int	run_pipeline(t_exec_info *info, t_command_list *cmds)
 		info->cmd = cmds;
 		info->pipe_info.is_first = (i == 0);
 		info->pipe_info.is_last = (cmds->next == NULL);
-		if (fork_command(info, i++) < 0)
+		if (start_process(info, i++) < 0)
 			return (-1);
 		cmds = cmds->next;
 	}
 	return (0);
 }
 
-int	execute_pipeline(t_command_list *cmds, t_shell_state *shell)
+int	execution(t_command_list *cmds, t_shell_state *shell)
 {
 	t_exec_info	info;
-	int			ret;
+	int			status;
 
 	if (!cmds || !shell)
 		return (0);
+	status = collect_heredocs(cmds, shell);
+	if (status != 0)
+		return (set_interactive_signals(), status);
 	if (expand_envs(cmds, shell->env, shell->exit_status) < 0)
-		return (1);
-	ret = handle_single_builtin(cmds, shell);
-	if (ret != -1)
-		return (ret);
+		return (unlink_heredocs(cmds), 1);
+	status = handle_single_builtin(cmds, shell);
+	if (status != -1)
+		return (unlink_heredocs(cmds), status);
 	info = init_exec_info(cmds, shell);
 	if (!info.pids)
 		return (1);
 	set_parent_wait_signals();
-	if (run_pipeline(&info, cmds) < 0)
-		return (set_interactive_signals(), free(info.pids), 1);
-	ret = wait_all_children(info.pids, info.num_cmds);
-	return (free(info.pids), set_interactive_signals(), ret);
+	if (create_processes(&info, cmds) < 0)
+		return (unlink_heredocs(cmds), free(info.pids),
+			set_interactive_signals(), 1);
+	status = wait_all_children(info.pids, info.num_cmds);
+	return (unlink_heredocs(cmds), free(info.pids),
+		set_interactive_signals(), status);
 }

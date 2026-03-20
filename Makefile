@@ -50,13 +50,13 @@ SRCS = main.c \
 		env/env_utils2.c \
 		executor/execute_single_builtin.c \
 		executor/execute_command.c \
-		executor/execute_pipeline.c \
+		executor/execute.c \
 		executor/execute_utils.c \
 		path/paths.c \
 		path/paths2.c \
-		redirection/setup_redirections.c \
-		redirection/setup_heredoc.c \
-		redirection/setup_redir_file.c \
+		redirection/setup_redir.c \
+		redirection/redir_utils.c \
+		redirection/redir_heredoc.c \
 		signals/signals.c \
 		signals/signal_utils.c 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))

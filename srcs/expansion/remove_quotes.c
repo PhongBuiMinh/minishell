@@ -6,7 +6,7 @@
 /*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 01:20:41 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/08 02:41:48 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/20 13:58:42 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,51 @@ char	*remove_quotes_str(char *str)
 	return (new_str);
 }
 
-void	remove_quotes(t_command_list *command)
+void	remove_argument_quotes(t_command_list *command)
 {
 	t_argument_list	*argument;
 	char			*new_str;
 
-	argument = NULL;
-	while (command)
+	argument = command->args;
+	while (argument)
 	{
-		argument = command->args;
-		while (argument)
+		new_str = remove_quotes_str(argument->string);
+		if (new_str)
 		{
-			new_str = remove_quotes_str(argument->string);
-			if (new_str)
-			{
-				free(argument->string);
-				argument->string = new_str;
-			}
-			argument = argument->next;
+			free(argument->string);
+			argument->string = new_str;
 		}
-		command = command->next;
+		argument = argument->next;
+	}
+}
+
+void	remove_redirection_quotes(t_command_list *command)
+{
+	t_redirection_list	*redir;
+	char				*new_str;
+
+	redir = command->redirs;
+	while (redir)
+	{
+		new_str = remove_quotes_str(redir->target);
+		if (new_str)
+		{
+			free(redir->target);
+			redir->target = new_str;
+		}
+		redir = redir->next;
+	}
+}
+
+void	remove_quotes(t_command_list *command)
+{
+	t_command_list	*current;
+
+	current = command;
+	while (current)
+	{
+		remove_argument_quotes(current);
+		remove_redirection_quotes(current);
+		current = current->next;
 	}
 }

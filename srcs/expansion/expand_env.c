@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn>    +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 15:49:17 by username          #+#    #+#             */
-/*   Updated: 2026/03/20 01:42:35 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/20 13:59:19 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,8 +133,7 @@ int	expand_envs(t_command_list *command, t_env *env, int exit_status)
 			return (-1);
 		current = current->next;
 	}
-	current = command;
-	remove_quotes(current);
+	remove_quotes(command);
 	return (0);
 }
 

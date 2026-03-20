@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_utils2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn>    +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:11:20 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/19 23:21:15 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/20 14:19:22 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	insert_argument_strings(t_argument_list *arg, char **split, int *error)
 			return ;
 		new_node->string = ft_strdup(split[j]);
 		if (!new_node->string)
-			return ;
+			return (free(new_node));
 		new_node->next = current->next;
 		current->next = new_node;
 		current = new_node;

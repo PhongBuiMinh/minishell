@@ -23,7 +23,7 @@ t_env	*find_env_var(t_env *env, char *name)
 	return (NULL);
 }
 
-void add_env_var(t_env **env_list, char *name, char *value)
+void	add_env_var(t_env **env_list, char *name, char *value)
 {
 	t_env	*new_var;
 	t_env	*last;

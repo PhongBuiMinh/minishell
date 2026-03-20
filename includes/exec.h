@@ -66,7 +66,8 @@ void								check_exec_path(char **argv, char *path,
 										char **env);
 char								*get_exec_path(char **argv,
 										char **env_array);
-int									update_full_var(t_env *env_var, char *new_value);
+int									update_full_var(t_env *env_var,
+										char *new_value);
 
 /* redir */
 int									setup_redirections(

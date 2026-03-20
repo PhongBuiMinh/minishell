@@ -37,25 +37,7 @@ static int	is_overflow(unsigned long long n, int digit, int sign)
 	return (0);
 }
 
-static int	parse_digits(char *str, int sign, unsigned long long *n)
-{
-	if (!(*str >= '0' && *str <= '9'))
-		return (0);
-	while (*str >= '0' && *str <= '9')
-	{
-		if (is_overflow(*n, *str - '0', sign))
-			return (0);
-		*n = *n * 10 + (*str - '0');
-		str++;
-	}
-	while (ft_isspace(*str))
-		str++;
-	if (*str == '\0')
-		return (1);
-	return (0);
-}
-
-int	advanced_atoll(char *str, long long *result)
+int	advanced_atoll(char *str, long long *res)
 {
 	unsigned long long	n;
 	int					sign;
@@ -67,13 +49,17 @@ int	advanced_atoll(char *str, long long *result)
 	if (*str == '-' || *str == '+')
 		if (*str++ == '-')
 			sign = -1;
-	while (*str == '0')
-		str++;
-	if (*str == '\0')
+	if (!(*str >= '0' && *str <= '9'))
 		return (0);
-	if (!parse_digits(str, sign, &n))
+	while (*str >= '0' && *str <= '9')
+	{
+		if (is_overflow(n, *str - '0', sign))
+			return (0);
+		n = n * 10 + (*str++ - '0');
+	}
+	if (*str != '\0')
 		return (0);
-	*result = (long long)(n * sign);
+	*res = (long long)(n * sign);
 	return (1);
 }
 

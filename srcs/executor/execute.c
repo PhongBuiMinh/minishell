@@ -76,8 +76,10 @@ int	execution(t_command_list *cmds, t_shell_state *shell)
 	t_exec_info	info;
 	int			status;
 
-	if (!cmds || !shell)
-		return (0);
+	if (!shell)
+		return (1);
+	if (!cmds)
+		return (shell->exit_status);
 	status = collect_heredocs(cmds, shell);
 	if (status != 0)
 		return (set_interactive_signals(), status);

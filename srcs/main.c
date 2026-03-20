@@ -56,13 +56,10 @@ int	process_cmd_line(t_shell_state *shell, char *full_input)
 	{
 		commands = NULL;
 		if (parser(pipelines[i], &commands) != -1)
-		{
-			if (commands)
-				shell->exit_status = execution(commands, shell);
-			free_all(commands);
-		}
+			shell->exit_status = execution(commands, shell);
 		else
 			shell->exit_status = 2;
+		free_all(commands);
 		free(pipelines[i++]);
 	}
 	free(pipelines);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_redirs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn>    +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/20 01:02:25 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/20 01:25:30 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/20 14:59:14 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	is_ambiguous_redirect(t_argument_list *arg)
 {
-	if (!arg || !arg->string || arg->next != NULL)
+	if (!arg->string || arg->next != NULL)
 		return (1);
 	return (0);
 }
@@ -31,7 +31,7 @@ static int	process_redir(t_shell_info *shell,
 	if (!fake_arg->string)
 		return (-1);
 	expand_args(shell, fake_cmd, fake_arg);
-	if (is_ambiguous_redirect(fake_arg))
+	if (shell->remove_arg || is_ambiguous_redirect(fake_arg))
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(old, STDERR_FILENO);
@@ -66,5 +66,5 @@ int	expand_redirs(t_shell_info *shell, t_command_list *command)
 			return (free_all(fake_cmd), -1);
 		cur = cur->next;
 	}
-	return (free(fake_arg), free(fake_cmd), 0);
+	return (free_all(fake_cmd), 0);
 }

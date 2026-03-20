@@ -18,6 +18,7 @@
 /* dispatcher */
 int		is_builtin(const char *cmd);
 int		handle_builtin(char *cmd, char **argv, t_shell_state *shell);
+int		is_valid_identifier(char *var);
 
 /* builtins */
 int		ft_cd(char **argv, t_shell_state *shell);
@@ -25,7 +26,7 @@ int		ft_echo(char **argv);
 int		ft_env(char **args, t_shell_state *shell);
 int		ft_exit(char **argv, t_shell_state *shell);
 int		ft_export(char **args, t_shell_state *shell);
-int		ft_pwd(void);
+int		ft_pwd(char **args);
 int		ft_unset(char **argv, t_shell_state *shell);
 
 #endif

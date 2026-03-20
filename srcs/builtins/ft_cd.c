@@ -56,7 +56,7 @@ int	ft_cd(char **argv, t_shell_state *shell)
 	if (!getcwd(old_cwd, sizeof(old_cwd)))
 		old_cwd[0] = '\0';
 	if (chdir(path) != 0)
-		return (ft_putstr_fd("minishell: cd", 2), 1);
+		return (ft_putstr_fd("minishell: cd: Not a dir\n", 2), 1);
 	update_work_dirs(shell, old_cwd);
 	return (0);
 }

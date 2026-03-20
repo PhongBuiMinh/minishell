@@ -46,24 +46,9 @@ void	check_exec_path(char **argv, char *path, char **env)
 
 static char	*find_path_logic(char *cmd, char **env_array)
 {
-	char	*path;
-	char	*cwd;
-
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
-	path = find_command_path(cmd, env_array);
-	if (!path)
-	{
-		cwd = getcwd(NULL, 0);
-		path = build_path(cwd, cmd);
-		free(cwd);
-		if (access(path, F_OK | X_OK) != 0)
-		{
-			free(path);
-			return (NULL);
-		}
-	}
-	return (path);
+	return (find_command_path(cmd, env_array));
 }
 
 char	*get_exec_path(char **argv, char **env_array)
@@ -86,3 +71,25 @@ char	*get_exec_path(char **argv, char **env_array)
 	}
 	return (path);
 }
+
+// static char	*find_path_logic(char *cmd, char **env_array)
+// {
+// 	char	*path;
+// 	char	*cwd;
+
+// 	if (ft_strchr(cmd, '/'))
+// 		return (ft_strdup(cmd));
+// 	path = find_command_path(cmd, env_array);
+// 	if (!path)
+// 	{
+// 		cwd = getcwd(NULL, 0);
+// 		path = build_path(cwd, cmd);
+// 		free(cwd);
+// 		if (access(path, F_OK | X_OK) != 0)
+// 		{
+// 			free(path);
+// 			return (NULL);
+// 		}
+// 	}
+// 	return (path);
+// }

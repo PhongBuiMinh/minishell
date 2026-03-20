@@ -79,8 +79,8 @@ $(NAME): $(LIBFT) $(OBJS) | $(OBJ_DIR)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	@echo "$(GREEN)Compiling source files...$(DEFAULT)"
-	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -MMD -MP -c $< -o $@
-# 	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -c $< -o $@
+	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -c $< -o $@
+# 	@$(CC) $(FLAGS) -Iincludes -I$(LIBFT_PATH) -MMD -MP -c $< -o $@
 
 # Library build
 $(LIBFT):
@@ -97,19 +97,5 @@ fclean: clean
 	@echo "$(RED)Removing program and libraries...$(DEFAULT)"
 	@rm -f $(NAME)
 	@make fclean -C $(LIBFT_PATH)
-
-# Testing and benchmarking
-test:
-	@./tests/run_tests.sh
-
-benhmark:
-	@./benchmarks/run_benchmarks.sh
-
-# Install and Uninstall
-install:
-	@cp $(NAME) /usr/local/bin
-
-uninstall:
-	@rm -f /usr/local/bin/$(NAME)
 
 re: fclean all

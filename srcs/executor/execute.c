@@ -56,8 +56,14 @@ int	create_processes(t_exec_info *info, t_command_list *cmds)
 	while (cmds)
 	{
 		info->cmd = cmds;
-		info->pipe_info.is_first = (i == 0);
-		info->pipe_info.is_last = (cmds->next == NULL);
+		if (i == 0)
+			info->pipe_info.is_first = 1;
+		else
+			info->pipe_info.is_first = 0;
+		if (cmds->next == NULL)
+			info->pipe_info.is_last = 1;
+		else
+			info->pipe_info.is_last = 0;
 		if (start_process(info, i++) < 0)
 			return (-1);
 		cmds = cmds->next;

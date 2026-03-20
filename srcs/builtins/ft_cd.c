@@ -39,7 +39,8 @@ int	ft_cd(char **argv, t_shell_state *shell)
 
 	if (argv[1] && argv[2])
 		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
-	if (!argv[1] || ft_strcmp(argv[1], "~") == 0)
+	if (!argv[1] || ft_strcmp(argv[1], "~") == 0
+		|| ft_strcmp(argv[1], "--") == 0)
 		path = ft_getenv(shell->env, "HOME");
 	else if (ft_strcmp(argv[1], "-") == 0)
 	{
@@ -55,7 +56,7 @@ int	ft_cd(char **argv, t_shell_state *shell)
 	if (!getcwd(old_cwd, sizeof(old_cwd)))
 		old_cwd[0] = '\0';
 	if (chdir(path) != 0)
-		return (perror("minishell: cd"), 1);
+		return (ft_putstr_fd("minishell: cd", 2), 1);
 	update_work_dirs(shell, old_cwd);
 	return (0);
 }

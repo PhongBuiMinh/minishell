@@ -29,7 +29,7 @@ int	handle_builtin(char *cmd, char **argv, t_shell_state *shell)
 	if (ft_strcmp(cmd, "cd") == 0)
 		return (ft_cd(argv, shell));
 	if (ft_strcmp(cmd, "pwd") == 0)
-		return (ft_pwd());
+		return (ft_pwd(argv));
 	if (ft_strcmp(cmd, "exit") == 0)
 		return (ft_exit(argv, shell));
 	if (ft_strcmp(cmd, "export") == 0)

@@ -20,43 +20,85 @@ static void	clean_exit(t_shell_state *shell, char **argv, int code)
 	exit(code);
 }
 
-int	is_numeric(const char *str)
+static int	is_overflow(unsigned long long n, int digit, int sign)
 {
-	if (!str || !*str)
-		return (0);
-	if (*str == '+' || *str == '-')
-		str++;
-	if (!*str)
-		return (0);
-	while (*str)
+	unsigned long long	max;
+
+	max = 922337203685477580ULL;
+	if (n > max)
+		return (1);
+	if (n == max)
 	{
-		if (!isdigit(*str))
+		if (sign == 1 && digit > 7)
+			return (1);
+		if (sign == -1 && digit > 8)
+			return (1);
+	}
+	return (0);
+}
+
+static int	parse_digits(char *str, int sign, unsigned long long *n)
+{
+	if (!(*str >= '0' && *str <= '9'))
+		return (0);
+	while (*str >= '0' && *str <= '9')
+	{
+		if (is_overflow(*n, *str - '0', sign))
 			return (0);
+		*n = *n * 10 + (*str - '0');
 		str++;
 	}
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '\0')
+		return (1);
+	return (0);
+}
+
+int	advanced_atoll(char *str, long long *result)
+{
+	unsigned long long	n;
+	int					sign;
+
+	n = 0;
+	sign = 1;
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '-' || *str == '+')
+		if (*str++ == '-')
+			sign = -1;
+	while (*str == '0')
+		str++;
+	if (*str == '\0' || ft_isspace(*str))
+	{
+		while (ft_isspace(*str))
+			str++;
+		if (*str != '\0')
+			return (0);
+		*result = 0;
+		return (1);
+	}
+	if (!parse_digits(str, sign, &n))
+		return (0);
+	*result = (long long)(n * sign);
 	return (1);
 }
 
 int	ft_exit(char **argv, t_shell_state *shell)
 {
-	int	exit_code;
+	long long	exit_code;
 
 	if (isatty(STDIN_FILENO))
 		ft_putstr_fd("exit\n", STDERR_FILENO);
 	if (!argv[1])
 		clean_exit(shell, argv, shell->exit_status);
-	if (!is_numeric(argv[1]))
+	if (!advanced_atoll(argv[1], &exit_code) || argv[2])
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-		ft_putstr_fd("numeric argument required\n", STDERR_FILENO);
+		ft_putstr_fd(argv[1], 2);
+		ft_putstr_fd(" numeric argument required\n", STDERR_FILENO);
 		clean_exit(shell, argv, 2);
 	}
-	if (argv[2])
-	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-		return (1);
-	}
-	exit_code = ft_atoi(argv[1]) % 256;
 	clean_exit(shell, argv, exit_code);
 	return (0);
 }

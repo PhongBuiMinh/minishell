@@ -46,7 +46,7 @@ int	ft_unset(char **argv, t_shell_state *shell)
 
 	if (!argv[1])
 		return (0);
-	if (argv[1][0] == '-' && argv[1][1])
+	if (argv[1][0] == '-')
 		return (ft_putstr_fd("minishell: unset: no options\n", 2), 2);
 	i = 0;
 	while (argv[++i])

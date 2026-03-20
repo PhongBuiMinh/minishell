@@ -12,17 +12,21 @@
 
 #include "minishell.h"
 
-int	ft_pwd(void)
+int	ft_pwd(char **args)
 {
 	char	cwd[PATH_MAX];
 
+	if (args && args[1] && args[1][0] == '-')
+	{
+		ft_putstr_fd("minishell: pwd: no options allowed\n", STDERR_FILENO);
+		return (2);
+	}
 	if (getcwd(cwd, PATH_MAX))
 	{
-		ft_putstr_fd(cwd, STDOUT_FILENO);
-		ft_putchar_fd('\n', STDOUT_FILENO);
+		ft_putendl_fd(cwd, STDOUT_FILENO);
 		return (0);
 	}
-	ft_putstr_fd("minishell: pwd: error retreiving current directory\n",
-		STDERR_FILENO);
+	ft_putstr_fd("pwd: error retrieving current directory: ", STDERR_FILENO);
+	ft_putstr_fd("getcwde: cannot access parent directories\n", STDERR_FILENO);
 	return (1);
 }

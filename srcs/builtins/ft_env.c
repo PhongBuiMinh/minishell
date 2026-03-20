@@ -18,20 +18,22 @@ int	ft_env(char **args, t_shell_state *shell)
 
 	if (args[1] && args[1][0] == '-')
 	{
-		ft_putstr_fd("minishell: no options allowed\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: no option\n", STDERR_FILENO);
 		return (2);
 	}
-	if (args[2])
+	if (!args[1])
 	{
-		ft_putstr_fd("minishell: no arguments allowed\n", STDERR_FILENO);
-		return (2);
+		curr = shell->env;
+		while (curr)
+		{
+			if (ft_strchr(curr->full_var, '='))
+				ft_putendl_fd(curr->full_var, STDOUT_FILENO);
+			curr = curr->next;
+		}
+		return (0);
 	}
-	curr = shell->env;
-	while (curr)
-	{
-		if (ft_strchr(curr->full_var, '='))
-			ft_putendl_fd(curr->full_var, STDOUT_FILENO);
-		curr = curr->next;
-	}
-	return (0);
+	ft_putstr_fd("minishell: env: ", STDERR_FILENO);
+	ft_putstr_fd(args[1], STDERR_FILENO);
+	ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+	return (127);
 }

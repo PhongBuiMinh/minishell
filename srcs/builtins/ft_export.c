@@ -12,28 +12,6 @@
 
 #include "minishell.h"
 
-void	print_export_list(t_env *env)
-{
-	while (env)
-	{
-		if (ft_strcmp(env->name, "_") == 0)
-		{
-			env = env->next;
-			continue ;
-		}
-		ft_putstr_fd("declare -x ", STDOUT_FILENO);
-		ft_putstr_fd(env->name, STDOUT_FILENO);
-		if (env->value)
-		{
-			ft_putstr_fd("=\"", STDOUT_FILENO);
-			ft_putstr_fd(env->value, STDOUT_FILENO);
-			ft_putstr_fd("\"", STDOUT_FILENO);
-		}
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		env = env->next;
-	}
-}
-
 int	is_valid_identifier(char *var)
 {
 	int	i;
@@ -41,7 +19,6 @@ int	is_valid_identifier(char *var)
 	i = 0;
 	if (!ft_isalpha(var[i]) && var[i] != '_')
 		return (0);
-	i++;
 	while (var[i] && var[i] != '=')
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
@@ -51,21 +28,26 @@ int	is_valid_identifier(char *var)
 	return (1);
 }
 
-int	update_full_var(t_env *env_var, char *new_value)
+static char	*extract_name(char *arg, char *eq_pos)
 {
-	char	*temp;
+	if (eq_pos)
+		return (ft_substr(arg, 0, eq_pos - arg));
+	return (ft_strdup(arg));
+}
 
-	free(env_var->full_var);
-	temp = ft_strjoin(env_var->name, "=");
-	if (!temp)
-		return (-1);
-	if (new_value)
-		env_var->full_var = ft_strjoin_free(temp, new_value);
+static char	*extract_value(char *arg, char *eq_pos, t_shell_state *shell)
+{
+	char	*value;
+	t_env	*existing;
+
+	if (eq_pos)
+		return (ft_strdup(eq_pos + 1));
+	existing = find_env_var(shell->env, arg);
+	if (existing && existing->value)
+		value = ft_strdup(existing->value);
 	else
-		env_var->full_var = temp;
-	if (!env_var->full_var)
-		return (-1);
-	return (0);
+		value = NULL;
+	return (value);
 }
 
 int	process_export_arg(char *arg, t_shell_state *shell)
@@ -73,25 +55,19 @@ int	process_export_arg(char *arg, t_shell_state *shell)
 	char	*name;
 	char	*value;
 	char	*eq_pos;
-	t_env	*existing;
 
 	eq_pos = ft_strchr(arg, '=');
-	if (!eq_pos)
-		return (0);
-	name = ft_strndup(arg, eq_pos - arg);
-	if (!name || !is_valid_identifier(name))
+	name = extract_name(arg, eq_pos);
+	if (!name)
+		return (1);
+	value = extract_value(arg, eq_pos, shell);
+	if (eq_pos && !value)
 		return (free(name), 1);
-	value = ft_strdup(eq_pos + 1);
-	existing = find_env_var(shell->env, name);
-	if (existing)
-	{
-		free(existing->value);
-		existing->value = value;
-		free(name);
-		return (update_full_var(existing, value));
-	}
-	add_env_var(&shell->env, name, value);
-	return (free(name), free(value), 0);
+	update_env(&shell->env, name, value);
+	free(name);
+	if (value)
+		free(value);
+	return (0);
 }
 
 int	ft_export(char **args, t_shell_state *shell)
@@ -103,9 +79,8 @@ int	ft_export(char **args, t_shell_state *shell)
 	if (!args[1])
 		return (sort_env_list(&shell->env),
 			print_export_list(shell->env), 0);
-	if (args[1][0] == '-' && args[1][1])
-		return (ft_putstr_fd("minishell: no option\n", STDERR_FILENO),
-			2);
+	if (args[1][0] == '-')
+		return (ft_putstr_fd("minishell: no options\n", 2), 2);
 	i = 0;
 	while (args[++i])
 	{

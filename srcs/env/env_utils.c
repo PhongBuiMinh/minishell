@@ -23,22 +23,23 @@ t_env	*find_env_var(t_env *env, char *name)
 	return (NULL);
 }
 
-void	add_env_var(t_env **env_list, char *name, char *value)
+void add_env_var(t_env **env_list, char *name, char *value)
 {
 	t_env	*new_var;
 	t_env	*last;
 
 	new_var = malloc(sizeof(t_env));
-	if (!new_var || !name)
-		return (free(new_var));
+	if (!new_var)
+		return ;
 	new_var->name = ft_strdup(name);
-	new_var->value = ft_strdup(value);
-	new_var->full_var = ft_strjoin(name, "=");
-	if (!new_var->name || !new_var->full_var || (value && !new_var->value))
-		return (free_env_var(new_var));
 	if (value)
-		new_var->full_var = ft_strjoin_free(new_var->full_var, value);
+		new_var->value = ft_strdup(value);
+	else
+		new_var->value = NULL;
+	new_var->full_var = NULL;
 	new_var->next = NULL;
+	if (update_full_var(new_var, value) != 0)
+		return (free_env_var(new_var), (void)0);
 	if (!*env_list)
 		*env_list = new_var;
 	else
@@ -52,11 +53,13 @@ void	add_env_var(t_env **env_list, char *name, char *value)
 
 void	update_env_value(t_env *env_var, char *new_value)
 {
-	free(env_var->value);
-	env_var->value = ft_strdup(new_value);
-	free(env_var->full_var);
-	env_var->full_var = ft_strjoin(env_var->name, "=");
-	env_var->full_var = ft_strjoin_free(env_var->full_var, new_value);
+	if (env_var->value)
+		free(env_var->value);
+	if (new_value)
+		env_var->value = ft_strdup(new_value);
+	else
+		env_var->value = NULL;
+	update_full_var(env_var, env_var->value);
 }
 
 void	update_env(t_env **env_list, char *name, char *value)

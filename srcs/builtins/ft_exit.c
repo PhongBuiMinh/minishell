@@ -69,15 +69,8 @@ int	advanced_atoll(char *str, long long *result)
 			sign = -1;
 	while (*str == '0')
 		str++;
-	if (*str == '\0' || ft_isspace(*str))
-	{
-		while (ft_isspace(*str))
-			str++;
-		if (*str != '\0')
-			return (0);
-		*result = 0;
-		return (1);
-	}
+	if (*str == '\0')
+		return (0);
 	if (!parse_digits(str, sign, &n))
 		return (0);
 	*result = (long long)(n * sign);
@@ -92,12 +85,17 @@ int	ft_exit(char **argv, t_shell_state *shell)
 		ft_putstr_fd("exit\n", STDERR_FILENO);
 	if (!argv[1])
 		clean_exit(shell, argv, shell->exit_status);
-	if (!advanced_atoll(argv[1], &exit_code) || argv[2])
+	if (!advanced_atoll(argv[1], &exit_code))
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(argv[1], 2);
 		ft_putstr_fd(" numeric argument required\n", STDERR_FILENO);
 		clean_exit(shell, argv, 2);
+	}
+	if (argv[2])
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+		return (1);
 	}
 	clean_exit(shell, argv, exit_code);
 	return (0);

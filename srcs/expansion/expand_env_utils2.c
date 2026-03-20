@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_utils2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:11:20 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/08 02:54:39 by bpetrovi         ###   ########.fr       */
+/*   Updated: 2026/03/19 23:21:15 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

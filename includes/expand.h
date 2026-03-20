@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 19:44:45 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/09 18:08:06 by fbui-min         ###   ########.fr       */
+/*   Updated: 2026/03/20 01:43:16 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ typedef struct s_shell_info
 int		is_allowed(char c);
 int		is_double_quoted(char *str, int dollar_pos);
 int		find_len(char *str, int *brackets);
+int		expand_redirs(t_shell_info *shell, t_command_list *command);
 char	*find_env(t_env *env, char *name, int i, int brackets);
+void	expand_args(t_shell_info *shell, t_command_list *current,
+			t_argument_list *arg);
 void	replace_argument_string(t_argument_list *arg, char *new_str);
 void	split_argument_string(t_argument_list *arg,
 			char *new_str, int *error);

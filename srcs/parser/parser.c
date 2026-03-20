@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bpetrovi <bpetrovi@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/14 18:36:03 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/09 00:25:36 by bpetrovi         ###   ########.fr       */
+/*   Created: 2025/12/14 18:36:03 by username          #+#    #+#             */
+/*   Updated: 2026/03/20 01:44:08 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	parse_pipeline(t_lexer *lexer,
 	t_token_type	type;
 
 	prev_command = NULL;
-	new_command = NULL;
 	type = lexer_peek(lexer);
 	while (type != EOF_TOKEN)
 	{
@@ -92,7 +91,7 @@ void	handle_parse_error(int error, t_lexer *lexer)
 		type = lexer_peek(lexer);
 		ft_putstr_fd("minishell: syntax error near unexpected token ",
 			STDERR_FILENO);
-		if (type == EOF_TOKEN || type == NEWLINE)
+		if (type == EOF_TOKEN)
 			ft_putstr_fd("`newline'\n", STDERR_FILENO);
 		else if (type == PIPE)
 			ft_putstr_fd("`|'\n", STDERR_FILENO);

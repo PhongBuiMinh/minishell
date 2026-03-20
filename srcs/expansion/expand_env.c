@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbui-min <fbui-min@student.42heilbronn.de> +#+  +:+       +#+        */
+/*   By: bpetrovi <bpetrovi@student.42heilbronn>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/08 15:49:17 by bpetrovi          #+#    #+#             */
-/*   Updated: 2026/03/09 18:25:24 by fbui-min         ###   ########.fr       */
+/*   Created: 2026/02/08 15:49:17 by username          #+#    #+#             */
+/*   Updated: 2026/03/20 01:42:35 by bpetrovi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,8 @@ int	expand_envs(t_command_list *command, t_env *env, int exit_status)
 		expand_args(&shell, current, arg);
 		if (shell.bad_substitution)
 			return (-1);
+		if (expand_redirs(&shell, current) == -1)
+			return (-1);
 		current = current->next;
 	}
 	current = command;
@@ -136,50 +138,58 @@ int	expand_envs(t_command_list *command, t_env *env, int exit_status)
 	return (0);
 }
 
-// int	main(int argc, char **argv, char **envp)
-//{
-//	char				*input = "Hello whats up is $namee
-//							parser frfr | ${whats}";
-//	t_shell_state		shell;
-//	t_command_list		*first_command = NULL;
-//	t_command_list		*commands;
-//	t_argument_list		*temp_arg;
-//	t_redirection_list	*temp_redir;
+// #include "../includes/shell.h"
+// #include <string.h>
+// #include <stdio.h>
+// #include <errno.h>
 
-//	(void)argc;
-//	(void)argv;
-//	init_shell(&shell, envp);
-//	if (parser(input, &first_command) == -1)
-//		return (printf("Parser failed"), -1);
-//	expand_envs(first_command, shell.env);
-//	commands = first_command;
-//	while (commands)
-//	{
-//		temp_arg = commands->args;
-//		temp_redir = commands->redirs;
-//		printf("Current command: %s\n", temp_arg->string);
-//		printf("All arguments: \n");
-//		temp_arg = temp_arg->next;
-//		while (temp_arg)
-//		{
-//			printf("%s\n", temp_arg->string);
-//			temp_arg = temp_arg->next;
-//		}
-//		printf("All redirections: \n");
-//		while (temp_redir)
-//		{
-//			printf("%i, %s\n", temp_redir->redir_type, temp_redir->target);
-//			temp_redir = temp_redir->next;
-//		}
-//		printf("-----------------------------------------------\n");
-//		commands = commands->next;
-//	}
-//	while (shell.env)
-//	{
-//		t_env *temp = shell.env;
-//		shell.env = shell.env->next;
-//		free(temp);
-//	}
-//	free_all(first_command);
-//	return (0);
-//}
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	char				*input = "Hello whats up is $namee
+// parser frfr | echo hello > $wrl";
+// 	t_shell_state		shell;
+// 	t_command_list		*first_command = NULL;
+// 	t_command_list		*commands;
+// 	t_argument_list		*temp_arg;
+// 	t_redirection_list	*temp_redir;
+
+// 	(void)argc;
+// 	(void)argv;
+// 	init_shell(&shell, envp);
+// 	if (parser(input, &first_command) == -1)
+// 		return (printf("Parser failed"), -1);
+// 	if (expand_envs(first_command, shell.env, 0) == -1)
+// 		return (printf("%s\n", strerror(errno)), 1);
+// 	commands = first_command;
+// 	while (commands)
+// 	{
+// 		temp_arg = commands->args;
+// 		temp_redir = commands->redirs;
+// 		if (temp_arg)
+// 			printf("Current command: %s\n", temp_arg->string);
+// 		printf("All arguments: \n");
+// 		if (temp_arg)
+// 			temp_arg = temp_arg->next;
+// 		while (temp_arg)
+// 		{
+// 			printf("%s\n", temp_arg->string);
+// 			temp_arg = temp_arg->next;
+// 		}
+// 		printf("All redirections: \n");
+// 		while (temp_redir)
+// 		{
+// 			printf("%i, %s\n", temp_redir->redir_type, temp_redir->target);
+// 			temp_redir = temp_redir->next;
+// 		}
+// 		printf("-----------------------------------------------\n");
+// 		commands = commands->next;
+// 	}
+// 	while (shell.env)
+// 	{
+// 		t_env *temp = shell.env;
+// 		shell.env = shell.env->next;
+// 		free(temp);
+// 	}
+// 	free_all(first_command);
+// 	return (0);
+// }
